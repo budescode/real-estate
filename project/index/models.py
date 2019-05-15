@@ -1,0 +1,76 @@
+from django.db import models
+
+class Poster(models.Model):
+	f0 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f1 = models.CharField(max_length=100, help_text="maximum length is 100")
+	f2 = models.CharField(max_length=10000)
+	f3 = models.IntegerField()
+	f4 = models.IntegerField()
+	f5 = models.IntegerField()
+	f6 = models.CharField(max_length=10000)
+	f7 = models.IntegerField()
+	f8 = models.IntegerField()
+	f9 = models.IntegerField()
+	f10 = models.IntegerField()
+	f11 = models.IntegerField()
+	f12 = models.IntegerField()
+	f13 = models.IntegerField()
+	f14 = models.IntegerField()
+	f15 = models.IntegerField()
+	f16 = models.IntegerField()
+	f17 = models.IntegerField()
+	f18 = models.IntegerField()
+	f19 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f20 = models.IntegerField()	
+	f21 = models.IntegerField()
+	f22 = models.CharField(max_length=150, help_text="maximum length is 150")
+	f23 = models.CharField(max_length=150, help_text="maximum length is 150")
+	f24 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f25 = models.CharField(max_length=4000, help_text="maximum length is 4000")
+	f26 = models.DateTimeField(auto_now=True)
+	f27 = models.FileField(help_text='image')
+	f29 = models.FileField(help_text="video")
+	f30 = models.FileField(help_text='image')
+
+	def __str__(self):
+		return str(self.id)
+
+
+
+class Seeker(models.Model):
+	f0 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f1 = models.CharField(max_length=100, help_text="maximum length is 100")
+	f2 = models.CharField(max_length=10000)
+	f3 = models.IntegerField()
+	f4 = models.IntegerField()
+	f5 = models.IntegerField()
+	f6 = models.CharField(max_length=10000)
+	f7 = models.IntegerField()
+	f8 = models.IntegerField()
+	f9 = models.IntegerField()
+	f10 = models.IntegerField()
+	f11 = models.IntegerField()
+	f12 = models.IntegerField()
+	f13 = models.IntegerField()
+	f14 = models.IntegerField()
+	f15 = models.IntegerField()
+	f16 = models.IntegerField()
+	f17 = models.IntegerField()
+	f18 = models.IntegerField()
+	f19 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f20 = models.IntegerField()	
+	f21 = models.IntegerField()
+	f22 = models.CharField(max_length=150, help_text="maximum length is 150")
+	f23 = models.CharField(max_length=150, help_text="maximum length is 150")
+	f24 = models.CharField(max_length=50, help_text="maximum length is 50")
+	f25 = models.CharField(max_length=4000, help_text="maximum length is 4000")
+	f26 = models.DateTimeField(auto_now=True)
+	f27 = models.FileField(help_text='upload image')
+	f29 = models.FileField(help_text="upload video")
+	f30 = models.FileField(help_text='upload image')
+
+	def __str__(self):
+		return str(self.id)
+
+
+

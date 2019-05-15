@@ -1,0 +1,50 @@
+
+
+
+
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+
+
+    <div class="intro-section" id="home-section">
+      
+    <div class="slide-1" style="background-image: url('../static/images/hero_1.jpg');" data-stellar-background-ratio="0.5">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-12">
+              <div class="row align-items-center">
+                <div class="col-lg-12 mb-4">
+                	
+
+<center>
+<h1>Registration Successful</h1>
+        <center><h2 style="font-family: 'black_jackregular'; color: white;"><i class="fa fa-paper-plane" aria-hidden="true" style="color: orange"></i>&nbsp;{{username}} Registered as {{first_name}}</h2></center><br>
+      
+        <p>
+         <center><p>Click on the button below to login</p></center>
+<a href="{% url 'account:login' %}"><button type="button" class="btn btn-md btn-block" style="background-color: rgb(79, 69, 227); color: white;"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>&nbsp;Login</button></a>
+    
+     </p>
+     </center>
+</div>  <!-- col-lg-5 -->
+ 
+
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+
+
+
