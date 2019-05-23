@@ -12,7 +12,7 @@ from django.contrib.auth.password_validation import MinimumLengthValidator, vali
 from django.shortcuts import render,redirect
 from datetime import *
 from django.http import HttpResponseRedirect, HttpResponse,QueryDict
-from .models import CreateProfile
+from .models import Profile, UserRegister
 
 
 
@@ -42,6 +42,7 @@ class RegisterForm(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+
         qs = User.objects.filter(username=username)
         if qs.exists():
             raise forms.ValidationError("Username is taken")
@@ -53,8 +54,9 @@ class RegisterForm(forms.Form):
         if qs.exists():
             raise forms.ValidationError("email is taken")
         return email
+
 class LoginForm(forms.Form):
-    username = forms.CharField(widget=forms.TextInput( 
+    phone_number = forms.CharField(widget=forms.TextInput( 
         attrs={'class':'form-control', 'placeholder':'Enter username'}))
     password = forms.CharField(widget=forms.PasswordInput( 
         attrs={'class':'form-control', 'placeholder':'Enter Password'}))
@@ -77,14 +79,20 @@ class CreateProfileForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput( 
         attrs={'class':'form-control', 'placeholder':'Enter Password'}))
     class Meta:
-        model = CreateProfile 
-        fields = ['username', 'email', 'password', 'category']
+        model = UserRegister 
+        exclude = ['']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone_number'].widget.attrs.update({'value': '+910'})
+        
+    def clean_phone_number(self):
+        username = self.cleaned_data.get('phone_number')
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
         qs = User.objects.filter(username=username)
         if qs.exists():
             raise forms.ValidationError("Username is taken")
+        if len(username)!=13:
+            raise forms.ValidationError("Length of phone number must be 13")
         return username
 
     def clean_email(self):
@@ -95,4 +103,9 @@ class CreateProfileForm(forms.ModelForm):
         return email
 
 
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user']
 

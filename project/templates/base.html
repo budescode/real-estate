@@ -23,6 +23,9 @@
 <link rel="stylesheet" href="{% static 'css/fl-bigmug-line.css' %}">
 <link rel="stylesheet" href="{% static 'css/aos.css' %}">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+
+
 
 
     
@@ -76,25 +79,61 @@
 
                 <ul class="site-menu js-clone-nav d-none d-lg-block">
                   <li class="active">
+
                     <a href="{% url 'home:home' %}">Home</a>
                   </li>
                   <li class="has-children">
                     <a href="">Properties</a>
                     <ul class="dropdown">
+                      
+                      {% if request.user.user_category.category == "Seller"  %}
+                      <li><a href="{% url 'home:post' %}">Sell</a></li>
+                      {% endif %}
                       <li><a href="#">Buy</a></li>
-                      <li><a href="#">Rent</a></li>
-                      <li><a href="#">Lease</a></li>
+                    
+                      <li><a href="#">Find Agents</a></li>
 
                     </ul>
                   </li>
                   <li><a href="us">Blog</a></li>
                   <li><a href="{% url 'home:about' %}">About</a></li>
                   <li><a href="{% url 'home:contact' %}">Contact</a></li>
-                <li><a href="{% url 'account:login' %}">Login</a></li>
+                
                 {% if request.user.is_authenticated %}
-                  <li><a href="{% url 'account:logout' %}">Logout</a></li>
-                {% endif %}
+                
+                 <li><a href=""><i class="fa fa-bell fa-lg"></i></a></li>
+<!--                   <li class="has-children">
+                    <a href="' %}"><i class="fa fa-bell fa-lg"></i><span style="color: red"><b></b></span></a>
+                    <ul class="dropdown">
+   
+                    
+                      <li><a href="#">Upgrade account</a></li>
+
+                    </ul>
+                  </li> -->
+
+                  <li class="has-children">
+                  <a href=""><i class="fa fa-user-circle-o fa-lg"></i></a>
+                  <ul class="dropdown">
+                  {% if request.user.user_category.category == "Seller"  %}
+                  <li><a href="{% url 'home:mypost' %}"><i class="fa fa-save"></i>My Post</a></li>
+                  {% endif %}
+                  <li><a href="#"><i class="fa fa-home"></i> My Property</a></li>
+                  <li><a href="#"><i class="fa fa-money"></i> My Finances</a></li>
+                  <li><a href="{% url 'account:profile' %}"><i class="fa fa-user"></i> My {{request.user.user_category.category}} Profile</a></li>
+                  <li><a href="#"><i class="fa fa-gear"></i> Account Settings</a></li>
+                  <li><a href="{% url 'account:logout' %}"> <i class="fa fa-sign-out"></i> Logout</a></li>
+
+                  </ul>
+                  </li>
+
+
+                  {% else %}
+                  <li><a href="{% url 'account:login' %}">Login</a></li>
                   <li><a href="{% url 'account:register' %}">Register</a></li>
+                {% endif %}
+
+                  
                 
                 </ul>
               </nav>
@@ -187,6 +226,8 @@
   <script src="{% static 'js/aos.js' %}"></script>
 
   <script src="{% static 'js/main.js' %}"></script>
+ 
+
     
   </body>
 </html>

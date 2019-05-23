@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 {% block body %}
 
+
+<link rel="stylesheet" href="{% static 'css/control.css' %}">
 
 
     <div class="intro-section" id="home-section" >
@@ -23,11 +26,33 @@
 
 <h1>{{msg}}</h1>
 <form method="post" enctype="multipart/form-data" action="{% url 'account:register' %}" style="margin-bottom: 100px;">{% csrf_token %}
+
+
+
+
+
 {{form|crispy}}
-<input class="btn btn-primary" type="submit" value="Register" name="">
+{{form2|crispy}}
+
+
+<!-- <div class="form-group" id="select_category_form" style="display: none;">
+ <label for="select_category" class="col-form-label">
+
+  Select Seller Category
+  </label>
+   <select name="seller_category" class="form-control" id="select_category"> 
+   <option value="" selected="">---------</option> 
+   <option value="Buyer">Individual</option> 
+   <option value="Seller">Agency</option>
+
+</select>
+</div> -->
+
+<input class="btn btn-primary" type="submit" value="Register" name="" id="register_button">
 
 
 </form>
+
 
 
 
@@ -46,4 +71,6 @@
           </div>
         </div>
       </div>
+
+ <script src="{% static 'js/control.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-12">
+  
+<div class="table-responsive">
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Post</th>
+        <th>Date Created</th>
+        <th>Status</th>
+        <th>Days Remaining</th>
+
+        <th>Edit</th>
+
+        <th>Delete</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in qs %}
+      <tr>
+        <td><a href="">Post</a></td>
+        <td>{{i.created}}</td>
+        <td>{% if i.active == False %} Not Active | <a href="">Pay to activate</a> {% else %} Active{% endif %}</td>
+        <td>Null</td>
+        <td><button class="btn btn-sm btn-primary">Edit</button></td>
+        <td><button class="btn btn-sm btn-primary">Delete</button></td>
+      </tr>
+
+    {% endfor %}
+
+    </tbody>
+  </table>
+  <p>For mobile screens, swipe left to view full table.</p>
+  </div>
+</div>
+  
+</div>
+  
+</div>
+{% endblock %}

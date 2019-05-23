@@ -1,6 +1,14 @@
 from django.contrib import admin
+from .models import Poster, PropertyType, Price
 
-from .models import Poster, Seeker
 
-admin.site.register(Poster)
-admin.site.register(Seeker)
+admin.site.register(PropertyType)
+admin.site.register(Price)
+
+
+
+
+class PosterAdmin(admin.ModelAdmin):
+	list_display = ['user','id', 'created', 'active']
+
+admin.site.register(Poster, PosterAdmin)
