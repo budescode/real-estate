@@ -9,6 +9,6 @@ admin.site.register(Price)
 
 
 class PosterAdmin(admin.ModelAdmin):
-	list_display = ['user','id', 'created', 'active']
+	list_display = ['user','id_user', 'created', 'active']
 
 admin.site.register(Poster, PosterAdmin)

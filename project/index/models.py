@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 
 
@@ -106,22 +107,23 @@ class Poster(models.Model):
 			('New', 'New'),
 			('Established', 'Established')
 		)
+	id_user = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	created = models.DateField(auto_now=True)
 	active = models.BooleanField(default=False)
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'userposts')
 	# days_left = models.PositiveIntegerField()
 	
 	address = models.CharField(max_length=1000)
-	Property_type = models.CharField(max_length=100, choices=PropertyTypeChoice)
+	Property_type = models.CharField(max_length=100, choices=PropertyTypeChoice, default='House')
 	Price = models.PositiveIntegerField()
 	image = models.ImageField()
-	Bedrooms = models.CharField(max_length=20, choices=bedrooms)
-	Bathrooms = models.CharField(max_length=10, choices = bathrooms)
-	Car_spaces = models.CharField(max_length=10, choices = car_spaces)
+	Bedrooms = models.CharField(max_length=20, choices=bedrooms, default='1')
+	Bathrooms = models.CharField(max_length=10, choices = bathrooms, default='1')
+	Car_spaces = models.CharField(max_length=10, choices = car_spaces, default='1')
 
 
 
-	new_or_established = models.CharField(max_length=20, choices=new_or_established)
+	new_or_established = models.CharField(max_length=20, choices=new_or_established, default='New')
 	Swimming_pool = models.BooleanField(default=False)
 	Garage = models.BooleanField(default=False)
 	Balcony = models.BooleanField(default=False)

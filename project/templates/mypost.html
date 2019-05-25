@@ -28,8 +28,8 @@
         <td>{{i.created}}</td>
         <td>{% if i.active == False %} Not Active | <a href="">Pay to activate</a> {% else %} Active{% endif %}</td>
         <td>Null</td>
-        <td><button class="btn btn-sm btn-primary">Edit</button></td>
-        <td><button class="btn btn-sm btn-primary">Delete</button></td>
+        <td><a href="{% url 'home:edit' i.id_user %}"><button class="btn btn-sm btn-primary">Edit</button></a></td>
+        <td><a href="{% url 'home:delete' i.id_user %}"><button class="btn btn-sm btn-primary">Delete</button></a></td>
       </tr>
 
     {% endfor %}

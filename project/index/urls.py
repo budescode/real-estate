@@ -11,6 +11,8 @@ urlpatterns = [
 	path('blog/', views.blog, name="blog" ),
 	path('sell/', views.post, name="post" ),
 	path('mypost/', views.Mypost, name="mypost" ),
+	path('delete/<slug:id>/', views.Delete, name="delete" ),
+	path('edit/<slug:id>/', views.Edit, name="edit" ),
 
 
 ]
