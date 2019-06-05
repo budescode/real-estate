@@ -1,0 +1,227 @@
+{% extends 'administrator/base.html' %}
+{% load staticfiles %}
+
+
+{% block body %}
+<body>
+  <section id="container">
+    <!-- **********************************************************************************************************************************************************
+        TOP BAR CONTENT & NOTIFICATIONS
+        *********************************************************************************************************************************************************** -->
+    <!--header start-->
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="index.html" class="logo"><b>ANA<span>ND</span></b></a>
+      <!--logo end-->
+      <div class="nav notify-row" id="top_menu">
+        <!--  notification start -->
+        <ul class="nav top-menu">
+   
+
+          <!-- notification dropdown start-->
+          <li id="header_notification_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-bell-o"></i>
+              <span class="badge bg-warning">7</span>
+              </a>
+            <ul class="dropdown-menu extended notification">
+              <div class="notify-arrow notify-arrow-yellow"></div>
+              <li>
+                <p class="yellow">You have 7 new notifications</p>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                  Server Overloaded.
+                  <span class="small italic">4 mins.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-warning"><i class="fa fa-bell"></i></span>
+                  Memory #2 Not Responding.
+                  <span class="small italic">30 mins.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                  Disk Space Reached 85%.
+                  <span class="small italic">2 hrs.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">
+                  <span class="label label-success"><i class="fa fa-plus"></i></span>
+                  New User Registered.
+                  <span class="small italic">3 hrs.</span>
+                  </a>
+              </li>
+              <li>
+                <a href="index.html#">See all notifications</a>
+              </li>
+            </ul>
+          </li>
+          <!-- notification dropdown end -->
+        </ul>
+        <!--  notification end -->
+      </div>
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="{% url 'account:logout' %}">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <!--header end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN SIDEBAR MENU
+        *********************************************************************************************************************************************************** -->
+    <!--sidebar start-->
+{% include 'administrator/sidebar.html' %}
+    <!--sidebar end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN CONTENT
+        *********************************************************************************************************************************************************** -->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-12 main-chart">
+            <!--CUSTOM CHART START -->
+            <div class="border-head">
+              <h3>STATICTICS</h3>
+            </div>
+            <div class="custom-bar-chart">
+              <ul class="y-axis">
+                <li><span>10000</span></li>
+                <li><span>8000</span></li>
+                <li><span>6000</span></li>
+                <li><span>4000</span></li>
+                <li><span>2000</span></li>
+                <li><span>0</span></li>
+              </ul>
+              <div class="bar">
+                <div class="title">ACTIVE USERS({{user_total_percentage}}%)</div>
+                <div class="value tooltips" data-original-title={{user_total}} data-toggle="tooltip" data-placement="top">{{user_total_percentage}}%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">ACTIVE POSTS({{post_active_total_percentage}}%)</div>
+                <div class="value tooltips" data-original-title="5000" data-toggle="tooltip" data-placement="top">{{post_active_total_percentage}}%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">DISABLED POSTS({{post_disabled_total_percentage}}%)</div>
+                <div class="value tooltips" data-original-title="6000" data-toggle="tooltip" data-placement="top">{{post_disabled_total_percentage}}%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">TOTAL POSTS({{total_post_percentage}}%)</div>
+                <div class="value tooltips" data-original-title="4500" data-toggle="tooltip" data-placement="top">{{total_post_percentage}}%</div>
+              </div>
+<!--               <div class="bar">
+                <div class="title">DISABLED POSTS</div>
+                <div class="value tooltips" data-original-title="3200" data-toggle="tooltip" data-placement="top">32%</div>
+              </div> -->
+  
+            </div>
+            <!--custom chart end-->
+            <div class="row mt">
+              <!-- SERVER STATUS PANELS -->
+              <div class="col-md-4 col-sm-4 mb">
+                <div class="grey-panel pn donut-chart">
+                  <div class="grey-header">
+                    <h5>TOTAL EARNINGS</h5>
+                  </div>
+                  <canvas id="serverstatus01" height="120" width="120"></canvas>
+                  <script>
+                    var doughnutData = [{
+                        value: 70,
+                        color: "#FF6B6B"
+                      },
+                      {
+                        value: 30,
+                        color: "#fdfdfd"
+                      }
+                    ];
+                    var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
+                  </script>
+                  <div class="row">
+                    <div class="col-sm-6 col-xs-6 goleft">
+                      <p>Usage Increase From Day1:</p>
+                    </div>
+                    <div class="col-sm-6 col-xs-6">
+                      <h2>21%</h2>
+                    </div>
+                  </div>
+                </div>
+                <!-- /grey-panel -->
+              </div>
+              <!-- /col-md-4-->
+
+              <div class="col-lg-4 col-md-4 col-sm-4 mb">
+                <div class="product-panel-2 pn">
+                  
+                  <img src="img/product.jpg" width="200" alt="">
+                  
+                  <h6>TOTAL SALES: </h6>
+                    <h6>ACTIVE USERS: {{user_total}}</h6>
+                    <h6>ACTIVE POSTS: {{post_active_total}}</h6>
+                    <h6>DISABLED POSTS: {{post_disabled_total}}</h6>
+                    <h6>TOTAL POSTS: {{total_post}}</h6>
+                  <button class="btn btn-small btn-theme04">FULL REPORT</button>
+                </div>
+              </div>
+              <!-- /col-md-4-->
+
+
+
+            <!--   <div class="col-md-4 mb"> -->
+                <!-- WHITE PANEL - TOP USER -->
+<!--                 <div class="white-panel pn">
+                  <div class="white-header">
+                    <h5>TOP USER</h5>
+                  </div>
+                  <p><img src="{% static 'administrator/img/fr-05.jpg' %}" class="img-circle" width="50"></p>
+                  <p><b>Zac Snider</b></p>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p class="small mt">MEMBER SINCE</p>
+                      <p>2012</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="small mt">TOTAL SPEND</p>
+                      <p>$ 47,60</p>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <!-- /col-md-4 -->
+            </div>
+            <!-- /row -->
+
+
+
+          </div>
+          <!-- /col-lg-9 END SECTION MIDDLE -->
+          <!-- **********************************************************************************************************************************************************
+              RIGHT SIDEBAR CONTENT
+              *********************************************************************************************************************************************************** -->
+
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+    <!--main content end-->
+
+  </section>
+  <!-- js placed at the end of the document so the pages load faster -->
+
+
+
+
+{% endblock body %}
+
+</body>
+
+</html>

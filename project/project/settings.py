@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'index',
     'account',
+    'administrator',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +66,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'project.processors.PosterContextProcessors',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -160,3 +162,5 @@ SOCIAL_AUTH_FACEBOOK_KEY = "608312729669552"        # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = "89191d63c6983f216d8c8aca9661086d"  # App Secret
 
 AUTH_PROFILE_MODULE = 'account.Profile'
+
+

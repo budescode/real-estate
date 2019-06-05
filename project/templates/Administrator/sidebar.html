@@ -1,0 +1,40 @@
+   {% load staticfiles %}
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion"> 
+          <p class="centered"><a href=""><img src="{% static 'administrator/img/fr-05.jpg' %}" class="img-circle" width="80"></a></p>
+          <h5 class="centered">{{request.user.username}}</h5>
+          <li class="mt">
+            <a class="" href="{% url 'administrator:administrator' %}">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+
+
+        <li class="mt">
+        <a class="" href="{% url 'home:home' %}">
+        <i class="fa fa-home"></i>
+        <span>Home</span>
+        </a>
+        </li>
+
+
+
+
+          <li>
+            <a href="{% url 'administrator:userposts' %}"">
+              <i class="fa fa-rss-square"></i>
+              <span>POSTS </span>
+
+              <span class="label label-theme pull-right mail-info">{{context_post}}</span>
+              </a>
+          </li>
+
+
+
+        </ul>
+        <!-- sidebar menu end-->
+      </div>
+    </aside>
