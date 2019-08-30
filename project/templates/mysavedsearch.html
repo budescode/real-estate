@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+		{% for i in qs %}
+			<div class="card" style="margin-top: 40px; margin-bottom: 40px;" id='div{{i.id_user}}'>
+				<div class="card-header">
+					{{i.user.username}}
+				</div>
+				<div class="card-body">
+					<img class="img-fluid img-thumbnail" src="{{i.image.url}}">
+				</div>
+				<div class="card-footer">
+				    <b>${{i.Price}}</b>
+				    <i class='fa fa-trash fa-lg' id='star{{i.id_user}}' style='cursor:pointer;float:right; cursor:pointer' onclick='deleteSearch("{{i.id_user}}")'></i>
+				    <p>{{i.street_name}} {{i.street_number}}</p>
+					<p>{{i.state}} {{i.suburb}}</p>
+					<p><i class="fa fa-bed"></i>{{i.Bedrooms}} <i class='fa fa-bath'></i>{{i.Bathrooms}} <i class="fa fa-car"></i>{{i.Car_spaces}}</p>
+				</div>
+			</div>
+		{% endfor %}
+
+		</div>
+	</div>
+</div>
+{% csrf_token %}
+<script>
+var url1 = 'http://anandrathi.pythonanywhere.com/'
+    function deleteSearch(e){
+        console.log(e)
+	var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+	var url = url1 +'deletesavesearch/'
+	let  formData = new FormData()
+	formData.append('post_id', e)
+
+
+	fetch(url,
+	{
+	body: new URLSearchParams(formData),
+	method: 'post',
+	headers:{
+	'X-CSRFTOKEN': token
+	}
+
+
+	}).then(res => res.json()).then(function(data) {
+        var post_id = '#div'+data.post_id
+        document.querySelector(post_id).remove()
+		console.log(data)
+
+
+
+	})
+
+    }
+</script>
+{% endblock %}

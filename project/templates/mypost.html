@@ -5,7 +5,7 @@
 <div class="container-fluid">
 <div class="row">
 <div class="col-md-12">
-  
+
 <div class="table-responsive">
 <table class="table table-bordered">
     <thead>
@@ -22,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for i in qs %}
+    {% for i in pagin %}
       <tr>
         <td><a href="">Post</a></td>
         <td>{{i.created}}</td>
@@ -37,10 +37,31 @@
     </tbody>
   </table>
   <p>For mobile screens, swipe left to view full table.</p>
+<div class="pagination">
+    <span class="step-links">
+        {% if pagin.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ pagin.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ pagin.number }} of {{ pagin.paginator.num_pages }}.
+        </span>
+
+        {% if pagin.has_next %}
+            <a href="?page={{ pagin.next_page_number }}">next</a>
+            <a href="?page={{ pagin.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+<!--end pagination div-->
+
+
+
   </div>
 </div>
-  
+
 </div>
-  
+
 </div>
 {% endblock %}

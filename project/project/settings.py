@@ -27,7 +27,7 @@ SECRET_KEY = '8^ddocc&9lq5$%h32fgt_j-7##0-o!h2vgh-!_j5u2wc3er0ih'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['anandrathi.pythonanywhere.com']
 
 
 # Application definition
@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'index',
     'account',
     'administrator',
+    'easy_maps',
+    'leaflet',
+
 ]
 
 MIDDLEWARE = [
@@ -85,10 +88,20 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'anandrathi$default',
+        'USER': 'anandrathi',
+        'PASSWORD': 'REO19&19',
+        'HOST': 'anandrathi.mysql.pythonanywhere-services.com',
     }
 }
 
@@ -139,11 +152,11 @@ AUTHENTICATION_BACKENDS = (
 )
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+#STATICFILES_DIRS = '/home/anandrathi/RE/real-estate/project/static'
+STATIC_ROOT = '/home/anandrathi/RE/real-estate/project/static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
+MEDIA_ROOT = '/home/anandrathi/RE/real-estate/project/media_cdn'
 CRISPY_TEMPLATE_PACK='bootstrap4'
 
 
@@ -164,3 +177,20 @@ SOCIAL_AUTH_FACEBOOK_SECRET = "89191d63c6983f216d8c8aca9661086d"  # App Secret
 AUTH_PROFILE_MODULE = 'account.Profile'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS=True
+
+EMAIL_HOST='smtp.gmail.com'
+
+EMAIL_HOST_USER='gospeltruth18@gmail.com'
+
+EMAIL_HOST_PASSWORD='bossess1'
+
+EMAIL_PORT=587
+
+DEFAULT_FROM_EMAIL = 'gospeltruth18@gmail.com'
+
+SERVER_EMAIL = 'gospeltruth18@gmail.com'
+
+EASY_MAPS_GOOGLE_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ___0123456789'

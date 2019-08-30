@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+    @media only screen and (max-width: 751px) {
+      #map {
+        height: 400px;
+      }
+    }
+    </style>
+<div class="container">
+	<div class="row">
+	    <div class='col-md-12'>
+<!--<form class="form-inline" action="/action_page.php">-->
+
+<!--<input type="text" class="form-control mb-2 mr-sm-2" id="email2" placeholder="NT DARWIN" name="email">-->
+<!--<select class="custom-select custom-select-sm mb-3">-->
+<!--<option selected>Small Custom Select Menu</option>-->
+<!--<option value="volvo">Volvo</option>-->
+<!--<option value="fiat">Fiat</option>-->
+<!--<option value="audi">Audi</option>-->
+<!--</select>-->
+<!--<select class="custom-select custom-select-sm mb-3">-->
+<!--<option selected>Small Custom Select Menu</option>-->
+<!--<option value="volvo">Volvo</option>-->
+<!--<option value="fiat">Fiat</option>-->
+<!--<option value="audi">Audi</option>-->
+<!--</select>-->
+<!--<select class="custom-select custom-select-sm mb-3">-->
+<!--<option selected>Small Custom Select Menu</option>-->
+<!--<option value="volvo">Volvo</option>-->
+<!--<option value="fiat">Fiat</option>-->
+<!--<option value="audi">Audi</option>-->
+<!--</select>-->
+<!--<select class="custom-select custom-select-sm mb-3">-->
+<!--<option selected>Small Custom Select Menu</option>-->
+<!--<option value="volvo">Volvo</option>-->
+<!--<option value="fiat">Fiat</option>-->
+<!--<option value="audi">Audi</option>-->
+<!--</select>-->
+
+<!--<button type="submit" class="btn btn-primary mb-2">Submit</button>-->
+<!--</form>-->
+	    </div>
+
+        <div class='col-md-4' >
+            <i class='fa fa-star fa-lg' id='star{{qs.id_user}}' style='float:right; cursor:pointer; {% ifequal data True %}color:orange;{% endifequal %}' onclick='StarSearch("{{qs.id_user}}")'></i><br>
+            {{qs.street_number}} {{qs.street_name}}, {{qs.suburb}} {{qs.state}} <br>
+        	<p><i class="fa fa-bed"></i> {{qs.Bedrooms}} <i class='fa fa-bath'></i> {{qs.Bathrooms}} <i class="fa fa-car"></i> {{qs.Car_spaces}} &nbsp;&nbsp;&nbsp; {{qs.Property_type}}</p>
+
+        	${{qs.Price}}<br>
+        	<p>{{qs.description}}</p>
+
+        </div>
+
+
+	    <div class='col-md-8'>
+
+	        <img src='https://www.pythonanywhere.com/user/anandrathi/files/home/anandrathi/RE/real-estate/project/media_cdn/banner.jpg' class='img-fluid'>
+
+	    </div>
+
+	 </div>
+	 <hr>
+
+	 <div class='row jumbotron'>
+
+        <div class='col-md-6' >
+        this is the map area
+        <div id="map"></div>
+        </div>
+
+
+	      <div class='col-md-6' >
+	          <h3>Send enquiry</h3>
+<form method='post' action=''>
+<div class="form-group">
+  <label for="usr">Name:</label>
+  <input type="text" class="form-control" id="usr">
+</div>
+<div class="form-group">
+  <label for="email">Email:</label>
+  <input type="email" class="form-control" id="email"
+</div>
+<div class="form-group">
+  <label for="mobile">Mobile:</label>
+  <input type="text" class="form-control" id="mobile">
+</div>
+
+<div class="form-group">
+  <label for="comment">Messsage:</label>
+  <textarea class="form-control" rows="5" id="comment"></textarea>
+</div>
+
+<input type='submit' value='Send Message' class='btn btn-primary'>
+</form>
+
+	      </div>
+
+
+	 </div>
+	 <!--end of col-sm-6-->
+
+
+
+
+</div>
+
+
+{% csrf_token %}
+
+
+    <script>
+      var geocoder;
+      var map;
+      var address = "{{qs.street_number}} {{qs.street_name}} {{qs.suburb}} {{qs.state}}";
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: {lat: -34.397, lng: 150.644}
+        });
+        geocoder = new google.maps.Geocoder();
+        codeAddress(geocoder, map);
+      }
+
+      function codeAddress(geocoder, map) {
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            map.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY
+&callback=initMap">
+    </script>
+
+<script>
+var url1 = 'http://anandrathi.pythonanywhere.com/'
+function StarSearch(e){
+        console.log(e)
+	var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+	var url = url1 +'savesearch/'
+	let  formData = new FormData()
+	formData.append('post_id', e)
+
+
+	fetch(url,
+	{
+	body: new URLSearchParams(formData),
+	method: 'post',
+	headers:{
+	'X-CSRFTOKEN': token
+	}
+
+
+	}).then(res => res.json()).then(function(data) {
+        var post_id = '#star'+data.post_id
+        if (data.msg == 'saved'){
+           document.querySelector(post_id).style.color = 'orange'
+        }
+        else if (data.msg == 'deleted'){
+           document.querySelector(post_id).style.color = 'grey'
+        }
+
+// 		console.log(data)
+
+
+
+	})
+
+    }
+</script>
+{% endblock %}

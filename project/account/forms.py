@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm, CharField
 from django.contrib.auth.hashers import make_password,is_password_usable,check_password
 import string
-import random 
+import random
 from django.forms import BaseModelFormSet
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
@@ -12,7 +12,7 @@ from django.contrib.auth.password_validation import MinimumLengthValidator, vali
 from django.shortcuts import render,redirect
 from datetime import *
 from django.http import HttpResponseRedirect, HttpResponse,QueryDict
-from .models import Profile, UserRegister
+from .models import Profile, UserRegister, PasswordResetEmail, ChangePassword, ChangePasswordCode
 
 
 
@@ -20,14 +20,14 @@ from .models import Profile, UserRegister
 
 
 
-	
+
 class RegisterForm(forms.Form):
     username = forms.CharField()
-    
+
     image = forms.FileField()
-    first_name = forms.CharField(widget=forms.TextInput( 
+    first_name = forms.CharField(widget=forms.TextInput(
         attrs={'class':'form-control', 'placeholder':'Enter First Name'}))
-    last_name = forms.CharField(widget=forms.TextInput( 
+    last_name = forms.CharField(widget=forms.TextInput(
         attrs={'class':'form-control', 'placeholder':'Enter Last Name'}))
     phone_number = forms.IntegerField()
     email    = forms.EmailField()
@@ -56,9 +56,9 @@ class RegisterForm(forms.Form):
         return email
 
 class LoginForm(forms.Form):
-    phone_number = forms.CharField(widget=forms.TextInput( 
+    phone_number = forms.CharField(widget=forms.TextInput(
         attrs={'class':'form-control', 'placeholder':'Enter username'}))
-    password = forms.CharField(widget=forms.PasswordInput( 
+    password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class':'form-control', 'placeholder':'Enter Password'}))
     # def clean(self, *args, **kwargs):
     #     username = self.cleaned_data.get("username")
@@ -76,15 +76,15 @@ class LoginForm(forms.Form):
 
 
 class CreateProfileForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput( 
+    password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class':'form-control', 'placeholder':'Enter Password'}))
     class Meta:
-        model = UserRegister 
+        model = UserRegister
         exclude = ['']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['phone_number'].widget.attrs.update({'value': '+910'})
-        
+
     def clean_phone_number(self):
         username = self.cleaned_data.get('phone_number')
 
@@ -109,3 +109,29 @@ class CategoryForm(forms.ModelForm):
         model = Profile
         exclude = ['user']
 
+
+class EmailPasswordReset(forms.ModelForm):
+    class Meta:
+        model = PasswordResetEmail
+        fields = ['email']
+        widgets = {
+            'email':forms.EmailInput(),
+        }
+
+
+class ChangePasswordCodeForm(forms.ModelForm):
+    class Meta:
+        model = ChangePasswordCode
+        fields = ['user_email']
+        widgets = {
+                    'user_email': forms.EmailInput(),
+        }
+
+class ChangePasswordForm(forms.ModelForm):
+    class Meta:
+        model = ChangePassword
+        fields = ['new_password', 'confirm_new_password']
+        widgets = {
+                    'new_password':forms.PasswordInput(),
+                    'confirm_new_password':forms.PasswordInput(),
+        }

@@ -39,19 +39,18 @@
 </div> -->
 
 
-<!-- 
-<div class="card card-body"><b>Become a memnber and enjoy unlimited ads for 90 days for $550</b> 
+<!--
+<div class="card card-body"><b>Become a memnber and enjoy unlimited ads for 90 days for $550</b>
 <button class="btn btn-primary">Get Started</button>
 </div>
 
-<div class="card card-body"><b>Post ads for 90 days for $150</b> 
+<div class="card card-body"><b>Post ads for 90 days for $150</b>
 <button class="btn btn-primary">Get Started</button>
 </div>
 
-<div class="card card-body"><b>Become a memnber and enjoy unlimited ads for 90 days for $550</b> 
+<div class="card card-body"><b>Become a memnber and enjoy unlimited ads for 90 days for $550</b>
 <button class="btn btn-primary">Get Started</button>
 </div> -->
-
 
             <form method="post" enctype='multipart/form-data'> {% csrf_token %}
 <div>
@@ -63,20 +62,59 @@
 {% endfor %}
 {% endif %}
 </div>
+
+
+<center><h3>Address Details</h3></center>
                 <div class="form-group row">
-                    <div class="col-sm-6">
-                        {{form.Property_type|as_crispy_field}}
+
+                    <div class="col-sm-3">
+                        {{form.unit|as_crispy_field}}
                     </div>
-                    <div class="col-sm-6">
-                        {{form.address|as_crispy_field}}
+                    <div class="col-sm-3">
+                        {{form.street_number|as_crispy_field}}
                     </div>
-                 
+                    <div class="col-sm-3">
+                        {{form.street_name|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.suburb|as_crispy_field}}
+                    </div>
+
 
                 </div>
+
                 <div class="form-group row">
-                    <div class="col-sm-6">
+
+                <div class="col-sm-3">
+                {{form.postcode|as_crispy_field}}
+                </div>
+                <div class="col-sm-3">
+                {{form.state|as_crispy_field}}
+                </div>
+                <div class="col-sm-3">
+                {{form.land_size|as_crispy_field}}
+                </div>
+
+
+
+
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                {{form.description|as_crispy_field}}
+                </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-3">
                          {{form.Price|as_crispy_field}}
                     </div>
+                    <div class="col-sm-3">
+                        {{form.Property_type|as_crispy_field}}
+                    </div>
+
                     <div class="col-sm-3">
                          {{form.Bedrooms|as_crispy_field}}
                     </div>
@@ -88,7 +126,7 @@
 
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-3">
                          {{form.Car_spaces|as_crispy_field}}
                     </div>
                     <div class="col-sm-3">
@@ -97,8 +135,93 @@
                     <div class="col-sm-3">
                         {{form.image|as_crispy_field}}
                     </div>
+                    <div class="col-sm-3">
+                        {{form.plan|as_crispy_field}}
+                    </div>
+                </div>
+<hr>
+
+
+
+               <h4><center>Additional Images(Optional) </center></h4>
+
+
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                         {{form.image1|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image2|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image3|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image4|as_crispy_field}}
+                    </div>
                 </div>
 
+
+               <div class="form-group row">
+                    <div class="col-sm-3">
+                         {{form.image5|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image6|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image7|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image8|as_crispy_field}}
+                    </div>
+                </div>
+
+
+               <div class="form-group row">
+                    <div class="col-sm-3">
+                         {{form.image9|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image10|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image11|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image12|as_crispy_field}}
+                    </div>
+                </div>
+
+
+               <div class="form-group row">
+                    <div class="col-sm-3">
+                         {{form.image13|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image14|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image15|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image16|as_crispy_field}}
+                    </div>
+                </div>
+
+ <div class="form-group row">
+                    <div class="col-sm-3">
+                         {{form.image17|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form.image18|as_crispy_field}}
+                    </div>
+
+                </div>
+
+
+
+<hr>
                 <h4><center>Additional Informations</center></h4>
 
 
@@ -194,7 +317,7 @@
                     <div class="col-sm-2">
                        {{form.Solar_hot_water|as_crispy_field}}
                     </div>
-               
+
 
 
                 </div>
@@ -207,6 +330,10 @@
 
                 <button type="Submit" class="btn btn-primary px-4 float-right">Submit</button>
             </form>
+
+
+
+
         </div>
     </div>
 </div>

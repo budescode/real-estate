@@ -1,599 +1,1076 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% block navbar %}
+
+<style>
+  .span4 img {
+    margin-right: 10px;
+}
+.span4 .img-left {
+    float: left;
+}
+
+.wrap {
+  display: flex;
+}
+
+/*label {*/
+/*  display: inline-block;*/
+/*}*/
+</style>
+
+
+
+
+
+
+
+<div class="container-fluid" style="background-image: url(../static/images/background8.jpg); height: 550px;">
+  <div class="row" style="">
+
+
+<div class="container-fluid">
+
+
+
+
+
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div> <!-- .site-mobile-menu -->
+
+    <div class="bd-transparent top-bar">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-6 col-md-6">
+            <p class="mb-0">
+              <a href="#" class="mr-3"><span class="text-black fl-bigmug-line-phone351"></span> <span class="d-none d-md-inline-block ml-2">+2349032841265</span></a>
+              <a href="#"><span class="text-black fl-bigmug-line-email64"></span> <span class="d-none d-md-inline-block ml-2">gospeltruth18@gmail.com</span></a>
+            </p>
+          </div>
+          <div class="col-6 col-md-6 text-right">
+            <a href="#" class="mr-3"><span class="text-black icon-facebook"></span></a>
+            <a href="#" class="mr-3"><span class="text-black icon-twitter"></span></a>
+            <a href="#" class="mr-0"><span class="text-black icon-linkedin"></span></a>
+            <a href="#" class="mr-0"><span class="">{{request.user.username}}</span></a>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="site-navbar " style="background-color: rgba(0,0,0,0); border-top-color: rgba(0,0,0,0); color: white;">
+        <div class="container-fluid py-1">
+          <div class="row align-items-center ">
+            <div class="col-8 col-md-8 col-lg-4 bd-transparent">
+              <h1 class=""><a href="{% url 'home:home' %}" class="h5 text-uppercase text-black"><strong style="color: white;">Anand<span class="text-danger">.</span></strong></a></h1>
+            </div>
+            <div class="col-4 col-md-4 col-lg-8">
+              <nav class="site-navigation text-right text-md-right " role="navigation">
+
+                <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3" style="color: white;"></span></a></div>
+
+                <ul class="site-menu js-clone-nav d-none d-lg-block" style="color: white;">
+                  <li class="active">
+
+                    <a href="{% url 'home:home' %}">Home</a>
+                  </li>
+
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                    <span style="color: orange">Properties</span>
+                    </a>
+                    <div class="dropdown-menu">
+                  {% if request.user.user_category.category == "Seller"  %}
+                      <a href="{% url 'home:post' %}" class="dropdown-item"  >Sell</a>
+                      {% endif %}
+                      <a href="#" class="dropdown-item" >Buy</a>
+
+                      <a href="#" class="dropdown-item" >Find Agents</a>
+
+                    </div>
+                    </li>
+
+                  <!--<li class="has-children">-->
+                  <!--  <a href="" style="color: orange;">Properties</a>-->
+                  <!--  <ul class="dropdown">-->
+
+                  <!--    {% if request.user.user_category.category == "Seller"  %}-->
+                  <!--    <li ><a href="{% url 'home:post' %}" >Sell</a></li>-->
+                  <!--    {% endif %}-->
+                  <!--    <li><a href="#">Buy</a></li>-->
+
+                  <!--    <li><a href="#">Find Agents</a></li>-->
+
+                  <!--  </ul>-->
+                  <!--</li>-->
+
+
+                  <li ><a href="" style="color: orange;">Blog</a></li>
+                  <li><a href="{% url 'home:about' %}" style="color: orange;">About</a></li>
+                  <li><a href="{% url 'home:contact' %}" style="color: orange;">Contact</a></li>
+
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                <span style="color: orange">{{request.user.username}}</span> <i class="fa fa-user-o" style="color: orange;"></i>
+                </a>
+                <div class="dropdown-menu">
+                {% if request.user.user_category.category == "Seller"  %}
+                <a class="dropdown-item" href="{% url 'home:mypost' %}"><i class="fa fa-save"></i> My Post</a>
+                {% endif %}
+
+                <!--<a href="#" class="dropdown-item"><i class="fa fa-home"></i> My Property</a>-->
+                <a href="{% url 'home:mysavedsearch' %}" class="dropdown-item"><i class="fa fa-home"></i> My Saved Items</a>
+                <!--<a href="#" class="dropdown-item"><i class="fa fa-money"></i> My Finances</a>-->
+                <a href="{% url 'account:profile' %}" class="dropdown-item"><i class="fa fa-user"></i> My {{request.user.user_category.category}} Profile</a>
+
+                <a class="dropdown-item" href="#"><i class="fa fa-gear"></i> Account Settings</a>
+                <a class="dropdown-item" href="{% url 'account:logout' %}"> <i class="fa fa-sign-out"></i> Logout</a>
+                <a class="dropdown-item" href="{% url 'account:change_password' %}"> <i class="fa fa-key"></i> Change Password</a>
+
+                </div>
+                </li>
+
+                 <li><a href=""><i class="fa fa-bell fa-lg" style="color: orange;"></i></a></li>
+<!--                   <li class="has-children">
+                    <a href="' %}"><i class="fa fa-bell fa-lg"></i><span style="color: red"><b></b></span></a>
+                    <ul class="dropdown">
+
+
+                      <li><a href="#">Upgrade account</a></li>
+
+                    </ul>
+                  </li> -->
+
+
+
+                  {% else %}
+                  <li><a href="{% url 'account:login' %}">Login</a></li>
+                  <li><a href="{% url 'account:register' %}">Register</a></li>
+                {% endif %}
+
+
+
+                </ul>
+              </nav>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<!-- container -->
+
+
+
+
+  </div>
+
+
+
+
+  <div class="row">
+  <div class="col-md-12">
+    <div class="jumbotron" style="background-color: rgba(0,0,0,.5); color: white;">
+  <h3>Search properties for sale</h3>
+  <nav class="nav nav-tabs" style="border-bottom-color: black;">
+    <a href="#" class="nav-item nav-link active" style="background-color: orange; border-color: black; color: white;" id='buy' onclick='ChangeCategoryBuy()'>
+        Buy
+    </a>
+    <a href="#" class="nav-item nav-link"  onclick='ChangeCategoryRent(this.id)' id='rent'>
+       Rent
+    </a>
+    <!--<a href="#" class="nav-item nav-link">-->
+    <!--   </i> Sold-->
+    <!--</a>-->
+
+  </nav>
+
+
+
+
+<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+<div class='row'>
+    <div class='col-md-9'>
+        <div id="searchitem" style="display: none;">
+
+</div>
+<input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
+<input type="text" name="category" id="category" style="display: none;" value="Poster">
+
+<input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
+<input type="text" name="bedmin1" id="bedmin1" style="display: none;" value="Bed (min)">
+<input type="text" name="bedmax1" id="bedmax1" style="display: none;" value="Bed (max)">
+<input type="text" name="pricemax1" id="pricemax1" style="display: none;" value="Price (max)">
+<input type="text" name="pricemin1" id="pricemin1" style="display: none;" value="Price (min)">
+
+    </div>
+</div>
+<div class="form-group row">
+<div class="col-sm-2" style='margin-top:.4em;margin-left:-1em;'>
+  <select class="form-control post_max m-b" id='state' name='state' onchange='stateChange()' >
+    <option value="ACT">ACT</option>
+    <option value="NSW">NSW</option>
+    <option value="NT">NT</option>
+    <option value="SA">SA</option>
+    <option value="QLD">QLD</option>
+    <option value="TAS">TAS</option>
+    <option value="VIC">VIC</option>
+    <option value="WA">WA</option>
+
+  </select>
+
+
+</div>
+<div class='col-md-8'>
+    <input type="text" oninput="InputChange()" id='search' placeholder="  search by state, studio or postcode" class="form-control-plaintext form-control-lg" style="margin-left:-1.2em;background-color: rgba(255,255,255, 0.9); margin-top: 5px;">
+
+</div>
+<div class="col-sm-2" style='margin-top:.4em;margin-left:-2.8em;'>
+
+  <input type="submit" value="Submit" class="btn btn-default" style='background-color:orange; height:2.8em'>
+
+</div>
+
+</div>
+<div class="btn-group" style="">
+    <span class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-top:-1px;font-size:12px;background-color: rgba(0,0,0,0); color: orange; border-color: rgba(0,0,0,0);">
+       Property type
+    </span>
+
+      <div class="dropdown-menu" style="height: 220px; width: 190px; overflow-x: hidden; overflow-x: auto;">
+      <form>
+
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="All" name="propertycheck" value="All property types" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">All property types</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="House" name="propertycheck" value="House" onclick='changePropertyType(this.id)' >
+        <label class="form-check-label" for="all"> House</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Apartment" name="propertycheck" value="Apartment & Unit" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all"> Apartment & Unit</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Town" name="propertycheck" value="Town House" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">Town House</label>
+      </div>
+<div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Villa" name="propertycheck" value="Villa" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">Villa</label>
+      </div>
+
+<div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Land" name="propertycheck" value="Land" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">Land</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Acreage" name="propertycheck" value="Acreage" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all"> Acreage</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Rural" name="propertycheck" value="Rural" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all"> Rural</label>
+      </div>
+      <div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Block" name="propertycheck" value="Block Of Units" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">Block Of Units</label>
+      </div>
+<div class="form-check dropdown-item">
+        <input type="checkbox" class="form-check-input" id="Retirement" name="propertycheck" value="Retirement Living" onclick='changePropertyType(this.id)'>
+        <label class="form-check-label" for="all">Retirement Living</label>
+      </div>
+
+      </form>
+    </div>
+
+<div class='col-md-12'>
+
+
+
+
+    <div class='form-inline'>
+
+<select name='Price(min)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
+<option selected>Price (min)</option>
+<option>Any </option>
+<option>$50,000 </option>
+<option>$75,000</option>
+<option>$100,000</option>
+<option>$125,000</option>
+<option>$150,000</option>
+<option>$175,000</option>
+<option>$200,000</option>
+<option>$225,000</option>
+<option>$250,000</option>
+<option>$275,000</option>
+<option>$300,000</option>
+<option>$325,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$375,000</option>
+<option>$400,000</option>
+<option>$425,000</option>
+<option>$450,000</option>
+<option>$475,000</option>
+<option>$500,000</option>
+<option>$550,000</option>
+<option>$600,000</option>
+<option>$650,000</option>
+<option>$700,000</option>
+<option>$750,000</option>
+<option>$800,000</option>
+<option>$850,000</option>
+<option>$900,000</option>
+<option>$950,000</option>
+<option>$1,000,000</option>
+<option>$1,100,000</option>
+<option>$1,200,000</option>
+<option>$1,300,000</option>
+<option>$1,400,000</option>
+<option>$1,500,000</option>
+<option>$1,600,000</option>
+<option>$1,700,000</option>
+<option>$1,800,000</option>
+<option>$1,900,000</option>
+<option>$2,000,000</option>
+<option>$2,250,000</option>
+<option>$2,500,000</option>
+<option>$2,750,000</option>
+<option>$3,000,000</option>
+<option>$3,500,000</option>
+<option>$4,000,000</option>
+<option>$4,500,000</option>
+<option>$5,000,000 </option>
+<option>$7,000,000</option>
+<option>$8,000,000</option>
+<option>$9,000,000</option>
+<option>$10,000,000</option>
+<option>$12,000,000</option>
+<option>$15,000,000</option>
+
+</select>
+<select name='Price(max)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
+<option selected>Price (max)</option>
+<option>Any</option>
+<option>$50,000 </option>
+<option>$75,000</option>
+<option>$100,000</option>
+<option>$125,000</option>
+<option>$150,000</option>
+<option>$175,000</option>
+<option>$200,000</option>
+<option>$225,000</option>
+<option>$250,000</option>
+<option>$275,000</option>
+<option>$300,000</option>
+<option>$325,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$375,000</option>
+<option>$400,000</option>
+<option>$425,000</option>
+<option>$450,000</option>
+<option>$475,000</option>
+<option>$500,000</option>
+<option>$550,000</option>
+<option>$600,000</option>
+<option>$650,000</option>
+<option>$700,000</option>
+<option>$750,000</option>
+<option>$800,000</option>
+<option>$850,000</option>
+<option>$900,000</option>
+<option>$950,000</option>
+<option>$1,000,000</option>
+<option>$1,100,000</option>
+<option>$1,200,000</option>
+<option>$1,300,000</option>
+<option>$1,400,000</option>
+<option>$1,500,000</option>
+<option>$1,600,000</option>
+<option>$1,700,000</option>
+<option>$1,800,000</option>
+<option>$1,900,000</option>
+<option>$2,000,000</option>
+<option>$2,250,000</option>
+<option>$2,500,000</option>
+<option>$2,750,000</option>
+<option>$3,000,000</option>
+<option>$3,500,000</option>
+<option>$4,000,000</option>
+<option>$4,500,000</option>
+<option>$5,000,000 </option>
+<option>$7,000,000</option>
+<option>$8,000,000</option>
+<option>$9,000,000</option>
+<option>$10,000,000</option>
+<option>$12,000,000</option>
+<option>$15,000,000</option>
+
+</select>
+
+<select name='Bed(min)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
+<option selected>Bed (min)</option>
+<option>Any</option>
+<option>Studio</option>
+<option>1 Bed</option>
+<option>2 Beds</option>
+<option>3 Beds</option>
+<option>4 Beds</option>
+<option>5 Beds</option>
+</select>
+
+<select name='Bed(max)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
+<option selected>Bed (max)</option>
+<option>Any</option>
+<option>Studio</option>
+<option>1 Bed</option>
+<option>2 Beds</option>
+<option>3 Beds</option>
+<option>4 Beds</option>
+<option>5 Beds</option>
+</select>
+
+
+
+    </div>
+</div>
+</div>
+</form>
+
+
+
+
+<p>
+
+
+
+
+
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</p>
+
+
+
+</div>
+  </div>
+  </div>
+
+</div>
+
+
+
+
+
+<script>
+propertylist=[]
+function changePropertyType(e){
+<!--console.log(e)-->
+var id = '#'+e
+var qs =document.querySelector(id)
+var a = propertylist.indexOf(qs.value);
+
+if (qs.checked==false){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = false
+
+        document.querySelector('#Apartment').checked = false
+
+        document.querySelector('#Town').checked = false
+
+        document.querySelector('#Villa').checked = false
+
+        document.querySelector('#Land').checked = false
+
+        document.querySelector('#Acreage').checked = false
+
+        document.querySelector('#Rural').checked = false
+
+        document.querySelector('#Retirement').checked = false
+
+        document.querySelector('#Block').checked = false
+        propertylist = []
+        console.log(propertylist)
+
+
+    }}
+
+if (qs.checked==true){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = true
+        propertylist.push(document.querySelector('#House').value)
+        document.querySelector('#Apartment').checked = true
+        propertylist.push(document.querySelector('#Apartment').value)
+        document.querySelector('#Town').checked = true
+        propertylist.push(document.querySelector('#Town').value)
+        document.querySelector('#Villa').checked = true
+        propertylist.push(document.querySelector('#Villa').value)
+        document.querySelector('#Land').checked = true
+        propertylist.push(document.querySelector('#Land').value)
+        document.querySelector('#Acreage').checked = true
+        propertylist.push(document.querySelector('#Acreage').value)
+        document.querySelector('#Rural').checked = true
+        propertylist.push(document.querySelector('#Rural').value)
+        document.querySelector('#Retirement').checked = true
+        propertylist.push(document.querySelector('#Retirement').value)
+        document.querySelector('#Block').checked = true
+        propertylist.push(document.querySelector('#Block').value)
+         }
+
+
+if (a==-1){
+
+propertylist.push(qs.value)
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value = propertylist
+console.log(propertytype1.value)
+} //if a==-1
+
+
+else{
+
+propertylist.splice(a, 1);
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value= propertylist
+console.log(propertytype1.value)
+
+}//else
+}// if qs
+
+
+else{
+    // console.log('nahhhh')
+    propertylist.splice(a, 1);
+    var propertytype1 = document.querySelector('#propertytype1')
+    propertytype1.value= propertylist
+    console.log(propertytype1.value)
+}
+
+} //function
+
+
+
+
+var categorylist = ['buy']
+// this list is to select the category, weather buy or rent
+
+// this function is to select the category, weather buy or rent
+function ChangeCategoryBuy(e){
+    var element = document.querySelector('#buy')
+    var element2 = document.querySelector('#rent')
+
+
+    element.style.backgroundColor =  'orange'
+    element.style.borderColor =  'black'
+    element.style.color =  'white'
+
+    element2.style.backgroundColor =  ''
+    element2.style.borderColor =  ''
+    element2.style.color =  'orange'
+
+    document.querySelector('#category').value = 'Poster'
+    console.log(document.querySelector('#category').value)
+}
+
+// this function is to select the category, weather buy or rent
+function ChangeCategoryRent(e){
+console.log(e)
+    var element = document.querySelector('#rent')
+    var element2 = document.querySelector('#buy')
+
+    element.style.backgroundColor =  'orange'
+    element.style.borderColor =  'black'
+    element.style.color =  'white'
+
+    element2.style.backgroundColor =  'black'
+    element2.style.borderColor =  'black'
+    element2.style.color =  'orange'
+    document.querySelector('#category').value = 'PosterRent'
+   console.log(document.querySelector('#category').value)
+}
+
+
+var searchlist = []
+// this will take the least of items to be searched
+
+var list1 = []
+{% for i in qs %}
+list1.push('{{i.suburb}}' + ' ' + '{{i.postcode}}' + ' ' + '{{i.state}}')
+{% endfor %}
+
+var list2 = []
+{% for i in qs %}
+list2.push('{{i.state}}' + ' ' + '{{i.suburb}}' + ' ' + '{{i.postcode}}')
+{% endfor %}
+console.log(list1)
+
+
+
+
+
+function stateChange(){
+    list=[]
+    var e = document.getElementById("state");
+    var state = e.options[e.selectedIndex].text;
+    for(i=0; i<list2.length; i++){
+    if(list2[i].includes(state)){
+    list1.push(list2[i])
+
+    }
+    else{
+        console.log('mahhh')
+    }
+
+}
+console.log('list isss', list2)
+
+}
+function global(){
+    console.log(list1,'okayy')
+}
+
+
+
+
+
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+    document.querySelector("#searchitem").style.display = 'block'
+    var inputedvalue = document.querySelector("#search").value
+    if (inputedvalue){
+    var searchitem = document.querySelector("#searchitem")
+    var inputedvalue = document.querySelector("#search").value
+    var spanelement = document.createElement("span");
+    var length = searchlist.length
+    spanelement.setAttribute("class", "badge badge-primary badge-lg");
+    spanelement.setAttribute("id", 'itemid'+length);
+    spanelement.style.marginLeft = '3px';
+    spanelement.style.marginRight = '3px';
+
+    spanelement.addEventListener('click',
+    function(){
+    var id = this.innerHTML.slice(0,-2)
+    var index = searchlist.indexOf(id)
+    searchlist.splice( index, 1 );
+    // console.log(id, index, searchlist)
+    this.remove()
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+    //console.log(propertytype1)
+    }
+
+    )
+
+    var testnode = document.createTextNode(inputedvalue)
+    var cancel = document.createTextNode(' X')
+
+
+    spanelement.appendChild(testnode)
+    spanelement.appendChild(cancel)
+
+
+    // console.log(spanelement)
+
+    searchitem.appendChild(spanelement)
+    searchlist[length] = spanelement.innerHTML
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+  //console.log(propertytype1)
+
+    inputedvalue = document.querySelector("#search").value = ''
+    }
+
+    // console.log(inputedvalue)
+      closeAllLists(e.target);
+
+  });
+}
+// end of auto complete function
+
+/*An array containing all the country names in the world:*/
+var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+// var countries = [
+
+// console.log(countries)
+
+
+
+
+
+// this function is used to check when semicolon has been added  to the search input as it enables multiple search
+function InputChange(){
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+autocomplete(document.getElementById("search"), list1);
+  document.querySelector("#searchitem").style.display = 'block';
+  var searchitem = document.querySelector("#search").value
+  if (searchitem.includes(";")){
+    console.log("ok")
+
+
+    var inputedvalue = document.querySelector("#search").value
+
+
+    if (inputedvalue){
+    var length = searchlist.length
+    var searchitem = document.querySelector("#searchitem")
+    inputedvalue = inputedvalue.slice(0, -1);
+    var spanelement = document.createElement("span");
+    spanelement.setAttribute("class", "badge badge-primary");
+    // var addlength =  length
+    spanelement.setAttribute("id", 'itemid'+length);
+
+
+
+    spanelement.style.marginLeft = '3px';
+    spanelement.style.marginRight = '3px';
+    spanelement.addEventListener('click',
+    function(){
+    var id = this.innerHTML.slice(0,-2)
+
+    // var element = document.querySelector(id);
+
+
+    var index = searchlist.indexOf(id)
+    searchlist.splice( index, 1 );
+    // var propertyarray = []
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    // var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+
+    this.remove()
+
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+    // console.log(propertyarray)
+    })
+
+    var testnode = document.createTextNode(inputedvalue)
+    var cancel = document.createTextNode(' X')
+    spanelement.appendChild(testnode)
+    spanelement.appendChild(cancel)
+    searchitem.appendChild(spanelement)
+    searchlist[length] = spanelement.innerHTML
+    // console.log(searchlist)
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+    var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+    // var bedmin1 = document.querySelector("#bedmin1").value = document.querySelector(".bedmin").innerHTML.trim().slice(0, 1);
+    // var bedmax1 = document.querySelector("#bedmax1").value = document.querySelector(".bedmax").innerHTML.trim().slice(0, 1);
+    // var pricemin1 = document.querySelector("#pricemin1").value = document.querySelector(".pricemin").innerHTML
+    // var pricemax1 = document.querySelector("#pricemax1").value = document.querySelector(".pricemax").innerHTML
+    // console.log(bedmin1)
+    inputedvalue = document.querySelector("#search").value = ''
+    }
+
+
+  }
+
+}
+// endof inputchange function
+
+
+
+
+function changebedmax(e){
+
+// console.log(e)
+
+document.querySelector(".bedmax").innerHTML = e
+document.querySelector("#bedmax1").value = e.trim().slice(0, 1);
+
+
+
+var bedmin =  document.querySelector(".bedmin").innerHTML
+document.querySelector("#bedmin1").value = bedmin.trim().slice(0, 1);
+
+var pricemin =  document.querySelector(".pricemin").innerHTML
+document.querySelector("#pricemin1").value = pricemin
+
+var pricemax =  document.querySelector(".pricemax").innerHTML
+document.querySelector("#pricemax1").value = pricemax
+
+console.log(document.querySelector("#bedmin1").value, document.querySelector("#bedmax1").value, document.querySelector("#pricemin1").value, document.querySelector("#pricemax1").value)
+}
+function changebedmin(e){
+
+document.querySelector(".bedmin").innerHTML = e
+document.querySelector("#bedmin1").value = e.trim().slice(0, 1);
+
+var bedmax =  document.querySelector(".bedmax").innerHTML
+document.querySelector("#bedmax1").value = bedmax.trim().slice(0, 1);
+
+var pricemin =  document.querySelector(".pricemin").innerHTML
+document.querySelector("#pricemin1").value = pricemin
+
+var pricemax =  document.querySelector(".pricemax").innerHTML
+document.querySelector("#pricemax1").value = pricemax
+
+console.log(document.querySelector("#bedmin1").value, document.querySelector("#bedmax1").value, document.querySelector("#pricemin1").value, document.querySelector("#pricemax1").value)
+
+}
+function priceMin(e){
+document.querySelector(".pricemin").innerHTML = e
+document.querySelector("#pricemin1").value = e
+
+
+
+
+var bedmin =  document.querySelector(".bedmin").innerHTML
+document.querySelector("#bedmin1").value = bedmin.trim().slice(0, 1);
+
+var pricemax =  document.querySelector(".pricemax").innerHTML
+document.querySelector("#pricemax1").value = pricemax
+
+var bedmax =  document.querySelector(".bedmax").innerHTML
+document.querySelector("#bedmax1").value = bedmax.trim().slice(0, 1);
+
+console.log(document.querySelector("#bedmin1").value, document.querySelector("#bedmax1").value, document.querySelector("#pricemin1").value, document.querySelector("#pricemax1").value)
+
+}
+function priceMax(e){
+document.querySelector(".pricemax").innerHTML = e
+document.querySelector("#pricemax1").value = e
+
+var bedmax =  document.querySelector(".bedmax").innerHTML
+document.querySelector("#bedmax1").value = bedmax.trim().slice(0, 1);
+
+var pricemin =  document.querySelector(".pricemin").innerHTML
+document.querySelector("#pricemin1").value = pricemin
+
+var bedmin =  document.querySelector(".bedmin").innerHTML
+document.querySelector("#bedmin1").value = bedmin.trim().slice(0, 1);
+console.log(document.querySelector("#bedmin1").value, document.querySelector("#bedmax1").value, document.querySelector("#pricemin1").value, document.querySelector("#pricemax1").value)
+
+
+
+}
+
+
+</script>
+
+{% endblock navbar %}
+
+
 
 {% block body %}
+<div class="container" style="margin-top: 50px;">
+  <div class="row">
+    <div class="col-md-12">
+<h2>Latest Property News</h2>
+
+<div class="block">
 
 
-    <div class="slide-one-item home-slider owl-carousel">
+<div class="row">
 
-      <div class="site-blocks-cover" style="background-image: url(../static/images/broke.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+<div class="col-sm-4">
+<img class="img-left img-thumbnail" src="../static/images/background8.jpg" style="height: 200px; widows: 200px;" />
+</div>
 
-        <div class="text">
-          <h2>Some text here</h2>
-          <p class="location"><span class="property-icon icon-room"></span>Some random text here</p>
-          <p class="mb-2"><strong>somr text here</strong></p>
-          
-          
-          <p class="mb-0"><a href="#" class="text-uppercase small letter-spacing-1 font-weight-bold">More Details</a></p>
-          
-          
-          <p class="mb-0"><a href="#" class="text-uppercase small letter-spacing-1 font-weight-bold">More Details</a></p>
-          
-        </div>
-      </div>  
+<div class="col-sm-6">
+<h5 style="font-family: Baufra;">5 STEPS TO ENSURE YOUR HOME IS A GOOD BUY &nbsp </h5>
+<p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.<br>
+Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+</div>
 
-      <div class="site-blocks-cover" style="background-image: url(../static/images/hero_bg_3.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
+</div>
+<!-- row -->
 
-        <div class="text">
-          <h2>Some text here</h2>
-          <p class="location"><span class="property-icon icon-room"></span>Some random text here</p>
-          <p class="mb-2"><strong>somr text here</strong></p>
-          
-          
-          <p class="mb-0"><a href="#" class="text-uppercase small letter-spacing-1 font-weight-bold">More Details</a></p>
-          
-        </div>
-        
-      </div>  
+<div class="row">
 
-    </div>
+<div class="col-sm-4">
+<img class="img-left img-thumbnail" src="../static/images/background8.jpg" style="height: 200px; widows: 200px;" />
+</div>
 
-    <div class="py-5">
-      <div class="container">
-        <form class="row mb-5">
-          
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Lot Area</option>
-                <option value="1000">1000</option>
-                <option value="800">800</option>
-                <option value="600">600</option>
-                <option value="400">400</option>
-                <option value="200">200</option>
-                <option value="100">100</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Property Status</option>
-                <option value="For Sale">For Sale</option>
-                <option value="For Rent">For Rent</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Location</option>
-                <option value="United States">United States</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="Canada">Canada</option>
-                <option value="Belgium">Belgium</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Lot Area</option>
-                <option value="1000">1000</option>
-                <option value="800">800</option>
-                <option value="600">600</option>
-                <option value="400">400</option>
-                <option value="200">200</option>
-                <option value="100">100</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Bedrooms</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5+">5+</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">Bathrooms</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5+">5+</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="mb-4">
-              <div id="slider-range" class="border-primary"></div>
-              <input type="text" name="text" id="amount" class="form-control border-0 pl-0 bg-white" disabled="" />
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <input type="submit" class="btn btn-primary btn-block form-control-same-height rounded-0" value="Search">
-          </div>
-          
-        </form>
+<div class="col-sm-6">
+<h5 style="font-family: Baufra;">5 STEPS TO ENSURE YOUR HOME IS A GOOD BUY &nbsp </h5>
+<p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.<br>
+Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+</div>
 
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
-            <div class="feature d-flex align-items-start">
-              <span class="icon mr-3 flaticon-house"></span>
-              <div class="text">
-                <h2 class="mt-0">Wide Range of Properties</h2>
-                <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
-            <div class="feature d-flex align-items-start">
-              <span class="icon mr-3 flaticon-rent"></span>
-              <div class="text">
-                <h2 class="mt-0">Rent or Sale</h2>
-                <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-3 mb-lg-0">
-            <div class="feature d-flex align-items-start">
-              <span class="icon mr-3 flaticon-location"></span>
-              <div class="text">
-                <h2 class="mt-0">Property Location</h2>
-                <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="site-section site-section-sm bg-light">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-12">
-            <div class="site-section-title">
-              <h2>New Properties for You</h2>
-            </div>
-          </div>
-        </div>
-        <div class="row mb-5">
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_1.jpg' %}" alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$1,930,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_2.jpg' %}" alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$2,438,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_3.jpg' %}" alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$5,320,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+</div>
+<!-- row -->
 
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_4.jpg' %}" alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$2,350,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_5.jpg' %}" alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$1,550,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="property-details.html" class="prop-entry d-block">
-              <figure>
-                <img src="{% static 'images/img_6.jpg' %} alt="Image" class="img-fluid">
-              </figure>
-              <div class="prop-text">
-                <div class="inner">
-                  <span class="price rounded">$4,291,000</span>
-                  <h3 class="title">853 S Lucerne Blvd</h3>
-                  <p class="location">Los Angeles, CA 90005</p>
-                </div>
-                <div class="prop-more-info">
-                  <div class="inner d-flex">
-                    <div class="col">
-                      <span>Area:</span>
-                      <strong>240m<sup>2</sup></strong>
-                    </div>
-                    <div class="col">
-                      <span>Beds:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Baths:</span>
-                      <strong>2</strong>
-                    </div>
-                    <div class="col">
-                      <span>Garages:</span>
-                      <strong>1</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+<div class="row">
 
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <div class="site-pagination">
-              <a href="#" class="active">1</a>
-              <a href="#">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <span>...</span>
-              <a href="#">10</a>
-            </div>
-          </div>  
-        </div>
-        
-      </div>
-    </div>
+<div class="col-sm-4">
+<img class="img-left img-thumbnail" src="../static/images/background8.jpg" style="height: 200px; widows: 200px;" />
+</div>
 
-    <div class="site-section">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-7 text-center mb-5">
-            <div class="site-section-title">
-              <h2>Our Services</h2>
-            </div>
-          </div>
-        </div>
+<div class="col-sm-6">
+<h5 style="font-family: Baufra;">5 STEPS TO ENSURE YOUR HOME IS A GOOD BUY &nbsp </h5>
+<p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.<br>
+Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+</div>
 
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="#" class="service text-center border rounded">
-              <span class="icon flaticon-house"></span>
-              <h2 class="service-heading">Research Subburbs</h2>
-              <p><span class="read-more">Learn More</span></p>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="#" class="service text-center border rounded">
-              <span class="icon flaticon-sold"></span>
-              <h2 class="service-heading">Sold Houses</h2>
-              <p><span class="read-more">Learn More</span></p>
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <a href="#" class="service text-center border rounded">
-              <span class="icon flaticon-camera"></span>
-              <h2 class="service-heading">Security Priority</h2>
-              <p><span class="read-more">Learn More</span></p>
-            </a>
-          </div>
+</div>
+<!-- row -->
 
 
-        </div>
-      </div>
-    </div>
-
-    <div class="site-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5">
-          <div class="col-md-7 text-center">
-            <div class="site-section-title">
-              <h2>Our Blog</h2>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="100">
-            <a href="#"><img src="{% static 'images/img_4.jpg' %}" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">When To Sell &amp; How Much To Sell?</a></h2>
-              <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text hereSome text here Some text hereSome.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="200">
-            <a href="#"><img src="{% static 'images/img_2.jpg' %}" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">When To Sell &amp; How Much To Sell?</a></h2>
-              <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text hereSome text here Some text hereSome.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="300">
-            <a href="#"><img src="{% static 'images/img_3.jpg' %}" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">When To Sell &amp; How Much To Sell?</a></h2>
-              <p>Some text here Some text hereSome text hereSome text hereSome text hereSome text hereSome text here Some text hereSome .</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-    
-    <div class="site-section">
-    <div class="container">
-      <div class="row mb-5 justify-content-center">
-        <div class="col-md-7">
-          <div class="site-section-title text-center">
-            <h2>Our Agents</h2>
-          </div>
-        </div>
-      </div>
-      <div class="row block-13">
-
-        <div class="nonloop-block-13 owl-carousel">
-
-          <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Anand Kumae</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here.</p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Omonbude Emmanuel</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here. </p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
- <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Emma Java</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here. </p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
- <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Akpama  Stanlee</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here. </p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Eze Chuka</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here. </p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-        <div class="slide-item">
-            <div class="team-member text-center">
-              <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid mb-4 w-50 rounded-circle mx-auto">
-              <div class="text p-3">
-                <h2 class="mb-2 font-weight-light text-black h4">Budes Code</h2>
-                <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
-                <p class="mb-5">Some text here Some text hereSome text hereSome text hereSome text hereSome text here some text here. </p>
-                <p>
-                  <a href="#" class="text-black p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          
-
-          
-
-        </div>
-
-        </div>
-      </div>
-    </div>
+</div>
 
 
-    
+  </div>
+</div>
+</div>
+
 {% endblock %}
-    

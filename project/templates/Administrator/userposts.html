@@ -1,4 +1,4 @@
-{% extends 'administrator/base.html' %}
+{% extends 'Administrator/base.html' %}
 {% block body %}
 <style>
   .full-screen{
@@ -9,6 +9,32 @@
     left: 0;
 
   }
+
+
+
+@media only screen and (max-width: 768px) {
+#plan_img{
+display: none;
+}
+#post_img1{
+display: none;
+}
+#plan_text{
+display: none;
+}
+#post_text{
+display: none;
+}
+
+}
+
+.green{
+  color: green;
+}
+
+
+
+
 </style>
 
 <body>
@@ -25,7 +51,9 @@
         *********************************************************************************************************************************************************** -->
     <!--sidebar start-->
     <aside>
-{% include 'administrator/sidebar.html' %}
+
+{% include 'Administrator/header.html' %}
+{% include 'Administrator/sidebar.html' %}
     </aside>
     <!--sidebar end-->
     <!-- **********************************************************************************************************************************************************
@@ -44,26 +72,29 @@
                 <thead>
                   <tr>
                     <th><i class="fa fa-user"></i> User</th>
-                    <th class="hidden-phone"><i class="fa fa-calendar"></i> Date</th>
+                    <th class="hidden-phone"><i class="fa fa-calendar"></i> Date Created</th>
                     <th><i class="fa fa-credit-card"></i> Price</th>
-                    <th><i class=" fa fa-edit"></i> Status</th>
+                    <th><i class=" fa fa-edit"></i> Active Status</th>
                     <th><i class=" fa fa-edit"></i> Delete</th>
                     <th></th>
                   </tr>
                 </thead>{% csrf_token %}
                 <tbody>
                 {% for i in user_post %}
-                  <tr class="" name={{i.pk}}>
+                  <tr class="post{{i.pk}}" name=>
                     <td>
-                      <a data-toggle="modal" data-target="#myModal" id={{i.pk}} onclick="viewDetails(this.id)">{{request.user.username}}</a>
+                      <a data-toggle="modal" data-target="#myModal" id="{{i.pk}}" onclick="viewDetails(this.id)">{{request.user.username}}</a>
                     </td>
-                    
+                    <td>
+                      {{i.created}}
+                    </td>
+
                     <td>${{i.Price}} </td>
                     <td><button class="btn btn-success btn-xs ">{{i.active}}</button></td>
                     <td id="testing">
-                 
+
                  <!-- <input style="display: none;" id="token" type="" name="" value=""> -->
-                 
+
                       <button class="btn btn-danger btn-xs" id={{i.pk}} onclick="deleteFunction(this.id)"><i class="fa fa-trash-o "></i></button>
                     </td>
                   </tr>
@@ -92,14 +123,69 @@
 
 <div class="container-fluid">
   <div class="row">
-  <div class="col-md-2" >
+  <div class="col-md-2 col-sm-4 col-xs-4" >
+
     <img src="" class="img-fluid img-thumbnail"  id="post_img1">
+    <div class="caption" id="post_text">Image</div>
+
+  <img src="" class="figure-img img-fluid img-thumbnail" alt="plan" id="plan_img">
+  <div class="caption" id="plan_text">Plan</div>
+    <!-- <img src="" class="img-fluid img-thumbnail"  id="plan_img"> -->
+
   </div>
 
   <div class="col-md-10">
+
+
     <img src="" class="img-fluid img-thumbnail"  id="main_img">
+    <br>
+ <b>  <h5>
+<!--   User: <span id="user" class="green"></span><br> -->
+  Active: <span id="Active" class="green"></span><br>
+  Address: <span id="address" class="green"></span><br>
+  Property Type: <span id="property_type" class="green"></span> <br>
+  Price: $<span id="Price" class="green"></span> <br>
+  Bedrooms: <span id="Bedrooms" class="green"></span> <br>
+  Bathrooms: <span id="Bathrooms" class="green"></span> <br>
+  Car Spaces: <span id="Car_spaces" class="green"></span> <br>
+  New Or Established: <span id="new_or_established" class="green"></span> <br>
+</h5>
+
+  <h3>OTHER INFORMATIONS</h3>
+  Swimming Pool : <span id="Swimming_pool" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Garage: <span id="Garage" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Balcony: <span id="Balcony" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Outdoor Area: <span id="Outdoor_area" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Undercover Parking: <span id="Undercover_parking" class="green"></span> &nbsp&nbsp&nbsp&nbsp <br>
+
+  Shed : <span id="Shed" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Fully Fenced : <span id="Fully_fenced" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Outdoor Spa : <span id="Outdoor_spa" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Tennis_court: <span id="Tennis_court" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Ensuite : <span id="Ensuite" class="green"></span> &nbsp&nbsp&nbsp&nbsp <br>
+
+  DishWasher : <span id="DishWasher" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+
+  Study : <span id="Study" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Built In Robes : <span id="Built_in_robes" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Alarm System : <span id="Alarm_system" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Broadband : <span id="Broadband" class="green"></span> &nbsp&nbsp&nbsp&nbsp <br>
+
+  Floorboards : <span id="Floorboards" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Gym : <span id="Gym" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Rumpus Room : <span id="Rumpus_room" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Workshop : <span id="Workshop" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Air Conditioning : <span id="Air_conditioning" class="green"></span> &nbsp&nbsp&nbsp&nbsp  <br>
+
+  Solar Panels : <span id="Solar_panels" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Heating : <span id="Heating" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  High Energy Efficiency : <span id="High_energy_efficiency" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Water Tank : <span id="Water_tank" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  Solar Hot Water : <span id="Solar_hot_water" class="green"></span> &nbsp&nbsp&nbsp&nbsp
+  <!--   <i class="fa fa-bath fa-lg"></i>  <i class="fa fa-bed fa-lg"></i>  <i class="fa fa-garage fa-lg"></i> -->
+  </b>
   </div>
-    
+
   </div>
 </div>
 
@@ -107,8 +193,8 @@
 
       <!-- Modal footer -->
       <div class="modal-footer">
-      
-        <button type="button" class="btn btn-primary" id="start" data-dismiss="modal">Delete</button>
+
+      <!--   <button type="button" class="btn btn-primary pk" id="" data-dismiss="modal">Delete</button> -->
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
 
