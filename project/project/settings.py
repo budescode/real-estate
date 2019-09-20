@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'administrator',
     'easy_maps',
     'leaflet',
+    'el_pagination',
+    'django_elasticsearch_dsl'
 
 ]
 
@@ -76,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',  # <--
                 'social_django.context_processors.login_redirect',
+                'django.template.context_processors.request', ## For EL-pagination
 
             ],
         },
@@ -194,3 +197,14 @@ DEFAULT_FROM_EMAIL = 'gospeltruth18@gmail.com'
 SERVER_EMAIL = 'gospeltruth18@gmail.com'
 
 EASY_MAPS_GOOGLE_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ___0123456789'
+
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'anandrathi.pythonanywhere.com',
+        'timeout': 60,
+    },
+}
+# elasticsearch settings
+FOUNDELASTICSEARCH_URL = "anandrathi.pythonanywhere.com"
+HTTP_AUTH = os.environ.get("HTTP_AUTH", None)

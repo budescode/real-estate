@@ -1,250 +1,271 @@
-{% extends 'base.html' %}
+{% extends 'index/base.html' %}
 {% load staticfiles %}
+{% load el_pagination_tags %}
+
 {% block body %}
 <style>
-    #map {
-	height: 100%;
+/*body {*/
+/*  font: 16px Arial;*/
+/*}*/
+
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
 }
 
-a {
-	text-decoration: none;
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
 }
 
-.row {
-  margin:15px 0;
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
 }
-label {
-  margin-bottom: 0;
-  margin-left: 1px;
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
 }
 </style>
 
-<div class="container">
-	<div class="row">
-		<div class="col-md-9">
 
-
-
-
-<ul class="nav nav-tabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link  active" href="" role="tab" data-toggle="tab" aria-selected="true" onclick='mapHide()'>List</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="" role="tab" data-toggle="tab" onclick='mapShow()'>Map</a>
-  </li>
-
-</ul>
-
-<div id="map" style='display:none;height:1000px;'></div>
-
-
-<!-- Tab panes -->
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="profile">
-
-
-
-
-
-
-
-
-
-
-      		{% for i in pagin %}
-
-
-			<div class="card" style="margin-top: 40px; margin-bottom: 40px;">
-			    <a href='{% url 'home:details' i.id_user category1 %}'>
-				<div class="card-header">
-					{{i.user.username}}
-				</div>
-
-				<div class="card-body">
-					<img class="img-fluid img-thumbnail" src="{{i.image.url}}">
-				</div>
-				</a>
-				<div class="card-footer">
-				    <b>${{i.Price}}</b>
-				    <i class='fa fa-star fa-lg' id='star{{i.id_user}}' style='float:right; cursor:pointer; {% ifequal i.saved True %}color:orange;{% endifequal %}' onclick='StarSearch("{{i.id_user}}")'></i>
-				    <p>{{i.street_name}} {{i.street_number}}</p>
-					<p>{{i.state}} {{i.suburb}}</p>
-					<p><i class="fa fa-bed"></i>{{i.Bedrooms}} <i class='fa fa-bath'></i>{{i.Bathrooms}} <i class="fa fa-car"></i>{{i.Car_spaces}}| {{i.Property_type}}</p>
-				</div>
-			</div>
-
-		{% endfor %}
-
-
-
-            <div class="pagination">
-            <span class="step-links">
-            {% if pagin.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ pagin.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ pagin.number }} of {{ pagin.paginator.num_pages }}.
-            </span>
-
-            {% if pagin.has_next %}
-                <a href="?page={{ pagin.next_page_number }}">next</a>
-                <a href="?page={{ pagin.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-            </span>
-            </div>
-
-
-  </div>
-  <div role="tabpanel" class="tab-pane fade" id="buzz">
-
-      <!--<div id="map"></div>-->
-
-  </div>
-
-</div>
-
-
-
-
-        <!--{{category1}}-->
-
-
-
-
-
-
-
-		</div>
-			<!-- end of col-md-9-->
-
-            <div class='col-md-3'>
 
 <form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
 
 
-  <div class="modal fade col-md-12" id="myModal" >
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable col-md-12">
-      <div class="modal-content">
+<div class='container'>
+    <div class='row' style='margin-top:85px;'>
+        <div class='col-md-9'>
+            <!-- A grey horizontal navbar that becomes vertical on small screens -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
+        <div id="navbarNavDropdown" class="navbar-collapse collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"><i class='fa fa-list-alt'></i> List <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class='fa fa-globe'></i> Map</a>
+                </li>
 
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Modal Heading</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </ul>
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <div class="form-group" style='margin-top:25px;'>
+                    <label class="d-inline-block" for="from_year">Sort By:</label>
+                    <select class="form-control form-control-sm d-inline-block" style="width: auto;" id="sortby" name='sortby'>
+                    <option value="Relevant">Most Relevant</option>
+                    <option value="-created">Date (Newest - Oldest)</option>
+                    <option value="created">Date (Oldest - Newest)</option>
+                    <option value="Price">Price (Lowest - Highest)</option>
+                    <option value="-Price">Price (Highest - Lowest)</option>
+                    </select>
+                    </div>
+                </li>
+
+            </ul>
         </div>
+    </nav>
 
-        <!-- Modal body -->
-        <div class="modal-body">
-          Modal body..
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-
-      </div>
+<div class='row'>
+    <div class='col-md-12'>
+        <div id="searchitem" style=""></div>
     </div>
-  </div>
-  <!--end of modal-->
-
-
-<div id="searchitem" style="display: none;">
-
 </div>
 
+    <hr>
+{% paginate pagin %}
+{% for i in pagin %}
+    <div class="card" style='margin-bottom:20px;'>
+        <div class="card-body">
+            <h4 class="card-title"> <p>{{i.street_name}} {{i.street_number}} {{i.state}} {{i.suburb}}</p></h4>
+            <p class="card-text">
+
+            <div class='row'>
+            <div class='col-md-4'>
+                <img class='img-fluid' src={{i.image.url}}>
+
+            </div>
+            <div class='col-md-8'>
+              <b> Property Type:</b>  {{i.Property_type}} <br>
+              <b>Price:</b> ${{i.Price}}
+              <br>
+              <p>Property_type {{i.description}}</p>
+              <!--<p>Property_type {{i.Property_type}}</p>-->
+              <!--<p>Swimming_pool {{i.Swimming_pool}}</p>-->
+              <!--<p>Garage {{i.Garage}}</p>-->
+              <!--<p>Balcony {{i.Balcony}}</p>-->
+              <!--<p>Outdoor_area {{i.Outdoor_area}}</p>-->
+              <!--<p>Undercover_parking {{i.Undercover_parking}}</p>-->
+              <!--<p>Shed {{i.Shed}}</p>-->
+              <!--<p>Fully_fenced {{i.Fully_fenced}}</p>-->
+              <!--<p>Outdoor_spa {{i.Outdoor_spa}}</p>-->
+              <!--<p>Tennis_court {{i.Tennis_court}}</p>-->
+              <!--<p>Ensuite {{i.Ensuite}}</p>-->
+              <!--<p>DishWasher {{i.DishWasher}}</p>-->
+              <!--<p>Study {{i.Study}}</p>-->
+              <!--<p>Built_in_robes {{i.Built_in_robes}}</p>-->
+              <!--<p>Alarm_system {{i.Alarm_system}}</p>-->
+              <!--<p>Broadband {{i.Broadband}}</p>-->
+              <!--<p>Floorboards {{i.Floorboards}}</p>-->
+              <!--<p>Gym {{i.Gym}}</p>-->
+              <!--<p>Rumpus_room {{i.Rumpus_room}}</p>-->
+              <!--<p>Workshop {{i.Workshop}}</p>-->
+              <!--<p>Air_conditioning {{i.Air_conditioning}}</p>-->
+              <!--<p>Solar_panels {{i.Solar_panels}}</p>-->
+              <!--<p>Heating {{i.Heating}}</p>-->
+              <!--<p>High_energy_efficiency {{i.High_energy_efficiency}}</p>-->
+              <!--<p>Water_tank {{i.Water_tank}}</p>-->
+
+              <!--<p>Solar_hot_water {{i.Solar_hot_water}}</p>-->
 
 
+              <a href='{% url 'home:details' i.id_user category1 %}'>See more</a>
 
+            </div>
+
+            </div>
+            <!--row-->
+<hr>
+            <div class='col-md-12' style='background-color:rgb(238, 40, 124); color: white; padding: 8px 8px;'>
+                <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}}
+                <i class='fa fa-bath' style='color:white'></i> {{i.Bathrooms}}
+                <i class='fa fa-car' style='color:white'></i> {{i.Car_spaces}}
+
+            </div>
+
+            </p>
+
+        </div>
+</div>
+<!--end card-->
+
+
+{% endfor %}
+{% show_pages %}
+
+        </div>
+        <!--col-md-8-->
+
+        <div class='col-md-3'>
+                <div class="alert alert-danger" style='background-color: rgb(238, 40, 124); color:white;'>
+                <strong> <i class='fa fa-filter'></i> Advance Filter Options ( <span id='filtercount'></span> )</strong>
+                </div>
+
+<div class="form-group row">
+
+<div class='col-md-12'>
 <input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
 <input type="text" name="category" id="category" style="display: none;" value="Poster">
+<input type="text" name="filterlist" id="filterlist" style="display: none;" value="">
 
 <input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
-<div class="form-group">
+<input type='text' class='form-control' id="myInput" name="myCountry" oninput="InputChange()">
 
-
-<input type="text" oninput="InputChange()" id='search' placeholder="  search by state, studio or postcode" class="form-control form-control-lg" style="">
 </div>
 
-              <div id="accordion">
-    <div class="card">
-      <div class="card-header">
-        <a class="card-link" data-toggle="collapse" href="#collapseOne">
-          Property Type
-        </a>
-      </div>
-      <div id="collapseOne" class="collapse" data-parent="#accordion">
-        <div class="card-body">
+<div class="col-sm-6">
+<label for="pricemin"><small>Price (Min):</small></label>
+    <select class="custom-select custom-select-sm" id="pricemin" name="pricemin" >
+    <option>Any </option>
+    <option>$50,000 </option>
+    <option>$75,000</option>
+    <option>$100,000</option>
+    <option>$125,000</option>
+    <option>$150,000</option>
+    <option>$175,000</option>
+    <option>$200,000</option>
+    <option>$225,000</option>
+    <option>$250,000</option>
+    <option>$275,000</option>
+    <option>$300,000</option>
+    <option>$325,000</option>
+    <option>$350,000</option>
+    <option>$350,000</option>
+    <option>$350,000</option>
+    <option>$375,000</option>
+    <option>$400,000</option>
+    <option>$425,000</option>
+    <option>$450,000</option>
+    <option>$475,000</option>
+    <option>$500,000</option>
+    <option>$550,000</option>
+    <option>$600,000</option>
+    <option>$650,000</option>
+    <option>$700,000</option>
+    <option>$750,000</option>
+    <option>$800,000</option>
+    <option>$850,000</option>
+    <option>$900,000</option>
+    <option>$950,000</option>
+    <option>$1,000,000</option>
+    <option>$1,100,000</option>
+    <option>$1,200,000</option>
+    <option>$1,300,000</option>
+    <option>$1,400,000</option>
+    <option>$1,500,000</option>
+    <option>$1,600,000</option>
+    <option>$1,700,000</option>
+    <option>$1,800,000</option>
+    <option>$1,900,000</option>
+    <option>$2,000,000</option>
+    <option>$2,250,000</option>
+    <option>$2,500,000</option>
+    <option>$2,750,000</option>
+    <option>$3,000,000</option>
+    <option>$3,500,000</option>
+    <option>$4,000,000</option>
+    <option>$4,500,000</option>
+    <option>$5,000,000 </option>
+    <option>$7,000,000</option>
+    <option>$8,000,000</option>
+    <option>$9,000,000</option>
+    <option>$10,000,000</option>
+    <option>$12,000,000</option>
+    <option>$15,000,000</option>
 
+    </select>
 
+</div>
 
-
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="All" name="propertycheck" value="All property types" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">All property types</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="House" name="propertycheck" value="House" onclick='changePropertyType(this.id)' >
-        <label class="form-check-label" for="all"> House</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Apartment" name="propertycheck" value="Apartment & Unit" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all"> Apartment & Unit</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Town" name="propertycheck" value="Town House" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">Town House</label>
-      </div>
-<div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Villa" name="propertycheck" value="Villa" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">Villa</label>
-      </div>
-
-<div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Land" name="propertycheck" value="Land" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">Land</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Acreage" name="propertycheck" value="Acreage" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all"> Acreage</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Rural" name="propertycheck" value="Rural" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all"> Rural</label>
-      </div>
-      <div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Block" name="propertycheck" value="Block Of Units" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">Block Of Units</label>
-      </div>
-<div class="form-check dropdown-item">
-        <input type="checkbox" class="form-check-input" id="Retirement" name="propertycheck" value="Retirement Living" onclick='changePropertyType(this.id)'>
-        <label class="form-check-label" for="all">Retirement Living</label>
-      </div>
-
-
-
-
-
-        </div>
-      </div>
-    </div>
-
-
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
-        Price (min)
-      </a>
-      </div>
-      <div id="collapseTwo" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-
-
-
-<select name='Price(min)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
-<option selected>Price (min)</option>
+<div class="col-sm-6">
+<label for="pricemax"><small>Price (Max):</small></label>
+<select class="custom-select custom-select-sm" id="pricemax" name="pricemax" >
 <option>Any </option>
 <option>$50,000 </option>
 <option>$75,000</option>
@@ -303,265 +324,600 @@ label {
 <option>$15,000,000</option>
 
 </select>
+</div>
+<!--col-md-6-->
 
 
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
-          Price (max)
-        </a>
-      </div>
-      <div id="collapseThree" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-
-
-
-<select name='Price(max)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
-<option selected>Price (max)</option>
+<div class='col-md-6'>
+<label for="bedmin"> <small>Bed (Min):</small></label>
+<select class="custom-select custom-select-sm" id="bedmin" name="Bed(min)" >
 <option>Any</option>
-<option>$50,000 </option>
-<option>$75,000</option>
-<option>$100,000</option>
-<option>$125,000</option>
-<option>$150,000</option>
-<option>$175,000</option>
-<option>$200,000</option>
-<option>$225,000</option>
-<option>$250,000</option>
-<option>$275,000</option>
-<option>$300,000</option>
-<option>$325,000</option>
-<option>$350,000</option>
-<option>$350,000</option>
-<option>$350,000</option>
-<option>$375,000</option>
-<option>$400,000</option>
-<option>$425,000</option>
-<option>$450,000</option>
-<option>$475,000</option>
-<option>$500,000</option>
-<option>$550,000</option>
-<option>$600,000</option>
-<option>$650,000</option>
-<option>$700,000</option>
-<option>$750,000</option>
-<option>$800,000</option>
-<option>$850,000</option>
-<option>$900,000</option>
-<option>$950,000</option>
-<option>$1,000,000</option>
-<option>$1,100,000</option>
-<option>$1,200,000</option>
-<option>$1,300,000</option>
-<option>$1,400,000</option>
-<option>$1,500,000</option>
-<option>$1,600,000</option>
-<option>$1,700,000</option>
-<option>$1,800,000</option>
-<option>$1,900,000</option>
-<option>$2,000,000</option>
-<option>$2,250,000</option>
-<option>$2,500,000</option>
-<option>$2,750,000</option>
-<option>$3,000,000</option>
-<option>$3,500,000</option>
-<option>$4,000,000</option>
-<option>$4,500,000</option>
-<option>$5,000,000 </option>
-<option>$7,000,000</option>
-<option>$8,000,000</option>
-<option>$9,000,000</option>
-<option>$10,000,000</option>
-<option>$12,000,000</option>
-<option>$15,000,000</option>
-
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
 </select>
+</div>
+
+<div class='col-md-6'>
+<label for="bedmax"> <small>Bed (Max):</small></label>
+<select class="custom-select custom-select-sm" id="bedmax" name="Bed(max)" >
+<option value='Any'>Any</option>
+<option value='Studio'>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+
+<!--<div class='col-md-6'>-->
+<!--    <button data-toggle="collapse" data-target="#demo" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Property Type</button>-->
+<!--</div>-->
+<!--<div class='col-md-6'>-->
+<!--    <button data-toggle="collapse" data-target="#filter" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' ><i style='color:white' class='fa fa-filter'> </i> Filter ( <span id='filtercount'></span>)</button>-->
+<!--</div>-->
+
+<!--<div class='col-md-12'>-->
+<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
+<!--</div>-->
 
 
+<div class='col-md-12'>
+<div id="filter" class="">
+    <h6>Filter Items</h6>
+    <div class='form-group row'>
+<div class='col-md-6'>
+<label for=""> <small>Bathrooms:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
 
+<div class='col-md-6'>
+<label for=""> <small>Car Spaces:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+<div class='col-md-6'>
+<label for=""> <small>Min land size (m2):</small></label>
+<select class="custom-select custom-select-sm" id="bedmin" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="100">100</option>
+<option value="200">200</option>
+<option value="300">300</option>
+<option value="400">400</option>
+<option value="500">500</option>
+</select>
+</div>
 
-        </div>
-      </div>
+<div class='col-md-6'>
+<label for=""> <small>New or established:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option value='Any'>Any</option>
+<option value='New'>New</option>
+<option value="Established">Established</option>
+</select>
+</div>
+<hr>
+
+<div class='col-md-12'><br>
+<center><b>Outdoor Features</b></center>
+<hr>
+</div>
+
+</div>
+
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Swimming_pool' onclick=changeFilter(this)> Swimming pool
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Balcony' onclick=changeFilter(this)> Balcony
+      </label>
+    </div>
+    <hr>
+  <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="check1"  value="Garage" onclick=changeFilter(this)> Garage
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="check2" value="Outdoor_area" onclick=changeFilter(this)> Outdoor area
+      </label>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFour">
-         Bed(min)
-        </a>
-      </div>
-      <div id="collapseFour" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-
-            <select name='Bed(min)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
-            <option selected>Bed (min)</option>
-            <option>Any</option>
-            <option>Studio</option>
-            <option>1 Bed</option>
-            <option>2 Beds</option>
-            <option>3 Beds</option>
-            <option>4 Beds</option>
-            <option>5 Beds</option>
-            </select>
-
-
-
-        </div>
-      </div>
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="check1"  value="Fully_fenced" onclick=changeFilter(this) > Fully fenced
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="check2" value="Shed" onclick=changeFilter(this)> Shed
+      </label>
+    </div>
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Outdoor_spa' onclick=changeFilter(this)> Outdoor spa
+      </label>
+    </div>
+  <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Tennis_court' onclick=changeFilter(this)> Tennis court
+      </label>
+    </div>
+    <hr>
+ <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Undercover_parking' onclick=changeFilter(this)> Undercover parking
+      </label>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFive">
-          Bed (max)
-        </a>
-      </div>
-      <div id="collapseFive" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-
-        <select name='Bed(max)' class="custom-select custom-select-sm mb-3" style='background-color:rgba(0,0,0,0); color:orange; border-color:rgba(0,0,0,0)'>
-        <option selected>Bed (max)</option>
-        <option>Any</option>
-        <option>Studio</option>
-        <option>1 Bed</option>
-        <option>2 Beds</option>
-        <option>3 Beds</option>
-        <option>4 Beds</option>
-        <option>5 Beds</option>
-        </select>
+<div class='col-md-12'><br>
+<center><b>Indoor Features</b></center>
+<hr>
+</div>
 
 
-        </div>
-      </div>
+<div class="form-check-inline">
+<label class="form-check-label" for="check1">
+<input type="checkbox" class="form-check-input" value="Ensuite" onclick=changeFilter(this) > Ensuite
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label" for="check2">
+<input type="checkbox" class="form-check-input"  value="DishWasher" onclick=changeFilter(this)> Dishwasher
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Built_in_robes' onclick=changeFilter(this)> Built in robes
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Study' onclick=changeFilter(this)> Study
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Alarm_system' onclick=changeFilter(this)> Alarm system
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Broadband' onclick=changeFilter(this)> Broadband
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Floorboards' onclick=changeFilter(this)> Floorboards
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Gym' onclick=changeFilter(this)> Gym
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Rumpus_room' onclick=changeFilter(this)> Rumpus room
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Workshop' onclick=changeFilter(this)> Workshop
+</label>
+</div>
+<hr>
+<div class='col-md-12'><br>
+<center><b>Climate control & energy</b></center>
+<hr>
+</div>
+
+
+<div class="form-check-inline">
+<label class="form-check-label" for="check1">
+<input type="checkbox" class="form-check-input" value="Air_conditioning" onclick=changeFilter(this) > Air conditioning
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label" for="check2">
+<input type="checkbox" class="form-check-input"  value="Solar_panels" onclick=changeFilter(this)> Solar panels
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Heating' onclick=changeFilter(this)> Heating
+</label>
+</div>
+
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Water_tank' onclick=changeFilter(this)> Water tank
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Solar_hot_water' onclick=changeFilter(this)> Solar hot water
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='High_energy_efficiency' onclick=changeFilter(this)> High energy efficiency
+</label>
+</div>
+<hr>
+
+<!--<div class='col-md-12'>-->
+<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
+<!--</div>-->
+
+</div>
+</div>
+<div class='col-md-12'>
+<div id="demo" class="">
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="All" value="All property types" onclick='changePropertyType(this.id)'>All property types
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="House" value="House" onclick='changePropertyType(this.id)'>House
+      </label>
+    </div>
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input"  id="Apartment"  value='Apartment & Unit' onclick='changePropertyType(this.id)'>Apartment & Unit
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" id="Land" value='Land' onclick='changePropertyType(this.id)'>Land
+      </label>
+    </div>
+    <hr>
+  <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="Town" value="Town House" onclick='changePropertyType(this.id)'>Town House
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="Villa" value="Villa" onclick='changePropertyType(this.id)'> Villa
+      </label>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="modal" data-target="#myModal" href='#'>
-          Filters
-        </a>
-      </div>
-
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="Acreage" value="Acreage" onclick='changePropertyType(this.id)'>Acreage
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="Rural" value="Rural" onclick='changePropertyType(this.id)'>Rural
+      </label>
+    </div>
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Block Of Units' id='Block' onclick='changePropertyType(this.id)'>Block Of Units
+      </label>
+    </div>
+  <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Retirement Living' id='Retirement' onclick='changePropertyType(this.id)'>Retirement Living
+      </label>
     </div>
 
-<div class="card">
-      <div class="card-header">
-        <input type='Submit', value='Update' class='btn btn-default' >
-      </div>
-
-    </div>
 
 
+<div class='col-md-12'>
+    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>
+</div>
+</form>
 
-
-
-  </div>
-
-    </form>
-            </div>
-            <!--end div3-->
+</div>
 
 
 
-	</div>
-	<!--end of row-->
+</div>
+
 
 
 
 
 
 </div>
-<!--end of container div-->
-{% csrf_token %}
+<!--form group row-->
+
+
+
+
+
+
+
+        </div>
+        <!--col-md-4-->
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
 <script>
-
 var searchlist = []
-// this will take the least of items to be searched
-var list1 = []
-{% for i in qs %}
-list1.push('{{i.state}}' + ' ' + '{{i.suburb}}' + ' ' + '{{i.postcode}}')
-{% endfor %}
 
-// this function is used to check when semicolon has been added  to the search input as it enables multiple search
-function InputChange(){
-  document.querySelector("#searchitem").style.display = 'block';
-  var searchitem = document.querySelector("#search").value
-  if (searchitem.includes(";")){
-    console.log("ok")
+filterlist = []
+function changeFilter(x){
+    filtercount = document.querySelector('#filtercount').innerHTML
+    position = filterlist.indexOf(x.value)
+    console.log(position)
+    if (x.checked == true){
+        if(position == -1){
+            console.log('uaaa')
+            filterlist.push(x.value)
+            document.querySelector('#filtercount').innerHTML = filterlist.length
+            document.querySelector('#filterlist').value = filterlist
 
+            console.log(filterlist, document.querySelector('#filterlist').value)
+        }
+    }
+    else if(x.checked == false){
+        if(position != -1){
+            filterlist.splice(position, 1);
 
-    var inputedvalue = document.querySelector("#search").value
+            document.querySelector('#filtercount').innerHTML = filterlist.length
+            document.querySelector('#filterlist').value = filterlist
+            console.log(filterlist, document.querySelector('#filterlist').value)
+        }
+    }
 
+}
 
-    if (inputedvalue){
-    var length = searchlist.length
-    var searchitem = document.querySelector("#searchitem")
-    inputedvalue = inputedvalue.slice(0, -1);
-    var spanelement = document.createElement("span");
-    spanelement.setAttribute("class", "badge badge-primary");
-    // var addlength =  length
-    spanelement.setAttribute("id", 'itemid'+length);
+document.querySelector('#bedmin').value = '{{firstbedmin|safe}}'
+document.querySelector('#bedmax').value = '{{firstbedmax|safe}}'
+document.querySelector('#pricemax').value = '{{firstpricemax|safe}}'
+document.querySelector('#pricemin').value = '{{firstpricemin|safe}}'
+var firstpropertytype = '{{firstpropertytype|safe}}'
+firstpropertytype = firstpropertytype.split(',')
+console.log(firstpropertytype)
+for(i=0; i<firstpropertytype.length; i++){
+    if (firstpropertytype[i] == 'All property types'){
+        document.querySelector('#All').checked = true
+        document.querySelector('#House').checked = true
+        document.querySelector('#Apartment').checked = true
+        document.querySelector('#Town').checked = true
+        document.querySelector('#Villa').checked = true
+        document.querySelector('#Land').checked = true
+        document.querySelector('#Acreage').checked = true
+        document.querySelector('#Rural').checked = true
+        document.querySelector('#Block').checked = true
+         document.querySelector('#Retirement').checked = true
 
+    }
+    else{
+    if (firstpropertytype[i] == 'House'){
 
+        document.querySelector('#House').checked = true
+    }
+    if (firstpropertytype[i] == 'Apartment & Unit'){
 
-    spanelement.style.marginLeft = '3px';
-    spanelement.style.marginRight = '3px';
-    spanelement.addEventListener('click',
-    function(){
-    var id = this.innerHTML.slice(0,-2)
+        document.querySelector('#Apartment').checked = true
+    }
+    if (firstpropertytype[i] == 'Town House'){
 
-    // var element = document.querySelector(id);
+        document.querySelector('#Town').checked = true
+    }
+    if (firstpropertytype[i] == 'Villa'){
 
+        document.querySelector('#Villa').checked = true
+    }
+    if (firstpropertytype[i] == 'Land'){
 
-    var index = searchlist.indexOf(id)
-    searchlist.splice( index, 1 );
-    // var propertyarray = []
-    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+        document.querySelector('#Land').checked = true
+    }
+    if (firstpropertytype[i] == 'Acreage'){
 
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    // var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+        document.querySelector('#Acreage').checked = true
+    }
+    if (firstpropertytype[i] == 'Rural'){
 
+        document.querySelector('#Rural').checked = true
+    }
+    if (firstpropertytype[i] == 'Block Of Units'){
 
-    this.remove()
+        document.querySelector('#Block').checked = true
+    }
+    if (firstpropertytype[i] == 'Retirement Living"'){
 
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-    // console.log(propertyarray)
-    })
-
-    var testnode = document.createTextNode(inputedvalue)
-    var cancel = document.createTextNode(' X')
-    spanelement.appendChild(testnode)
-    spanelement.appendChild(cancel)
-    searchitem.appendChild(spanelement)
-    searchlist[length] = spanelement.innerHTML
-    // console.log(searchlist)
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-
-    var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
-
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-    // var bedmin1 = document.querySelector("#bedmin1").value = document.querySelector(".bedmin").innerHTML.trim().slice(0, 1);
-    // var bedmax1 = document.querySelector("#bedmax1").value = document.querySelector(".bedmax").innerHTML.trim().slice(0, 1);
-    // var pricemin1 = document.querySelector("#pricemin1").value = document.querySelector(".pricemin").innerHTML
-    // var pricemax1 = document.querySelector("#pricemax1").value = document.querySelector(".pricemax").innerHTML
-    // console.log(bedmin1)
-    inputedvalue = document.querySelector("#search").value = ''
+        document.querySelector('#Retirement').checked = true
     }
 
 
-  }
+    }
+    //else
 
 }
-// endof inputchange function
+
+// changePropertyType(e)
+
+
+mysearch = {{mylist|safe}}
+document.querySelector("#hiddensearch").value = mysearch
+console.log(document.querySelector("#hiddensearch").value)
+for (i=0;i<mysearch.length;i++){
+    qs = mysearch[i]
+    searchlist.push(qs)
+    var element = document.createTextNode(qs+ ' X')
+    // console.log(mysearch[i], 'listttt', element)
+
+var searchitem = document.querySelector("#searchitem")
+var spanelement = document.createElement("span");
+var length = searchlist.length
+spanelement.setAttribute("class", "badge badge-primary badge-lg");
+spanelement.setAttribute("id", 'itemid'+length);
+spanelement.style.marginLeft = '3px';
+spanelement.style.marginRight = '3px';
+
+spanelement.addEventListener('click',
+function(){
+var id = this.innerHTML.slice(0,-2)
+var index = searchlist.indexOf(id)
+searchlist.splice( index, 1 );
+// console.log(id, index, searchlist)
+this.remove()
+var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+console.log(searchlist)
+// var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+// for (var i = 0; i < checkboxes.length; i++) {
+// propertyarray.push(checkboxes[i].value)
+// }
+//var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+//console.log(propertytype1)
+}
+)
+
+
+
+spanelement.appendChild(element)
+
+searchitem.appendChild(spanelement)
+
+
+}
+
+
+propertylist=[]
+function changePropertyType(e){
+<!--console.log(e)-->
+var id = '#'+e
+var qs =document.querySelector(id)
+var a = propertylist.indexOf(qs.value);
+
+if (qs.checked==false){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = false
+
+        document.querySelector('#Apartment').checked = false
+
+        document.querySelector('#Town').checked = false
+
+        document.querySelector('#Villa').checked = false
+
+        document.querySelector('#Land').checked = false
+
+        document.querySelector('#Acreage').checked = false
+
+        document.querySelector('#Rural').checked = false
+
+        document.querySelector('#Retirement').checked = false
+
+        document.querySelector('#Block').checked = false
+        propertylist = []
+        console.log(propertylist)
+
+
+    }}
+
+if (qs.checked==true){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = true
+        propertylist.push(document.querySelector('#House').value)
+        document.querySelector('#Apartment').checked = true
+        propertylist.push(document.querySelector('#Apartment').value)
+        document.querySelector('#Town').checked = true
+        propertylist.push(document.querySelector('#Town').value)
+        document.querySelector('#Villa').checked = true
+        propertylist.push(document.querySelector('#Villa').value)
+        document.querySelector('#Land').checked = true
+        propertylist.push(document.querySelector('#Land').value)
+        document.querySelector('#Acreage').checked = true
+        propertylist.push(document.querySelector('#Acreage').value)
+        document.querySelector('#Rural').checked = true
+        propertylist.push(document.querySelector('#Rural').value)
+        document.querySelector('#Retirement').checked = true
+        propertylist.push(document.querySelector('#Retirement').value)
+        document.querySelector('#Block').checked = true
+        propertylist.push(document.querySelector('#Block').value)
+         }
+
+
+if (a==-1){
+
+propertylist.push(qs.value)
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value = propertylist
+console.log(propertytype1.value)
+} //if a==-1
+
+
+else{
+
+propertylist.splice(a, 1);
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value= propertylist
+console.log(propertytype1.value)
+
+}//else
+}// if qs
+
+
+else{
+    // console.log('nahhhh')
+    propertylist.splice(a, 1);
+    var propertytype1 = document.querySelector('#propertytype1')
+    propertytype1.value= propertylist
+    console.log(propertytype1.value)
+}
+
+} //function
+
+
+
+
 
 
 
@@ -656,14 +1012,13 @@ function autocomplete(inp, arr) {
       }
     }
   }
-
   /*execute a function when someone clicks in the document:*/
   document.addEventListener("click", function (e) {
     document.querySelector("#searchitem").style.display = 'block'
-    var inputedvalue = document.querySelector("#search").value
+    var inputedvalue = document.querySelector("#myInput").value
     if (inputedvalue){
     var searchitem = document.querySelector("#searchitem")
-    var inputedvalue = document.querySelector("#search").value
+    var inputedvalue = document.querySelector("#myInput").value
     var spanelement = document.createElement("span");
     var length = searchlist.length
     spanelement.setAttribute("class", "badge badge-primary badge-lg");
@@ -714,9 +1069,10 @@ function autocomplete(inp, arr) {
     // }
     //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
 
-  //console.log(propertytype1)
+  console.log(searchlist)
 
-    inputedvalue = document.querySelector("#search").value = ''
+    inputedvalue = document.querySelector("#myInput").value = ''
+    // document.querySelector("#myInput").focus()
     }
 
     // console.log(inputedvalue)
@@ -726,16 +1082,209 @@ function autocomplete(inp, arr) {
 }
 
 /*An array containing all the country names in the world:*/
-var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-// var countries = [
-
-// console.log(countries)
+// var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
 
 
+
+
+
+var list2 = []
+{% for i in qs %}
+list2.push('{{i.suburb}}' + ' - ' +  '{{i.state}}')
+{% endfor %}
+
+
+
+// this will take the least of items to be searched
+
+
+function InputChange(){
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-autocomplete(document.getElementById("search"), list1);
-// end of auto complete function
 
+autocomplete(document.getElementById("myInput"), list2);
+  document.querySelector("#searchitem").style.display = 'block';
+  var searchitem = document.querySelector("#myInput").value
+  if (searchitem.includes(";")){
+    console.log("ok")
+
+
+    var inputedvalue = document.querySelector("#myInput").value
+
+
+    if (inputedvalue){
+    var length = searchlist.length
+    var searchitem = document.querySelector("#searchitem")
+    inputedvalue = inputedvalue.slice(0, -1);
+    var spanelement = document.createElement("span");
+    spanelement.setAttribute("class", "badge badge-primary");
+    // var addlength =  length
+    spanelement.setAttribute("id", 'itemid'+length);
+
+
+
+    spanelement.style.marginLeft = '3px';
+    spanelement.style.marginRight = '3px';
+    spanelement.addEventListener('click',
+    function(){
+    var id = this.innerHTML.slice(0,-2)
+
+    // var element = document.querySelector(id);
+
+
+    var index = searchlist.indexOf(id)
+    searchlist.splice( index, 1 );
+    // var propertyarray = []
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    // var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+
+    this.remove()
+
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+    // console.log(propertyarray)
+    })
+
+    var testnode = document.createTextNode(inputedvalue)
+    var cancel = document.createTextNode(' X')
+    spanelement.appendChild(testnode)
+    spanelement.appendChild(cancel)
+    searchitem.appendChild(spanelement)
+    searchlist[length] = spanelement.innerHTML
+    console.log(searchlist)
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+    var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+    // var bedmin1 = document.querySelector("#bedmin1").value = document.querySelector(".bedmin").innerHTML.trim().slice(0, 1);
+    // var bedmax1 = document.querySelector("#bedmax1").value = document.querySelector(".bedmax").innerHTML.trim().slice(0, 1);
+    // var pricemin1 = document.querySelector("#pricemin1").value = document.querySelector(".pricemin").innerHTML
+    // var pricemax1 = document.querySelector("#pricemax1").value = document.querySelector(".pricemax").innerHTML
+    // console.log(bedmin1)
+    inputedvalue = document.querySelector("#myInput").value = ''
+    }
+
+
+  }
+
+}
+// endof inputchange function
+
+
+
+function filterState(e){
+document.querySelector('.modal-title').innerHTML = 'Search bu suburb, postcode'
+
+document.getElementById("loading").style.display = 'block'
+
+
+document.getElementById("myInput").style.display = 'none';
+
+document.getElementById("loading").innerHTML = 'loading'
+
+
+
+test(e)
+}
+// end of function
+
+
+function test(e){
+        list1=[]
+
+    for(i=0; i<list2.length; i++){
+
+    if(list2[i].includes(e)){
+    list1.push(list2[i])
+    console.log('yeahh')
+    }
+
+
+    else{
+        console.log('nahhh')
+    }
+    console.log(document.getElementById("loader").style.display, 'okay')
+
+}
+// end for loop
+
+
+autocomplete(document.getElementById("myInput"), list1);
+document.getElementById("loading").innerHTML = 'done'
+document.getElementById("myInput").style.display = 'block';
+console.log(e, 'done')
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+}
+
+
+
+
+
+</script>
+
+<!-- slider script -->
+<script>
+// var slider = document.getElementById("myRange");
+// var output = document.getElementById("demoslide");
+// output.innerHTML = slider.value;
+
+// slider.oninput = function() {
+//   output.innerHTML = this.value;
+// }
+
+// var maxslider = document.getElementById("myRange2");
+// var maxoutput = document.getElementById("demoslide2");
+// maxoutput.innerHTML = maxslider.value;
+
+// maxslider.oninput = function() {
+//   maxoutput.innerHTML = this.value;
+// }
+
+
+
+
+
+var url1 = 'http://anandrathi.pythonanywhere.com/'
+function StarSearch(e){
+console.log(e)
+var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+var url = url1 +'savesearch/'
+let  formData = new FormData()
+formData.append('post_id', e)
+
+
+fetch(url,
+{
+body: new URLSearchParams(formData),
+method: 'post',
+headers:{
+'X-CSRFTOKEN': token
+}
+
+
+}).then(res => res.json()).then(function(data) {
+var post_id = '#star'+data.post_id
+if (data.msg == 'saved'){
+document.querySelector(post_id).style.color = 'orange'
+}
+else if (data.msg == 'deleted'){
+document.querySelector(post_id).style.color = 'grey'
+}
+console.log(data)
+
+
+
+})
+
+}
 
 
 
@@ -752,114 +1301,6 @@ function mapHide(){
 
     console.log('hidden')
 }
-
-
-
-var url1 = 'http://anandrathi.pythonanywhere.com/'
-    function StarSearch(e){
-        console.log(e)
-	var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
-
-	var url = url1 +'savesearch/'
-	let  formData = new FormData()
-	formData.append('post_id', e)
-
-
-	fetch(url,
-	{
-	body: new URLSearchParams(formData),
-	method: 'post',
-	headers:{
-	'X-CSRFTOKEN': token
-	}
-
-
-	}).then(res => res.json()).then(function(data) {
-        var post_id = '#star'+data.post_id
-        if (data.msg == 'saved'){
-           document.querySelector(post_id).style.color = 'orange'
-        }
-        else if (data.msg == 'deleted'){
-           document.querySelector(post_id).style.color = 'grey'
-        }
- 		console.log(data)
-
-
-
-	})
-
-    }
-</script>
-
-<script>
-
-var latitude = []
-var longitude = []
-var address = []
-var data = []
-
-{% for i in pagin %}
-var person = {firstName:Number({{i.latitude}}), lastName:Number({{i.longitude}})};
-data.push(person)
-console.log(person)
-latitude.push('{{i.latitude}}');
-longitude.push('{{i.longitude}}');
-address.push('<strong>Chipotle on Broadway</strong><br>' + '{{i.street_number}}' + '{{i.street_name}}' + '{{i.suburb}}' + '{{i.state}}' + '{{i.postcode}}' + '<br>' + '<a href="https://goo.gl/maps/jKNEDz4SyyH2">Get Directions</a>', {{i.latitude}}, {{i.longitude}});
-
-
-// console.log('datatttttttt iss', {{i.latitude}}, {{i.longitude}});
-
-{% endfor %}
-console.log(data)
-
-
-
-
-GetCenterFromDegrees(data)
-
-
-
-function GetCenterFromDegrees(data){
-    // var data = [{lat:22.281610498720003,lng:70.77577162868579},{lat:22.28065743343672,lng:70.77624369747241},{lat:22.280860953131217,lng:70.77672113067706},{lat:22.281863655593973,lng:70.7762061465462}];
-    var num_coords = data.length;
-    var X = 0.0;
-    var Y = 0.0;
-    var Z = 0.0;
-
-    for(i=0; i<num_coords; i++){
-        var lat = data[i].lat * Math.PI / 180;
-        var lon = data[i].lng * Math.PI / 180;
-        var a = Math.cos(lat) * Math.cos(lon);
-        var b = Math.cos(lat) * Math.sin(lon);
-        var c = Math.sin(lat);
-
-        X += a;
-        Y += b;
-        Z += c;
-    }
-
-    X /= num_coords;
-    Y /= num_coords;
-    Z /= num_coords;
-
-    lon = Math.atan2(Y, X);
-    var hyp = Math.sqrt(X * X + Y * Y);
-    lat = Math.atan2(Z, hyp);
-
-    var finalLat = lat * 180 / Math.PI;
-    var finalLng =  lon * 180 / Math.PI;
-
-    var finalArray = Array();
-    finalArray.push(finalLat);
-    finalArray.push(finalLng);
-    console.log('dataaaaaaa',finalArray)
-    return finalArray;
-}
-
-
-
-
-
 
 
 
@@ -932,75 +1373,10 @@ function initMap() {
 
 
 
-
-
-propertylist=[]
-function changePropertyType(e){
-<!--console.log(e)-->
-var id = '#'+e
-var qs =document.querySelector(id)
-var a = propertylist.indexOf(qs.value);
-
-if (qs.checked==true){
-    if(qs.value=='All property types'){
-        document.querySelector('#House').checked = true
-        propertylist.push(document.querySelector('#House').value)
-        document.querySelector('#Apartment').checked = true
-        propertylist.push(document.querySelector('#Apartment').value)
-        document.querySelector('#Town').checked = true
-        propertylist.push(document.querySelector('#Town').value)
-        document.querySelector('#Villa').checked = true
-        propertylist.push(document.querySelector('#Villa').value)
-        document.querySelector('#Land').checked = true
-        propertylist.push(document.querySelector('#Land').value)
-        document.querySelector('#Acreage').checked = true
-        propertylist.push(document.querySelector('#Acreage').value)
-        document.querySelector('#Rural').checked = true
-        propertylist.push(document.querySelector('#Rural').value)
-        document.querySelector('#Retirement').checked = true
-        propertylist.push(document.querySelector('#Retirement').value)
-        document.querySelector('#Block').checked = true
-        propertylist.push(document.querySelector('#Block').value)
- //document.querySelector('#').checked = true
-
-
-}
-if (a==-1){
-
-propertylist.push(qs.value)
-var propertytype1 = document.querySelector('#propertytype1')
-propertytype1.value = propertylist
-console.log(propertytype1.value)
-} //if a==-1
-
-
-else{
-
-propertylist.splice(a, 1);
-var propertytype1 = document.querySelector('#propertytype1')
-propertytype1.value= propertylist
-console.log(propertytype1.value)
-
-}//else
-}// if qs
-
-
-else{
-    // console.log('nahhhh')
-    propertylist.splice(a, 1);
-    var propertytype1 = document.querySelector('#propertytype1')
-    propertytype1.value= propertylist
-    console.log(propertytype1.value)
-}
-
-} //function
-
-
-
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
 
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
 
 
 {% endblock %}

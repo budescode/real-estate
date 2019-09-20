@@ -1,0 +1,933 @@
+{% extends 'index/base.html' %}
+{% load staticfiles %}
+{% block body %}
+<style>
+
+
+/*body {*/
+/*  font: 16px Arial;*/
+/*}*/
+
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+</style>
+
+
+			<!-- start banner Area -->
+			<section class="banner-area relative" id="home">
+				<div class="overlay overlay-bg"></div>
+				<div class="container">
+
+					<div class="row fullscreen align-items-center justify-content-center" style="height: 915px;">
+
+						<div class="banner-content col-lg-12 col-md-12">
+							<h1 style="font-size: 35px;" class="text-uppercase">
+								Real Estate Company In Austrailia
+							</h1>
+							<div class="search-field">
+<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+<div class='row'>
+<div class='col-md-12'>
+<div id="searchitem" style=""></div>
+</div>
+</div>
+									 <div class="row">
+									 	<div class="col-lg-12 d-flex align-items-center justify-content-center toggle-wrap">
+											<div class="row">
+												<div class="col">
+													<h4 class="search-title">Search Properties For</h4>
+													  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Select State</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="col-md-12">
+
+
+<span class="badge" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='ACT'>ACT</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='NSW'>NSW</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='NT'>NT</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='SA'>SA</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='QLD'>QLD</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='TAS'>TAS</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='VIC'>VIC</span>
+<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='WA'>WA</span>
+
+
+
+
+            </div>
+           <div><img src="{% static 'images/loader.gif' %}" width='50' height='50' style='margin: 10px 10px; display:none' id='loader'>
+           <span style='display:none' id='loading'>loading</span></div>
+
+            <!--<div class="col-md-12">-->
+            <!--<input type="text" class="form-control" placeholder="search by state, suburb and postalcode" id="myInput" name="myCountry" style='display:none;'>-->
+            <!--</div>-->
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="genric-btn info" data-dismiss="modal">Next</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+												</div>
+												<div class="col">
+													<div class="onoffswitch3 d-block mx-auto">
+													    <input type="checkbox" name="onoffswitch3" class="onoffswitch3-checkbox" id="myonoffswitch3" checked>
+													    <label class="onoffswitch3-label" for="myonoffswitch3">
+													        <span class="onoffswitch3-inner">
+													            <span class="onoffswitch3-active">
+													            	<span class="onoffswitch3-switch">Buy</span>
+													            	<span class="lnr lnr-arrow-right"></span>
+													            </span>
+													            <span class="onoffswitch3-inactive">
+													            	<span class="lnr lnr-arrow-left"></span>
+													            	<span class="onoffswitch3-switch">Rent</span>
+													            </span>
+													        </span>
+													    </label>
+													</div>
+												</div>
+<div class="col">
+<div class="onoffswitch3 d-block mx-auto">
+<div id="searchitem" style="display: none;"></div>
+</div>
+</div>
+
+
+											</div>
+									 	</div>
+									    <div class="col-lg-5 col-md-6 col-xs-6">
+<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+<input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
+<input type="text" name="category" id="category" style="display: none;" value="Poster">
+<input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
+
+<label for="demo">What are you looking for?</label>
+<input type="text" class="form-control" placeholder="search by state, suburb and postalcode" id="myInput" name="myCountry" style='' oninput="InputChange()">
+						<!--<input type="text" class="form-control" placeholder="search by state, suburb and postalcode" id="myInput" name="myCountry">-->
+
+									    </div>
+									    <div class="col-lg-3 col-md-6 col-xs-6">
+
+
+<label for="demo">Property type</label><br>
+<div class="btn-group" style="">
+    <!--<span class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-top:-1px;font-size:12px;">-->
+    <!--   Property type-->
+    <!--</span>-->
+    <a href="#" class="genric-btn info-border dropdown-toggl" data-toggle="dropdown">Property type</a>
+
+<div class="dropdown-menu" style="height: 220px; width: 190px; overflow-x: hidden; overflow-x: auto;">
+
+
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="All" name="propertycheck" value="All property types" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">All property types</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="House" name="propertycheck" value="House" onclick='changePropertyType(this.id)' >
+<label class="form-check-label" for="all"> House</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Apartment" name="propertycheck" value="Apartment & Unit" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all"> Apartment & Unit</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Town" name="propertycheck" value="Town House" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">Town House</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Villa" name="propertycheck" value="Villa" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">Villa</label>
+</div>
+
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Land" name="propertycheck" value="Land" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">Land</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Acreage" name="propertycheck" value="Acreage" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all"> Acreage</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Rural" name="propertycheck" value="Rural" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all"> Rural</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Block" name="propertycheck" value="Block Of Units" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">Block Of Units</label>
+</div>
+<div class="form-check dropdown-item">
+<input type="checkbox" class="form-check-input" id="Retirement" name="propertycheck" value="Retirement Living" onclick='changePropertyType(this.id)'>
+<label class="form-check-label" for="all">Retirement Living</label>
+</div>
+
+
+</div>
+
+
+</div>
+
+
+									    </div>
+									    <div class="col-lg-2 col-md-6 col-xs-6">
+									        <label for="demo">Bed (max)</label>
+											<select name="Bed(min)" class="app-select form-control" required>
+
+                                                <option>Any</option>
+                                                <option>Studio</option>
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+
+											</select>
+									    </div>
+									    <div class="col-lg-2 col-md-6 col-xs-6">
+									        <label for="demo">Bed (min)</label>
+											<select name="Bed(max)" class="app-select form-control" required>
+
+                                                <option>Any</option>
+                                                <option>Studio</option>
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+
+											</select>
+									    </div>
+
+
+
+<div class="col-lg-4">
+                                    <div class="form-group">
+                                    <label for="sel1">Minimum Price</label>
+                                    <select class="form-control" id="sel1" name="pricemin">
+                                    <!--<option selected>Price (min)</option>-->
+                                    <option>Any </option>
+                                    <option>$50,000 </option>
+                                    <option>$75,000</option>
+                                    <option>$100,000</option>
+                                    <option>$125,000</option>
+                                    <option>$150,000</option>
+                                    <option>$175,000</option>
+                                    <option>$200,000</option>
+                                    <option>$225,000</option>
+                                    <option>$250,000</option>
+                                    <option>$275,000</option>
+                                    <option>$300,000</option>
+                                    <option>$325,000</option>
+                                    <option>$350,000</option>
+                                    <option>$350,000</option>
+                                    <option>$350,000</option>
+                                    <option>$375,000</option>
+                                    <option>$400,000</option>
+                                    <option>$425,000</option>
+                                    <option>$450,000</option>
+                                    <option>$475,000</option>
+                                    <option>$500,000</option>
+                                    <option>$550,000</option>
+                                    <option>$600,000</option>
+                                    <option>$650,000</option>
+                                    <option>$700,000</option>
+                                    <option>$750,000</option>
+                                    <option>$800,000</option>
+                                    <option>$850,000</option>
+                                    <option>$900,000</option>
+                                    <option>$950,000</option>
+                                    <option>$1,000,000</option>
+                                    <option>$1,100,000</option>
+                                    <option>$1,200,000</option>
+                                    <option>$1,300,000</option>
+                                    <option>$1,400,000</option>
+                                    <option>$1,500,000</option>
+                                    <option>$1,600,000</option>
+                                    <option>$1,700,000</option>
+                                    <option>$1,800,000</option>
+                                    <option>$1,900,000</option>
+                                    <option>$2,000,000</option>
+                                    <option>$2,250,000</option>
+                                    <option>$2,500,000</option>
+                                    <option>$2,750,000</option>
+                                    <option>$3,000,000</option>
+                                    <option>$3,500,000</option>
+                                    <option>$4,000,000</option>
+                                    <option>$4,500,000</option>
+                                    <option>$5,000,000 </option>
+                                    <option>$7,000,000</option>
+                                    <option>$8,000,000</option>
+                                    <option>$9,000,000</option>
+                                    <option>$10,000,000</option>
+                                    <option>$12,000,000</option>
+                                    <option>$15,000,000</option>
+
+
+                                    </select>
+                                    </div>
+                                    </div>
+
+
+
+ <div class="col-lg-4">
+                                        <div class="form-group">
+                                        <label for="sel1">Maximum Price</label>
+                                        <select class="form-control" id="sel1" name="pricemax">
+                                        <!--<option selected>Price (max)</option>-->
+                                        <option>Any </option>
+                                        <option>$50,000 </option>
+                                        <option>$75,000</option>
+                                        <option>$100,000</option>
+                                        <option>$125,000</option>
+                                        <option>$150,000</option>
+                                        <option>$175,000</option>
+                                        <option>$200,000</option>
+                                        <option>$225,000</option>
+                                        <option>$250,000</option>
+                                        <option>$275,000</option>
+                                        <option>$300,000</option>
+                                        <option>$325,000</option>
+                                        <option>$350,000</option>
+                                        <option>$350,000</option>
+                                        <option>$350,000</option>
+                                        <option>$375,000</option>
+                                        <option>$400,000</option>
+                                        <option>$425,000</option>
+                                        <option>$450,000</option>
+                                        <option>$475,000</option>
+                                        <option>$500,000</option>
+                                        <option>$550,000</option>
+                                        <option>$600,000</option>
+                                        <option>$650,000</option>
+                                        <option>$700,000</option>
+                                        <option>$750,000</option>
+                                        <option>$800,000</option>
+                                        <option>$850,000</option>
+                                        <option>$900,000</option>
+                                        <option>$950,000</option>
+                                        <option>$1,000,000</option>
+                                        <option>$1,100,000</option>
+                                        <option>$1,200,000</option>
+                                        <option>$1,300,000</option>
+                                        <option>$1,400,000</option>
+                                        <option>$1,500,000</option>
+                                        <option>$1,600,000</option>
+                                        <option>$1,700,000</option>
+                                        <option>$1,800,000</option>
+                                        <option>$1,900,000</option>
+                                        <option>$2,000,000</option>
+                                        <option>$2,250,000</option>
+                                        <option>$2,500,000</option>
+                                        <option>$2,750,000</option>
+                                        <option>$3,000,000</option>
+                                        <option>$3,500,000</option>
+                                        <option>$4,000,000</option>
+                                        <option>$4,500,000</option>
+                                        <option>$5,000,000 </option>
+                                        <option>$7,000,000</option>
+                                        <option>$8,000,000</option>
+                                        <option>$9,000,000</option>
+                                        <option>$10,000,000</option>
+                                        <option>$12,000,000</option>
+                                        <option>$15,000,000</option>
+
+
+                                        </select>
+                                        </div>
+                                        </div>
+
+
+
+									    <!-- <div class="col-lg-4 range-wrap">
+									    	<p>Area Range(sqm):</p>
+									    	<input type="text" id="range2" value="" name="range" />
+									    </div>										     -->
+									    <div class="col-lg-4 d-flex justify-content-end">
+											<button class="primary-btn mt-50" style="height: 45px;" type='submit'>Search Properties<span class="lnr lnr-arrow-right"></span></button>
+										</div>
+									  </div>
+</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- End banner Area -->
+
+			<!-- Start service Area -->
+			<section class="service-area section-gap" id="service">
+				<div class="container">
+					<div class="row d-flex justify-content-center">
+						<div class="col-md-8 pb-40 header-text">
+							<h1>Why we are the best</h1>
+							<p>
+								Who are in extremely love with eco friendly system.
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4 col-md-6 pb-30">
+							<div class="single-service">
+								<center><img src="{% static 'index/img/1.png' %}" width="50" height="50">
+								<h4>Professional Service</h4>
+							</center>
+								<p>
+									Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+								</p>
+							</div>
+						</div>
+
+						<div class="col-lg-4 col-md-6 pb-30">
+								<div class="single-service">
+									<center><img src="{% static 'index/img/recommended.svg' %}" width="50" height="50">
+									<h4>Highly recommended</h4>
+								</center>
+									<p>
+										Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+									</p>
+								</div>
+						</div>
+
+
+						<div class="col-lg-4 col-md-6 pb-30">
+								<div class="single-service">
+									<center><img src="{% static 'index/img/support.svg' %}" width="50" height="50">
+									<h4>Highly recommended</h4>
+								</center>
+									<p>
+										Usage of the Internet is becoming more common due to rapid advancement of technology and power.
+									</p>
+								</div>
+						</div>
+
+
+					</div>
+				</div>
+			</section>
+			<!-- End service Area -->
+
+
+
+
+
+
+
+			<div class="container" style="margin-top: 50px;">
+					<div class="row">
+					  <div class="col-md-12">
+				  <h2>Latest Property News</h2>
+				  <br>
+
+				  <div class="block">
+
+
+				  <div class="row">
+
+				  <div class="col-sm-2">
+				  <img class="img-left img-thumbnail img-fluid" src="{% static 'index/img/news.jpg' %}" style="height: 150px;" />
+				  </div>
+
+				  <div class="col-sm-6">
+				  <h5 style="font-family: Baufra;">5 STEPS TO ENSURE YOUR HOME IS A GOOD BUY &nbsp </h5>
+				  <p>Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.<br>
+				  Donec id elit non mi porta gravida at eget metus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+				  </div>
+
+				  </div>
+				  <!-- row -->
+
+				  </div>
+				  </div>
+				  </div>
+				  </div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+propertylist=[]
+function changePropertyType(e){
+<!--console.log(e)-->
+var id = '#'+e
+var qs =document.querySelector(id)
+var a = propertylist.indexOf(qs.value);
+
+if (qs.checked==false){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = false
+
+        document.querySelector('#Apartment').checked = false
+
+        document.querySelector('#Town').checked = false
+
+        document.querySelector('#Villa').checked = false
+
+        document.querySelector('#Land').checked = false
+
+        document.querySelector('#Acreage').checked = false
+
+        document.querySelector('#Rural').checked = false
+
+        document.querySelector('#Retirement').checked = false
+
+        document.querySelector('#Block').checked = false
+        propertylist = []
+        console.log(propertylist)
+
+
+    }}
+
+if (qs.checked==true){
+    if(qs.value=='All property types'){
+        document.querySelector('#House').checked = true
+        propertylist.push(document.querySelector('#House').value)
+        document.querySelector('#Apartment').checked = true
+        propertylist.push(document.querySelector('#Apartment').value)
+        document.querySelector('#Town').checked = true
+        propertylist.push(document.querySelector('#Town').value)
+        document.querySelector('#Villa').checked = true
+        propertylist.push(document.querySelector('#Villa').value)
+        document.querySelector('#Land').checked = true
+        propertylist.push(document.querySelector('#Land').value)
+        document.querySelector('#Acreage').checked = true
+        propertylist.push(document.querySelector('#Acreage').value)
+        document.querySelector('#Rural').checked = true
+        propertylist.push(document.querySelector('#Rural').value)
+        document.querySelector('#Retirement').checked = true
+        propertylist.push(document.querySelector('#Retirement').value)
+        document.querySelector('#Block').checked = true
+        propertylist.push(document.querySelector('#Block').value)
+         }
+
+
+if (a==-1){
+
+propertylist.push(qs.value)
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value = propertylist
+console.log(propertytype1.value)
+} //if a==-1
+
+
+else{
+
+propertylist.splice(a, 1);
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value= propertylist
+console.log(propertytype1.value)
+
+}//else
+}// if qs
+
+
+else{
+    // console.log('nahhhh')
+    propertylist.splice(a, 1);
+    var propertytype1 = document.querySelector('#propertytype1')
+    propertytype1.value= propertylist
+    console.log(propertytype1.value)
+}
+
+} //function
+
+
+
+
+
+
+
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+    document.querySelector("#searchitem").style.display = 'block'
+    var inputedvalue = document.querySelector("#myInput").value
+    if (inputedvalue){
+    var searchitem = document.querySelector("#searchitem")
+    var inputedvalue = document.querySelector("#myInput").value
+    var spanelement = document.createElement("span");
+    var length = searchlist.length
+    spanelement.setAttribute("class", "badge badge-primary badge-lg");
+    spanelement.setAttribute("id", 'itemid'+length);
+    spanelement.style.marginLeft = '3px';
+    spanelement.style.marginRight = '3px';
+
+    spanelement.addEventListener('click',
+    function(){
+    var id = this.innerHTML.slice(0,-2)
+    var index = searchlist.indexOf(id)
+    searchlist.splice( index, 1 );
+    // console.log(id, index, searchlist)
+    this.remove()
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+    //console.log(propertytype1)
+    }
+
+    )
+
+    var testnode = document.createTextNode(inputedvalue)
+    var cancel = document.createTextNode(' X')
+
+
+    spanelement.appendChild(testnode)
+    spanelement.appendChild(cancel)
+
+
+    // console.log(spanelement)
+
+    searchitem.appendChild(spanelement)
+    searchlist[length] = spanelement.innerHTML
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+  //console.log(propertytype1)
+
+    inputedvalue = document.querySelector("#myInput").value = ''
+    }
+
+    // console.log(inputedvalue)
+      closeAllLists(e.target);
+
+  });
+}
+
+/*An array containing all the country names in the world:*/
+// var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+
+
+
+
+var list2 = []
+{% for i in qs %}
+list2.push('{{i.suburb}}' + ' - ' +  '{{i.state}}')
+{% endfor %}
+
+
+
+var searchlist = []
+// this will take the least of items to be searched
+
+
+function InputChange(){
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+
+autocomplete(document.getElementById("myInput"), list2);
+  document.querySelector("#searchitem").style.display = 'block';
+  var searchitem = document.querySelector("#myInput").value
+  if (searchitem.includes(";")){
+    console.log("ok")
+
+
+    var inputedvalue = document.querySelector("#myInput").value
+
+
+    if (inputedvalue){
+    var length = searchlist.length
+    var searchitem = document.querySelector("#searchitem")
+    inputedvalue = inputedvalue.slice(0, -1);
+    var spanelement = document.createElement("span");
+    spanelement.setAttribute("class", "badge badge-primary");
+    // var addlength =  length
+    spanelement.setAttribute("id", 'itemid'+length);
+
+
+
+    spanelement.style.marginLeft = '3px';
+    spanelement.style.marginRight = '3px';
+    spanelement.addEventListener('click',
+    function(){
+    var id = this.innerHTML.slice(0,-2)
+
+    // var element = document.querySelector(id);
+
+
+    var index = searchlist.indexOf(id)
+    searchlist.splice( index, 1 );
+    // var propertyarray = []
+    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    // var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+
+
+    this.remove()
+
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+    // console.log(propertyarray)
+    })
+
+    var testnode = document.createTextNode(inputedvalue)
+    var cancel = document.createTextNode(' X')
+    spanelement.appendChild(testnode)
+    spanelement.appendChild(cancel)
+    searchitem.appendChild(spanelement)
+    searchlist[length] = spanelement.innerHTML
+    // console.log(searchlist)
+    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+    var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
+
+    // for (var i = 0; i < checkboxes.length; i++) {
+    // propertyarray.push(checkboxes[i].value)
+    // }
+    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
+    // var bedmin1 = document.querySelector("#bedmin1").value = document.querySelector(".bedmin").innerHTML.trim().slice(0, 1);
+    // var bedmax1 = document.querySelector("#bedmax1").value = document.querySelector(".bedmax").innerHTML.trim().slice(0, 1);
+    // var pricemin1 = document.querySelector("#pricemin1").value = document.querySelector(".pricemin").innerHTML
+    // var pricemax1 = document.querySelector("#pricemax1").value = document.querySelector(".pricemax").innerHTML
+    // console.log(bedmin1)
+    inputedvalue = document.querySelector("#myInput").value = ''
+    }
+
+
+  }
+
+}
+// endof inputchange function
+
+
+
+function filterState(e){
+document.querySelector('.modal-title').innerHTML = 'Search bu suburb, postcode'
+
+document.getElementById("loading").style.display = 'block'
+
+
+document.getElementById("myInput").style.display = 'none';
+
+document.getElementById("loading").innerHTML = 'loading'
+
+
+
+test(e)
+}
+// end of function
+
+
+function test(e){
+        list1=[]
+
+    for(i=0; i<list2.length; i++){
+
+    if(list2[i].includes(e)){
+    list1.push(list2[i])
+    console.log('yeahh')
+    }
+
+
+    else{
+        console.log('nahhh')
+    }
+    console.log(document.getElementById("loader").style.display, 'okay')
+
+}
+// end for loop
+
+
+autocomplete(document.getElementById("myInput"), list1);
+document.getElementById("loading").innerHTML = 'done'
+document.getElementById("myInput").style.display = 'block';
+console.log(e, 'done')
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+}
+
+
+
+
+
+</script>
+
+
+
+		</body>
+	</html>
+
+	{% endblock %}

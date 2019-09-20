@@ -21,10 +21,10 @@ import requests
 def home(request):
 	qs = CountryDetails.objects.all()
 
-	return render(request, 'index.html', {'qs':qs})
+	return render(request, 'index/index.html', {'qs':qs})
 
 def about(request):
-	return render(request, 'rough.html')
+	return render(request, 'about.html')
 
 def contact(request):
 	return render(request, 'contact.html')
@@ -35,28 +35,45 @@ def blog(request):
 
 # this function is used to filter the searched items from users
 def filter_search(request):
+
+# 	print(filterlist,sortby ,'listttt')
+# 	for i in filterlist:
+# 	    print(i)
+# 	return HttpResponse('done')
+
 	qs = CountryDetails.objects.all()
+	filterlist = ['none']
 	if not request.method == 'POST':
 	    #if the method isn't post, it get its data off the session
-		print('hiddensearchsession', request.session['hiddensearchsession'])
+# 		print('hiddensearchsession', request.session['hiddensearchsession'])
 
 		hiddensearch = request.session['hiddensearchsession']
+		print(hiddensearch)
 		mylist = request.session['mylistsession']
-		propertytype1 = request.session['propertytype1session']
-		bedmin1 = request.session['bedmin1session']
-		bedmax1 = request.session['bedmax1session']
-		pricemax1 = request.session['pricemax1session']
-		pricemin1 = request.session['pricemin1session']
-		category = request.session['categorysession']
-		state = request.session['state']
+		propertytype1 = request.session['propertytype1']
+		bedmin1 = request.session['bedmin1']
+		bedmax1 = request.session['bedmax1']
+		pricemax1 = request.session['pricemax1']
+		pricemin1 = request.session['pricemin1']
+# 		category = request.session['categorysession']
+# 		state = request.session['state']
+		firstbedmin = request.session['firstbedmin']
+		firstbedmax = request.session['firstbedmax']
+		firstpricemin = request.session['firstpricemin']
+		firstpricemax = request.session['firstpricemax']
+		firstpropertytype = request.session['firstpropertytype']
+		filterlist = request.session['filterlist']
 
 
-		print('valuessssss', mylist, propertytype1, bedmin1, bedmax1, pricemax1, pricemin1)
+
+
+		#print('valuessssss', mylist, propertytype1, bedmin1, bedmax1, pricemax1, pricemin1)
 
 # 		return HttpResponse('done')
 	if request.method == 'POST':
 		hiddensearch = request.POST.get("hiddensearch") #it brings a string of the postalcode
 		print(hiddensearch)
+		#print('hiddensearch is',hiddensearch)
 		if hiddensearch:
 		    hiddensearch0 = hiddensearch.replace('X', '')
 		    hiddensearch1 =  hiddensearch0.split(',')
@@ -65,36 +82,74 @@ def filter_search(request):
 		    mylist = ['']
 		request.session['hiddensearchsession'] = hiddensearch
 		request.session['mylistsession'] = mylist
+		filterlist = request.POST.get('filterlist')
 
-		category = request.POST.get("category") #it brings a string of the category rent or buy
-		request.session['categorysession'] = category
+		if filterlist:
+			filterlist = filterlist.split(',')
+			request.session['filterlist'] = filterlist
+		else:
+		    fillterlist = ['']
+		    request.session['filterlist'] = filterlist
+		sortby = request.POST.get('sortby')
+# 		category = request.POST.get("category") #it brings a string of the category rent or buy
+# 		request.session['categorysession'] = category
 
-		state = request.POST.get("state")
-		request.session['state'] = state
-		print('the state isss', state, mylist )
+# 		state = request.POST.get("state")
+# 		request.session['state'] = state
+# 		print('the state isss', state, mylist )
 
 		propertytype1 = request.POST.get("propertytype1")
+		firstpropertytype = propertytype1 #I will return it as default value back to the template.
+
 		propertytype1 =  propertytype1.split(',')
-		request.session['propertytype1session'] = propertytype1
+		request.session['propertytype1'] = propertytype1
+		request.session['firstpropertytype'] = firstpropertytype
 
-		bedmin1 = request.POST.get("Bed(min)")[0]
-		request.session['bedmin1session'] = bedmin1
 
-		bedmax1 = request.POST.get("Bed(max)")[0]
-		request.session['bedmax1session'] = bedmax1
+		bedmin1 = request.POST.get("Bed(min)")
+		firstbedmin = bedmin1 #I will return it as default value back to the template.
 
-		pricemax1 = request.POST.get("Price(max)")
-		pricemax1 = ''.join(pricemax1.split())
-		pricemax1 = ''.join(pricemax1.split(','))
+		request.session['bedmin1'] = bedmin1
+		request.session['firstbedmin'] = firstbedmin
+
+
+		bedmax1 = request.POST.get("Bed(max)")
+		firstbedmax = bedmax1 #I will return it as default value back to the template.
+
+		request.session['bedmax1'] = bedmax1
+		request.session['firstbedmax'] = firstbedmax
+		#print('enhh', propertytype1, bedmin1, bedmax1, price_range[0], price_range[1])
+# 		return HttpResponse('ok')
+
+# 		pricemax1 = request.POST.get("Price(max)")
+# 		pricemax1 = ''.join(pricemax1.split())
+# 		pricemax1 = ''.join(pricemax1.split(','))
+# 		pricemax1 = pricemax1[1:]
+
+		pricemax1 = request.POST.get("pricemax")
+		firstpricemax = pricemax1
 		pricemax1 = pricemax1[1:]
-		request.session['pricemax1session'] = pricemax1
+		pricemax1 = pricemax1.replace(',', '')
+		request.session['pricemax1'] = pricemax1
+		request.session['firstpricemax'] = firstpricemax
 
-		pricemin1 = request.POST.get("Price(min)")
-		pricemin1 = ''.join(pricemin1.split())
-		pricemin1 = ''.join(pricemin1.split(','))
+
+# 		pricemin1 = request.POST.get("Price(min)")
+# 		pricemin1 = ''.join(pricemin1.split())
+# 		pricemin1 = ''.join(pricemin1.split(','))
+# 		pricemin1 = pricemin1[1:]
+		pricemin1 = request.POST.get("pricemin")
+		firstpricemin = pricemin1
 		pricemin1 = pricemin1[1:]
-		request.session['pricemin1session'] = pricemin1
+		pricemin1 = pricemin1.replace(',', '')
+		request.session['pricemin1'] = pricemin1
+		request.session['firstpricemin'] = firstpricemin
 
+# 	print('testttt', pricemin1, pricemax1,propertytype1, bedmin1, bedmax1)
+
+# 	return HttpResponse('done')
+
+	category = 'Poster'
 	if category == 'Poster':
 		category = Poster
 		category1 = 'Poster'
@@ -103,18 +158,18 @@ def filter_search(request):
 	elif category == 'PosterRent':
 		category = PosterRent
 		category1 = 'PosterRent'
-		print('PosterRent')
+		#print('PosterRent')
 
 
 
-	if bedmin1 == 'B' or bedmin1 == 'A' or bedmin1 == 'Bed (min)' or bedmin1 == 'Any':
+	if bedmin1 == 'B' or bedmin1 == 'A' or bedmin1 == 'Bed (min)' or bedmin1 == 'Any' or bedmin1 == 'ny':
 		bedminsearch = 0
 	elif bedmin1 == 'S' or bedmin1 == 'Studio':
 		bedminsearch = 0
 	else:
 		bedminsearch = int(bedmin1)
 
-	if bedmax1 == 'B' or bedmax1 == 'A' or bedmax1=='Bed (max)' or bedmax1 =='Any':
+	if bedmax1 == 'B' or bedmax1 == 'A' or bedmax1=='Bed (max)' or bedmax1 =='Any' or bedmax1 =='ny':
 		bedmaxsearch = 100
 
 	elif bedmax1 == 'S' or bedmax1 == 'Studio':
@@ -123,14 +178,14 @@ def filter_search(request):
 	else:
 		bedmaxsearch = int(bedmax1)
 
-	if pricemin1 == 'rice(min)' or pricemin1 == 'ny' or pricemin1== 'Price (min)':
+	if pricemin1 == 'rice(min)' or pricemin1 == 'ny' or pricemin1== 'Price (min)' or pricemin1== 'Any':
 		priceminsearch = 0
 
 	else:
 		priceminsearch = int(pricemin1)
 
 
-	if pricemax1 == 'rice(max)' or pricemax1 == 'ny' or pricemax1=='Price (max)':
+	if pricemax1 == 'rice(max)' or pricemax1 == 'ny' or pricemax1=='Price (max)' or pricemax1=='Any':
 		pricemaxsearch = 1000000000000
 	else:
 		pricemaxsearch = int(pricemax1)
@@ -143,114 +198,482 @@ def filter_search(request):
 
 
 	list2 = ['TAS GLEBEA' ,'NT DARWIN']
+	#print(bedminsearch, bedmaxsearch, priceminsearch, pricemaxsearch)
 #
 	# it'll remove duplicate from the list that has the postal code
 
 	searchlist = []
 	# this list contains all the Poster that has the postal code needed
 	#print('mylist', len(mylist), mylist, mylist[0] )
+# 	print(fillterlist)
+# 	return HttpResponse('done')
+	print('filterrrr', filterlist)
 	if mylist == ['']:
 	   # print('zobobobo')
-	    searchlist = category.objects.all()
-	else:
-	    for i in mylist:
-	        findvalue = i.find(' ')
-
-	       # statesub = i[0:findvalue].strip()
-	       # print('ok',statesub, i)
-	       # ab = i.replace(' '+state, '')
-	       # print('abbb', ab, len(ab))
-	        postal1 = i[-5:]
-
-	        first = postal1[:1]
-	        if first == ' ':
-	            print('space')
-	            postal1 = postal1[-6:]
-	            suburb = i.replace(postal1, '')
-	            sub = suburb[0:len(suburb)]
-
-	        else:
-	            print('nahhhh', first)
-
-	            suburb = i.replace(postal1, '')
-	            sub = suburb[0:len(suburb)-1]
-
-	        test = postal1.replace(' ', '')
-
-
-	       # postal = ab[-4:].replace(' ', '')
-
-
-
-
-	        print('testingggggg',sub,postal1, state)
-	        if suburb == '':
-	            post = category.objects.filter(state= state)
-	        else:
-	            post = category.objects.filter(state__icontains= state, suburb__icontains=sub)
-	           # print('post isss', post, category)
-	        searchlist.extend(post)
-	#print('searchlist', searchlist)
-
-	#print('bedminsearch is', bedminsearch)
-# 	print('dvdhdhdhhdhd', bedminsearch, bedmaxsearch,pricemaxsearch, priceminsearch)
-# 	print(propertytype1)
-	for i in searchlist:
-
 		if 'All property types' in propertytype1:
-			print('yeahhh')
-			if int(i.Bedrooms) >= int(bedminsearch) and int(i.Bedrooms) <= int(bedmaxsearch) and int(i.Price)>=priceminsearch and int(i.Price)<=pricemaxsearch:
-			    try:
-			        saved = SavedSearch.objects.get(post_id=i.id_user)
-			        i.saved = True
-			        generallist.append(i)
-			    except SavedSearch.DoesNotExist:
-			        generallist.append(i)
+			if filterlist:
+				if 'Swimming_pool' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True )
+					searchlist.extend(searchlist1)
+				elif 'Garage' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Garage=True )
+					searchlist.extend(searchlist1)
+				elif 'Balcony' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Balcony=True )
+					searchlist.extend(searchlist1)
+				elif 'Outdoor_area' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_area=True )
+					searchlist.extend(searchlist1)
+				elif 'Undercover_parking' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Undercover_parking=True )
+					searchlist.extend(searchlist1)
+				elif 'Shed' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Shed=True )
+					searchlist.extend(searchlist1)
+				elif 'Fully_fenced' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Fully_fenced=True )
+					searchlist.extend(searchlist1)
+				elif 'Outdoor_spa' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_spa=True )
+					searchlist.extend(searchlist1)
+				elif 'Tennis_court' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Tennis_court=True )
+					searchlist.extend(searchlist1)
+				elif 'Ensuite' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Ensuite=True )
+					searchlist.extend(searchlist1)
+				elif 'DishWasher' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,DishWasher=True )
+					searchlist.extend(searchlist1)
+				elif 'Study' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Study=True )
+					searchlist.extend(searchlist1)
+				elif 'Built_in_robes' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Built_in_robes=True )
+					searchlist.extend(searchlist1)
+				elif 'Alarm_system' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Alarm_system=True )
+					searchlist.extend(searchlist1)
+				elif 'Broadband' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Broadband=True )
+					searchlist.extend(searchlist1)
+				elif 'Floorboards' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Floorboards=True )
+					searchlist.extend(searchlist1)
+				elif 'Gym' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Gym=True )
+					searchlist.extend(searchlist1)
+				elif 'Rumpus_room' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Rumpus_room=True )
+					searchlist.extend(searchlist1)
+				elif 'Workshop' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Workshop=True )
+					searchlist.extend(searchlist1)
+				elif 'Air_conditioning' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Air_conditioning=True )
+					searchlist.extend(searchlist1)
+				elif 'Solar_panels' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_panels=True )
+					searchlist.extend(searchlist1)
+				elif 'Heating' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Heating=True )
+					searchlist.extend(searchlist1)
+				elif 'High_energy_efficiency' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,High_energy_efficiency=True )
+					searchlist.extend(searchlist1)
+				elif 'Water_tank' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Water_tank=True )
+					searchlist.extend(searchlist1)
+				elif 'Solar_hot_water' in filterlist:
+					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_hot_water=True )
+					searchlist.extend(searchlist1)
 
 
-
+				else:
+					searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch)
+					print('nahhhh')
 			else:
-				pass
-
-			# it'll append the post to the general list
+				searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch)
+				print('okayyyyy')
 		else:
-			for a in propertytype1:
-				if i.Property_type==a and int(i.Bedrooms) >= int(bedminsearch) and int(i.Bedrooms) <= int(bedmaxsearch) and int(i.Price)>=priceminsearch and int(i.Price)<=pricemaxsearch:
-					print("yes", i.Property_type)
-					try:
-					    saved = SavedSearch.objects.get(post_id=i.id_user)
-					    i.saved = True
-					    generallist.append(i)
-					except SavedSearch.DoesNotExist:
-					    generallist.append(i)
+			for i in propertytype1:
+
+				# searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch, Property_type=i)
+				# searchlist.extend(searchlist1)
+				if filterlist:
+					if 'Swimming_pool' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Garage' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Garage=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Balcony' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Balcony=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Outdoor_area' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_area=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Undercover_parking' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Undercover_parking=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Shed' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Shed=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Fully_fenced' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Fully_fenced=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Outdoor_spa' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_spa=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Tennis_court' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Tennis_court=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Ensuite' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Ensuite=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'DishWasher' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,DishWasher=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Study' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Study=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Built_in_robes' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Built_in_robes=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Alarm_system' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Alarm_system=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Broadband' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Broadband=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Floorboards' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Floorboards=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Gym' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Gym=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Rumpus_room' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Rumpus_room=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Workshop' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Workshop=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Air_conditioning' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Air_conditioning=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Solar_panels' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_panels=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Heating' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Heating=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'High_energy_efficiency' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,High_energy_efficiency=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Water_tank' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Water_tank=True , Property_type=i )
+						searchlist.extend(searchlist1)
+					elif 'Solar_hot_water' in filterlist:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_hot_water=True , Property_type=i )
+						searchlist.extend(searchlist1)
 
 
-	generallist = list(dict.fromkeys(generallist))	# it'll remove duplicate from the generallist
-	page = request.GET.get('page', 1)
+					else:
+						searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch, Property_type=i)
+						print('nahhhh')
+				else:
+					searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch, Property_type=i)
+					print('okayyyyy')
 
-	paginator = Paginator(generallist, 30)
+	else:
+		for i in mylist:
+			findvalue = i.find(' - ')
+
+			suburb = i[0:findvalue]
+			state = i[findvalue+3:].replace(' ', '')
+			print(suburb, state)
+			if suburb == '':
+				if 'All property types' in propertytype1:
+					if filterlist:
+						if 'Swimming_pool' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Garage' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Garage=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Balcony' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Balcony=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Outdoor_area' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_area=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Undercover_parking' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Undercover_parking=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Shed' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Shed=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Fully_fenced' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Fully_fenced=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Outdoor_spa' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_spa=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Tennis_court' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Tennis_court=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Ensuite' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Ensuite=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'DishWasher' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,DishWasher=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Study' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Study=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Built_in_robes' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Built_in_robes=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Alarm_system' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Alarm_system=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Broadband' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Broadband=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Floorboards' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Floorboards=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Gym' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Gym=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Rumpus_room' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Rumpus_room=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Workshop' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Workshop=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Air_conditioning' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Air_conditioning=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Solar_panels' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_panels=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Heating' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Heating=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'High_energy_efficiency' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,High_energy_efficiency=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Water_tank' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Water_tank=True ,state= state )
+							searchlist.extend(searchlist1)
+						elif 'Solar_hot_water' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_hot_water=True ,state= state )
+							searchlist.extend(searchlist1)
+
+
+						else:
+							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state= state)
+							print('nahhhh')
+					else:
+						searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state= state)
+						print('okayyyyy')
+				else:
+					for a in propertytype1:
+						post = category.objects.filter(Property_type=a, state= state, Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch)
+						searchlist.extend(post)
+			else:
+				print(state, suburb, 'zobo', filterlist)
+				if 'All property types' in propertytype1:
+					post = category.objects.filter(state__icontains= state, suburb__icontains=suburb, Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch)
+					if filterlist:
+						print('yaya')
+						if 'Swimming_pool' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Garage' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Garage=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Balcony' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Balcony=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Outdoor_area' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_area=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Undercover_parking' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Undercover_parking=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Shed' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Shed=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Fully_fenced' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Fully_fenced=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Outdoor_spa' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_spa=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Tennis_court' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Tennis_court=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Ensuite' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Ensuite=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'DishWasher' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,DishWasher=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Study' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Study=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Built_in_robes' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Built_in_robes=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Alarm_system' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Alarm_system=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Broadband' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Broadband=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Floorboards' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Floorboards=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Gym' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Gym=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Rumpus_room' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Rumpus_room=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Workshop' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Workshop=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Air_conditioning' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Air_conditioning=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Solar_panels' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_panels=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Heating' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Heating=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'High_energy_efficiency' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,High_energy_efficiency=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Water_tank' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Water_tank=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+						elif 'Solar_hot_water' in filterlist:
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_hot_water=True ,state__icontains= state, suburb__icontains=suburb, )
+							searchlist.extend(searchlist1)
+
+
+						else:
+							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state__icontains= state, suburb__icontains=suburb,)
+							print('nahhhh')
+					else:
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state__icontains= state, suburb__icontains=suburb,)
+						searchlist.extend(searchlist1)
+				else:
+					for a in propertytype1:
+						if filterlist:
+							if 'Swimming_pool' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Garage' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Garage=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Balcony' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Balcony=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Outdoor_area' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_area=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Undercover_parking' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Undercover_parking=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Shed' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Shed=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Fully_fenced' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Fully_fenced=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Outdoor_spa' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Outdoor_spa=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Tennis_court' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Tennis_court=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Ensuite' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Ensuite=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'DishWasher' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,DishWasher=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Study' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Study=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Built_in_robes' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Built_in_robes=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Alarm_system' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Alarm_system=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Broadband' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Broadband=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Floorboards' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Floorboards=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Gym' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Gym=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Rumpus_room' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Rumpus_room=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Workshop' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Workshop=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Air_conditioning' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Air_conditioning=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Solar_panels' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_panels=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Heating' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Heating=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'High_energy_efficiency' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,High_energy_efficiency=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Water_tank' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Water_tank=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+							elif 'Solar_hot_water' in filterlist:
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Solar_hot_water=True ,Property_type=a, state= state, suburb__icontains=suburb )
+								searchlist.extend(searchlist1)
+
+
+							else:
+								searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb)
+								print('nahhhh')
+						else:
+							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb)
+							print('okayyyyy')
+
+			print('propertytype1 is', propertytype1)
+
+	pagin = list(dict.fromkeys(searchlist))	# it'll remove duplicate from the generallist
+
 	try:
-		pagin = paginator.page(page)
-	except PageNotAnInteger:
-		pagin = paginator.page(1)
-	except EmptyPage:
-		pagin = paginator.page(paginator.num_pages)
-# 	paginator = Paginator(qs, 2) # Show 20 contacts per page
-# 	page = request.GET.get('page')
-# 	myposts = paginator.get_page(page)
-	context = {'pagin':pagin}
-	# 	page = request.GET.get('page', 1)
+	    user = User.objects.get(username=request.user.username)
+	    saved = SavedSearch.objects.filter(user=request.user)
+	    #print('saved is', saved)
+	except User.DoesNotExist:
+	    saved='None'
+	   # print('saved is', saved)
+	    pass
 
-	# 	paginator = Paginator(generallist, 4)
-	# 	try:
-	# 		pagin = paginator.page(page)
-	# 	except PageNotAnInteger:
-	# 		pagin = paginator.page(1)
-	# 	except EmptyPage:
-	# 		pagin = paginator.page(paginator.num_pages)
+# 	print('lastttttt', saved)
 
-
-	context = {'qs':qs,'pagin':pagin, 'category1':category1,'generallist':generallist, 'bedminsearch':bedminsearch, 'bedmaxsearch':bedmaxsearch, 'priceminsearch':priceminsearch, 'pricemaxsearch':pricemaxsearch}
+	context = {'saved':saved, 'firstbedmin':firstbedmin, 'firstpropertytype':firstpropertytype, 'firstbedmax':firstbedmax, 'firstpricemax':firstpricemax, 'firstpricemin':firstpricemin, 'saved':saved,'mylist':mylist,'qs':qs,'pagin':pagin, 'category1':category1,'generallist':generallist, 'bedminsearch':bedminsearch, 'bedmaxsearch':bedmaxsearch, 'priceminsearch':priceminsearch, 'pricemaxsearch':pricemaxsearch}
 
 
 	return render(request, 'filter_search.html', context)

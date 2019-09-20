@@ -132,9 +132,9 @@ class Poster(models.Model):
 	Price = models.PositiveIntegerField()
 	image = models.ImageField()
 	plan = models.ImageField()
-	Bedrooms = models.CharField(max_length=20, choices=bedrooms, default='1')
-	Bathrooms = models.CharField(max_length=10, choices = bathrooms, default='1')
-	Car_spaces = models.CharField(max_length=10, choices = car_spaces, default='1')
+	Bedrooms = models.PositiveIntegerField(default=1)
+	Bathrooms =models.PositiveIntegerField(default=1)
+	Car_spaces = models.PositiveIntegerField(default=1)
 
 	image1 = models.ImageField(default='', blank=True)
 	image2 = models.ImageField(default='', blank=True)

@@ -1,124 +1,280 @@
-{% extends 'base.html' %}
+{% extends 'index/base.html' %}
+{% load staticfiles %}
+{% load el_pagination_tags %}
 {% block body %}
 
 
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
 
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
 
-    @media only screen and (max-width: 751px) {
-      #map {
-        height: 400px;
-      }
-    }
-    </style>
-<div class="container">
-	<div class="row">
-	    <div class='col-md-12'>
-<!--<form class="form-inline" action="/action_page.php">-->
 
-<!--<input type="text" class="form-control mb-2 mr-sm-2" id="email2" placeholder="NT DARWIN" name="email">-->
-<!--<select class="custom-select custom-select-sm mb-3">-->
-<!--<option selected>Small Custom Select Menu</option>-->
-<!--<option value="volvo">Volvo</option>-->
-<!--<option value="fiat">Fiat</option>-->
-<!--<option value="audi">Audi</option>-->
-<!--</select>-->
-<!--<select class="custom-select custom-select-sm mb-3">-->
-<!--<option selected>Small Custom Select Menu</option>-->
-<!--<option value="volvo">Volvo</option>-->
-<!--<option value="fiat">Fiat</option>-->
-<!--<option value="audi">Audi</option>-->
-<!--</select>-->
-<!--<select class="custom-select custom-select-sm mb-3">-->
-<!--<option selected>Small Custom Select Menu</option>-->
-<!--<option value="volvo">Volvo</option>-->
-<!--<option value="fiat">Fiat</option>-->
-<!--<option value="audi">Audi</option>-->
-<!--</select>-->
-<!--<select class="custom-select custom-select-sm mb-3">-->
-<!--<option selected>Small Custom Select Menu</option>-->
-<!--<option value="volvo">Volvo</option>-->
-<!--<option value="fiat">Fiat</option>-->
-<!--<option value="audi">Audi</option>-->
-<!--</select>-->
+<div class='container'>
+    <div class='row' style='margin-top:85px;'>
+        <div class='col-md-9'>
+            <a class="nav-link" href="#" onclick="window.history.back();return false;"><i class='fa fa-arrow-left'></i> Back TO PROPERTY LIST <span class="sr-only">(current)</span></a>
+            <!-- A grey horizontal navbar that becomes vertical on small screens -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
+            <div id="navbarNavDropdown" class="navbar-collapse collapse">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
 
-<!--<button type="submit" class="btn btn-primary mb-2">Submit</button>-->
-<!--</form>-->
-	    </div>
+            <p>{{qs.street_number}}  {{qs.street_name}}, {{qs.suburb}} {{qs.state}}</p>
+            </li>
+            <!--<li class="nav-item">-->
+            <!--    <a class="nav-link" href="#"><i class='fa fa-globe'></i> Map</a>-->
+            <!--</li>-->
 
-        <div class='col-md-4' >
-            <i class='fa fa-star fa-lg' id='star{{qs.id_user}}' style='float:right; cursor:pointer; {% ifequal data True %}color:orange;{% endifequal %}' onclick='StarSearch("{{qs.id_user}}")'></i><br>
-            {{qs.street_number}} {{qs.street_name}}, {{qs.suburb}} {{qs.state}} <br>
-        	<p><i class="fa fa-bed"></i> {{qs.Bedrooms}} <i class='fa fa-bath'></i> {{qs.Bathrooms}} <i class="fa fa-car"></i> {{qs.Car_spaces}} &nbsp;&nbsp;&nbsp; {{qs.Property_type}}</p>
+            </ul>
+            <ul class="navbar-nav">
 
-        	${{qs.Price}}<br>
-        	<p>{{qs.description}}</p>
+            <li class="nav-item">
+            <p>$ {{qs.Price}}</p>
+            </li>
+
+            </ul>
+            </div>
+            </nav>
+
+
+            <img src='{{qs.image.url}}' class='img-fluid'>
 
         </div>
+        <!--col-md-9-->
 
 
-	    <div class='col-md-8'>
+        <div class='col-md-3'>
+            <br>
+            <hr>
+            <div class="alert alert-primary">
+              <strong>Share this property</strong>
+            </div>
+            <a href=''> <i class='fa fa-facebook' style='font-size:20px'></i></a>
+            <a href=''>    <i class='fa fa-twitter' style='font-size:20px'></i></a>
+            <a href=''>   <i class='fa fa-instagram' style='font-size:20px'></i></a>
+          <br>
+          <hr>
+            <a href=''> <i class='fa fa-bed' style='font-size:20px'></i>{{qs.Bedrooms}}</a>
+            <a href=''>    <i class='fa fa-bath' style='font-size:20px'></i>  {{qs.Bathrooms}} </a>
+            <a href=''>   <i class='fa fa-car' style='font-size:20px'></i>   {{qs.Car_spaces}} </a>
+            <a href=''>   <i class='fa fa-area-chart' style='font-size:20px'></i>   {{qs.land_size}} </a> <br>
+            <a href=''>     {{qs.Property_type}} </a>
 
-	        <img src='https://www.pythonanywhere.com/user/anandrathi/files/home/anandrathi/RE/real-estate/project/media_cdn/banner.jpg' class='img-fluid'>
+            <hr>
+            <p><b>Description:</b></p>
+            {{qs.description}}
 
-	    </div>
+            <hr>
 
-	 </div>
-	 <hr>
+            <p><b>Other Properties</b></p>
+            {% if qs.Swimming_pool == True %}
+            Swimming pool,
+            {% endif %}
+            {% if qs.Garage == True %}
+            Garage,
+            {% endif %}
+            {% if qs.Outdoor_area == True %}
+            Outdoor area,
+            {% endif %}
+            {% if qs.Undercover_parking == True %}
+            Undercover parking,
+            {% endif %}
+            {% if qs.Shed == True %}
+            Shed,
+            {% endif %}
+            {% if qs.Fully_fenced == True %}
+            Fully fenced,
+            {% endif %}
+            {% if qs.Outdoor_spa == True %}
+            Outdoor spa,
+            {% endif %}
+            {% if qs.Tennis_court == True %}
+            Tennis court,
+            {% endif %}
+            {% if qs.Ensuite == True %}
+            Ensuite,
+            {% endif %}
+            {% if qs.DishWasher == True %}
+            DishWasher,
+            {% endif %}
+            {% if qs.Study == True %}
+            Study,
+            {% endif %}
+            {% if qs.Built_in_robes == True %}
+            Built in robes,
+            {% endif %}
+            {% if qs.Alarm_system == True %}
+            Alarm system,
+            {% endif %}
+            {% if qs.Broadband == True %}
+            Broadband,
+            {% endif %}
+            {% if qs.Floorboards == True %}
+            Floorboards,
+            {% endif %}
+            {% if qs.Gym == True %}
+            Gym,
+            {% endif %}
+            {% if qs.Rumpus_room == True %}
+            Rumpus room,
+            {% endif %}
+            {% if qs.Workshop == True %}
+            Workshop,
+            {% endif %}
+            {% if qs.Air_conditioning == True %}
+            Air conditioning,
+            {% endif %}
+            {% if qs.Solar_panels == True %}
+            Solar panels,
+            {% endif %}
+            {% if qs.Heating == True %}
+            Heating,
+            {% endif %}
+            {% if qs.High_energy_efficiency == True %}
+            High energy efficiency,
+            {% endif %}
+            {% if qs.Water_tank == True %}
+            Water tank,
+            {% endif %}
+            {% if qs.Solar_hot_water == True %}
+            Solar hot water
+            {% endif %}
 
-	 <div class='row jumbotron'>
-
-        <div class='col-md-6' >
-        this is the map area
-        <div id="map"></div>
-        </div>
 
 
-	      <div class='col-md-6' >
-	          <h3>Send enquiry</h3>
-<form method='post' action=''>
+<div class="alert alert-primary">
+<strong>Contact Agent</strong>
+</div>
+
+<form action="">
+
 <div class="form-group">
-  <label for="usr">Name:</label>
-  <input type="text" class="form-control" id="usr">
+<label for="name">Name:</label>
+<input type="text" class="form-control" id="name">
 </div>
 <div class="form-group">
-  <label for="email">Email:</label>
-  <input type="email" class="form-control" id="email"
-</div>
-<div class="form-group">
-  <label for="mobile">Mobile:</label>
-  <input type="text" class="form-control" id="mobile">
+<label for="email">Email address:</label>
+<input type="email" class="form-control" id="email">
 </div>
 
 <div class="form-group">
-  <label for="comment">Messsage:</label>
+<label for="phone">Phone:</label>
+<input type="text" class="form-control" id="phone">
+</div>
+<div class="form-group">
+  <label for="comment">Comment:</label>
   <textarea class="form-control" rows="5" id="comment"></textarea>
 </div>
-
-<input type='submit' value='Send Message' class='btn btn-primary'>
+<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-	      </div>
 
 
-	 </div>
-	 <!--end of col-sm-6-->
 
 
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+    <!--row-->
+
+
+
+
+<div class='row'>
+<div class='col-md-6'>
+    Map View
+    <div id="map" style='height:100%'></div>
+
+</div>
+</div>
 
 
 </div>
+
+
+
+
+
+		<!-- start footer Area -->
+			<footer class="footer-area section-gap" style='margin-top:70px'>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3  col-md-6 col-sm-6">
+							<div class="single-footer-widget">
+								<h6>About Us</h6>
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.
+								</p>
+							</div>
+						</div>
+						<div class="col-lg-3  col-md-6 col-sm-6">
+							<div class="single-footer-widget">
+								<h6>Newsletter</h6>
+								<p>Stay update with our latest</p>
+								<div class="" id="mc_embed_signup">
+
+
+										<div class="d-flex flex-row">
+
+											<input class="form-control" name="EMAIL" placeholder="Enter Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email '" required="" type="email">
+
+
+				                            	<button class="click-btn btn btn-default"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+				                            	<div style="position: absolute; left: -5000px;">
+													<input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
+												</div>
+
+											<!-- <div class="col-lg-4 col-md-4">
+												<button class="bb-btn btn"><span class="lnr lnr-arrow-right"></span></button>
+											</div>  -->
+										</div>
+										<div class="info"></div>
+
+								</div>
+								</div>
+						</div>
+						<div class="col-lg-3  col-md-6 col-sm-6">
+							<div class="single-footer-widget mail-chimp">
+								<h6 class="mb-20">Instragram Feed</h6>
+								<ul class="instafeed d-flex flex-wrap">
+									<li><img src="img/i1.jpg" alt=""></li>
+									<li><img src="img/i2.jpg" alt=""></li>
+									<li><img src="img/i3.jpg" alt=""></li>
+									<li><img src="img/i4.jpg" alt=""></li>
+									<li><img src="img/i5.jpg" alt=""></li>
+									<li><img src="img/i6.jpg" alt=""></li>
+									<li><img src="img/i7.jpg" alt=""></li>
+									<li><img src="img/i8.jpg" alt=""></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-sm-6">
+							<div class="single-footer-widget">
+								<h6>Follow Us</h6>
+								<p>Let us be social</p>
+								<div class="footer-social d-flex align-items-center">
+									<a href="#"><i class="fa fa-facebook"></i></a>
+									<a href="#"><i class="fa fa-twitter"></i></a>
+									<a href="#"><i class="fa fa-dribbble"></i></a>
+									<a href="#"><i class="fa fa-behance"></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</footer>
+			<!-- End footer Area -->
+
+
+
+
 
 
 {% csrf_token %}
@@ -193,4 +349,12 @@ function StarSearch(e){
 
     }
 </script>
+
+
+
+
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
+
 {% endblock %}

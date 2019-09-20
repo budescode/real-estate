@@ -63,33 +63,33 @@ def upload_csv(request):
 	user1 = request.user.username
 	user = User.objects.get(username=user1)
 	for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-		address = column[41] + ' ' + column[40] + ' ' +  column[42] + ' ' + column[39] + ' '+ ', Australia'
-		print('address is', address)
-		r = requests.post('https://maps.googleapis.com/maps/api/geocode/json?address=address&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY')
-		latitude = r.json()['results'][0]['geometry']['location']['lat']
-		longitude = r.json()['results'][0]['geometry']['location']['lng']
-		print('the datas areee',r.json())
+# 		address = column[41] + ' ' + column[40] + ' ' +  column[42] + ' ' + column[39] + ' '+ ', Australia'
+# 		print('address is', address)
+# 		r = requests.post('https://maps.googleapis.com/maps/api/geocode/json?address=address&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY')
+# 		latitude = r.json()['results'][0]['geometry']['location']['lat']
+# 		longitude = r.json()['results'][0]['geometry']['location']['lng']
+# 		print('the datas areee',r.json())
 # 		print('address is',column[41], column[40], column[42], column[39])
 
-# 		Poster.objects.create(user=request.user,
-# 		# _, created = Poster.objects.create(
-# 			# user = request.user,
-# 			Property_type = column[3],
-# 			Price = column[4],
-# 			Bedrooms = column[5],
-# 			Bathrooms = column[6],
-# 			Car_spaces = column[7],
-# 			postcode = column[38],
-# 			state = column[39],
-# 			suburb = column[42],
-# 			unit = column[43],
-# 			land_size = column[37],
-# 			street_name = column[40],
-#  			street_number = column[41],
-# 			image = column[44],
+		Poster.objects.create(user=request.user,
+		# _, created = Poster.objects.create(
+			# user = request.user,
+			Property_type = column[3],
+			Price = column[4],
+			Bedrooms = column[5],
+			Bathrooms = column[6],
+			Car_spaces = column[7],
+			postcode = column[38],
+			state = column[39],
+			suburb = column[42],
+			unit = column[43],
+			land_size = column[37],
+			street_name = column[40],
+ 			street_number = column[41],
+			image = column[44],
 # 			image1 = column[45],
-# 			plan = column[46],
-# 			)
+			plan = column[36],
+			)
 	context = {}
 	return HttpResponse("done")
 
