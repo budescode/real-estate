@@ -1,0 +1,128 @@
+ {% extends 'index/base.html' %}
+ {% block body %}
+<style>
+    #map {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height:500px;
+
+}
+</style>
+
+
+        <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+  <!--           <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY
+&callback=initMap">
+    </script> -->
+  <!--       <script src="https://maps.googleapis.com/maps/api/js?v=3.11&sensor=false" type="text/javascript"></script> -->
+
+<div class='container' style='margin-top:250px;margin-bottom:600px'>
+    <div class='row'>
+        <div class='col-md-12'>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
+        <div id="navbarNavDropdown" class="navbar-collapse collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" onclick="window.history.back();return false;"><i class='fa fa-list-alt'></i> List <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home:mapview_search' %}"><i class='fa fa-globe'></i> Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal"><i class='fa fa-save'></i><span id='savesearchid'>Save Search</span></a>
+                </li>
+
+
+            </ul>
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <div class="form-group" style='margin-top:25px;'>
+                    <label class="d-inline-block" for="">Sort By:</label>
+                    <select class="form-control form-control-sm d-inline-block" style="width: auto;" id="sortby" name='sortby' onchange="this.form.submit()">
+                    <option value="Relevant">Most Relevant</option>
+                    <option value="-created">Date (Newest - Oldest)</option>
+                    <option value="created">Date (Oldest - Newest)</option>
+                    <option value="Price">Price (Lowest - Highest)</option>
+                    <option value="-Price">Price (Highest - Lowest)</option>
+                    </select>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+
+<div id="map" style="">
+</div>
+
+
+
+
+
+<script>
+  function initialize() {
+    var locations = [
+    //   ['Bondi Beach', -33.890542, 151.274856],
+    //   ['Coogee Beach', -33.923036, 151.259052],
+    //   ['Cronulla Beach', -34.028249, 151.157507],
+    //   ['Manly Beach', -33.80010128657071, 151.28747820854187],
+    //   ['Maroubra Beach', -33.950198, 151.259302]
+    ];
+
+    {% for i in pagin %}
+     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}'])
+    //   console.log('yeahhh', '{{i.latitude}}', '{{i.longitude}}')
+
+    {% endfor %}
+
+    console.log(locations)
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(-33.92, 151.25),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+}
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  // script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+  //     'callback=initialize';
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initialize';
+
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
+  </script>
+
+
+         </div>
+    </div>
+</div>
+
+{% endblock %}

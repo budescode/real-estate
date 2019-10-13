@@ -17,6 +17,10 @@ app_name = "account"
 urlpatterns = [
 
 	path('logout/', views.logout_page, name='logout'),
+	path('googlelogin/', views.googlelogin, name='googlelogin'),
+	path('fblogin/', views.fblogin, name='fblogin'),
+
+
 	path('register/', views.register, name='register'),
 	path('profile/', views.profile, name="profile" ),
 	path('upgrade/', views.Upgrade, name="upgrade" ),
@@ -26,6 +30,9 @@ urlpatterns = [
 	path('change_password_confirm/', views.change_password_confirm, name='change_password_confirm'),
 	path('<slug:pk>', views.change_password_code, name='change_password_code'),
 	path('change_password_success/', views.change_password_success, name='change_password_success'),
+# 	path('social-auth/', include('social_django.urls', namespace="social"))
+
+
 
 
 

@@ -44,10 +44,21 @@ INSTALLED_APPS = [
     'index',
     'account',
     'administrator',
-    'easy_maps',
-    'leaflet',
+    # 'easy_maps',
+    # 'leaflet',
     'el_pagination',
-    'django_elasticsearch_dsl'
+    # 'django_elasticsearch_dsl',
+    'django.contrib.sites',
+
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+     # ... include the providers you want to enable:
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.gitlab',
+    # 'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.twitter',
 
 ]
 
@@ -60,6 +71,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
+
+    #"account.middleware.FacebookAuthAlreadyAssociatedMiddleware",
+    "account.middleware.FacebookAuthAlreadyAssociatedMiddleware",
+    #this middleware is for facebook users already logged in who wants to login
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -79,6 +95,7 @@ TEMPLATES = [
                 'social_django.context_processors.backends',  # <--
                 'social_django.context_processors.login_redirect',
                 'django.template.context_processors.request', ## For EL-pagination
+
 
             ],
         },
@@ -147,12 +164,22 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.open_id.OpenIdAuth',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.yahoo.YahooOpenId',
 
     'django.contrib.auth.backends.ModelBackend',
 )
+
+
+SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 STATIC_URL = '/static/'
 #STATICFILES_DIRS = '/home/anandrathi/RE/real-estate/project/static'
@@ -169,13 +196,19 @@ CRISPY_TEMPLATE_PACK='bootstrap4'
 
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_GITHUB_KEY = '399bc306d35ec9bcaf4e'
 SOCIAL_AUTH_GITHUB_SECRET = 'c80665cfaf0d163ef210403c66b1dc5a6c91d26e'
 
-SOCIAL_AUTH_FACEBOOK_KEY = "608312729669552"        # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = "89191d63c6983f216d8c8aca9661086d"  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = "442789136494433"        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = "a5d046f8bbe660763f995e835c8abdaf"  # App Secret
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '576414184693-t0gh6fjlb1sgi6o28um5emp77sfntd54.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '6YzYeVEJgpiJjkiP_c2uW8tF'
+
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
 
 AUTH_PROFILE_MODULE = 'account.Profile'
 
@@ -199,12 +232,44 @@ SERVER_EMAIL = 'gospeltruth18@gmail.com'
 EASY_MAPS_GOOGLE_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ___0123456789'
 
 
-ELASTICSEARCH_DSL={
-    'default': {
-        'hosts': 'anandrathi.pythonanywhere.com',
-        'timeout': 60,
-    },
-}
+# ELASTICSEARCH_DSL={
+#     'default': {
+#         'hosts': 'anandrathi.pythonanywhere.com',
+#         'timeout': 60,
+#     },
+# }
 # elasticsearch settings
-FOUNDELASTICSEARCH_URL = "anandrathi.pythonanywhere.com"
-HTTP_AUTH = os.environ.get("HTTP_AUTH", None)
+# FOUNDELASTICSEARCH_URL = "anandrathi.pythonanywhere.com"
+# HTTP_AUTH = os.environ.get("HTTP_AUTH", None)
+
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email'] # add this
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       # add this
+#   'fields': 'id, name, email, picture.type(large), link'
+# }
+# SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
+#     ('name', 'name'),
+#     ('email', 'email'),
+#     ('picture', 'picture'),
+#     ('link', 'profile_url'),
+# ]
+
+SOCIAL_AUTH_RAISE_EXCEPTIONS = True
+RAISE_EXCEPTIONS = True
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'social_core.pipeline.social_auth.associate_by_email',
+
+)
+
+
+SITE_ID=1

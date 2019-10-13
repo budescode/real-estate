@@ -70,11 +70,22 @@ def upload_csv(request):
 # 		longitude = r.json()['results'][0]['geometry']['location']['lng']
 # 		print('the datas areee',r.json())
 # 		print('address is',column[41], column[40], column[42], column[39])
+		url =  'https://maps.googleapis.com/maps/api/geocode/json?address='+ str(column[41]) + ', '+ str(column[40]) + ', ' +  str(column[42]) + ', ' +  str(column[39]) + ', ' + str(column[38]) + '&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY'
+		r = requests.get(url = url)
+		data = r.json()
+		print(url)
+		#print('dataaaaaaaaaaaaaa', data)
+		latitude = data['results'][0]['geometry']['location']['lat']
+		longitude = data['results'][0]['geometry']['location']['lng']
+		print(latitude, longitude, 'yeahhh')
 
 		Poster.objects.create(user=request.user,
+
 		# _, created = Poster.objects.create(
 			# user = request.user,
 			Property_type = column[3],
+			longitude = longitude,
+			latitude = latitude,
 			Price = column[4],
 			Bedrooms = column[5],
 			Bathrooms = column[6],
@@ -92,4 +103,22 @@ def upload_csv(request):
 			)
 	context = {}
 	return HttpResponse("done")
+
+
+def updatelonglat(request):
+	qs = Poster.objects.all()
+	for i in qs:
+		url =  'https://maps.googleapis.com/maps/api/geocode/json?address='+ str(i.street_number) + ', '+ str(i.street_name) + ', ' +  str(i.suburb) + ', ' +  str(i.state) + ', ' + str(i.postcode) + '&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY'
+		r = requests.get(url = url)
+		data = r.json()
+		print(url)
+		#print('dataaaaaaaaaaaaaa', data)
+		latitude = data['results'][0]['geometry']['location']['lat']
+		longitude = data['results'][0]['geometry']['location']['lng']
+		i.longitude = longitude
+		i.latitude = latitude
+		i.save()
+		print(latitude, longitude, 'yeahhh')
+	return HttpResponse('done')
+
 

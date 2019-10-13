@@ -50,10 +50,9 @@
                     <a href="">Properties</a>
                     <ul class="dropdown">
 
-                      {% if request.user.user_category.category == "Seller"  %}
+
                       <li><a href="{% url 'home:post' %}">Sell</a></li>
-                      {% endif %}
-                      <li><a href="{% url 'home:rent' %}">Rent</a></li>
+
 
                       <li><a href="#">Find Agents</a></li>
 
@@ -79,12 +78,12 @@
                   <li class="has-children">
                   <a href=""><i class="fa fa-user-circle-o fa-lg"></i></a>
                   <ul class="dropdown">
-                  {% if request.user.user_category.category == "Seller"  %}
+
                   <li><a href="{% url 'home:mypost' %}"><i class="fa fa-save"></i>My Post</a></li>
-                  {% endif %}
+
                   <!--<li><a href="#"><i class="fa fa-home"></i> My Property</a></li>-->
                   <!--<li><a href="#"><i class="fa fa-money"></i> My Finances</a></li>-->
-                  <li><a href="{% url 'account:profile' %}"><i class="fa fa-user"></i> My {{request.user.user_category.category}} Profile</a></li>
+                  <li><a href="{% url 'account:profile' %}"><i class="fa fa-user"></i> My Profile</a></li>
                   <li><a href="#"><i class="fa fa-save"></i> Saved Search</a></li>
 
                   <li><a href="#"><i class="fa fa-gear"></i> Account Settings</a></li>

@@ -40,12 +40,22 @@
                 <div class="form-group row">
 <div class="col-sm-4">
 
+  <!--<option value="Internet Explorer">-->
+  <!--<option value="Firefox">-->
+  <!--<option value="Chrome">-->
+  <!--<option value="Opera">-->
+  <!--<option value="Safari">-->
+
+
   <label for="selectstate">Select State:</label>
-  <select class="form-control" id="selectstate" name="state" >
+  <!--<select class="form-control" id="selectstate" name="state" >-->
+<input list="select_state" class="form-control" id="selectstate" name="state">
+<datalist id="select_state">
   {% for i in state %}
     <option>{{i}}</option>
 {% endfor %}
-  </select>
+</datalist>
+  <!--</select>-->
   <label for="state" style="color: red; font-size: 10px; display: none;" id="statestatus"></label>
 </div>
 
@@ -63,11 +73,15 @@
 
 <div class="col-sm-4">
   <label for="selectsuburb">Select Suburb:</label>
+  <!--<input list="selectsuburb" class="form-control" id="select_suburb" name="state">-->
   <select class="form-control" id="selectsuburb" name="suburb">
-  <option>____</option>
+<!--<datalist class="form-control" id="selectsuburb">-->
+  <!--<option>____</option>-->
+  <!--<option></option>-->
   {% for i in suburb %}
   <option>{{i}}</option>
   {% endfor %}
+ <!--</datalist>-->
   </select>
 </div>
 
@@ -343,6 +357,12 @@
 
 
 <script>
+
+// {% for i in qs %}
+// // console.log({{i|safe}})
+// var obj = {'{{i.state|safe}}':[{{i.postcode|safe}}]}
+// console.log(obj)
+// {% endfor %}
 var selectstate = document.querySelector("#selectstate")
 selectstate.addEventListener('change', fetchFunction)
 
@@ -356,8 +376,9 @@ document.querySelector("#statestatus").innerHTML = 'Validating...'
 
 var token = document.querySelector("input[name='csrfmiddlewaretoken']").value
 var url = 'http://anandrathi.pythonanywhere.com/filterstate/'
-var stateIndex = document.querySelector('#selectstate').selectedIndex;
-var selectedstate = document.querySelector('#selectstate').options[stateIndex].text;
+// var stateIndex = document.querySelector('#select_state').selectedIndex;
+var selectedstate = document.querySelector('#selectstate').value
+console.log('okaaaa', selectedstate)
 var myForm = new FormData();
 myForm.append('state', selectedstate);
 
@@ -378,7 +399,7 @@ myForm.append('state', selectedstate);
 postal_list = []
 suburb_list = []
 
-
+console.log(postal_list, 'yeahhhhhhh')
 // the forloop is to seperate the Postcode and suburb from the response gotten
 for(i=0; i<length;i++){
   postal_list.push(response[i].postcode)

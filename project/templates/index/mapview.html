@@ -5,6 +5,14 @@
 {% block body %}
 <style>
 
+    #map {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height:500px;
+
+}
+
 .endless_page_link{
     font-size:15px;
     background-color: rgb(238, 40, 124);
@@ -73,7 +81,7 @@ input[type=submit] {
 
 
 
-<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+<form action="{% url 'home:mapview_search' %}" method="post"> {% csrf_token %}
 
 
 <div class='container'>
@@ -163,90 +171,19 @@ input[type=submit] {
 
 
     <hr>
-{% paginate pagin %}
-{% show_pages %}
-<hr>
-{% for i in pagin %}
-    <div class="card" style='margin-bottom:20px;'>
-        <div class="card-body">
-            <h4 class="card-title"> <p>{{i.street_name}} {{i.street_number}} {{i.state}} {{i.suburb}}</p></h4>
-            <p class="card-text">
 
-            <div class='row'>
-            <div class='col-md-4'>
-              <a href='{% url 'home:details' i.id_user category1 %}'>   <img class='img-fluid' src={{i.image.url}}> </a>
-
-            </div>
-            <div class='col-md-8'>
-
-            <div class='row'>
-           <div class='col-md-12' style='background-color:rgb(238, 40, 124); color: white; padding: 8px 8px;'>
-                <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}} &nbsp&nbsp&nbsp
-                <i class='fa fa-bath' style='color:white'></i> {{i.Bathrooms}} &nbsp&nbsp&nbsp
-                <i class='fa fa-car' style='color:white'></i> {{i.Car_spaces}} &nbsp&nbsp&nbsp
-                {% for a in saved %}
-                {% if a.post_id == i.post_id %}
-                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
-                {% endif %}
-                {% endfor %}
-                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
-
-            </div>
-            </div>
-            <hr>
-
-                {{i.created|timesince}} ago <br> <br>
-              {{i.Property_type}} | ${{i.Price}}  |  <a href='{% url 'home:details' i.id_user category1 %}'>See more</a>  <br>
-
-              <br>
-              <p>{{i.description}}</p>
-              <!--<p>Property_type {{i.Property_type}}</p>-->
-              <!--<p>Swimming_pool {{i.Swimming_pool}}</p>-->
-              <!--<p>Garage {{i.Garage}}</p>-->
-              <!--<p>Balcony {{i.Balcony}}</p>-->
-              <!--<p>Outdoor_area {{i.Outdoor_area}}</p>-->
-              <!--<p>Undercover_parking {{i.Undercover_parking}}</p>-->
-              <!--<p>Shed {{i.Shed}}</p>-->
-              <!--<p>Fully_fenced {{i.Fully_fenced}}</p>-->
-              <!--<p>Outdoor_spa {{i.Outdoor_spa}}</p>-->
-              <!--<p>Tennis_court {{i.Tennis_court}}</p>-->
-              <!--<p>Ensuite {{i.Ensuite}}</p>-->
-              <!--<p>DishWasher {{i.DishWasher}}</p>-->
-              <!--<p>Study {{i.Study}}</p>-->
-              <!--<p>Built_in_robes {{i.Built_in_robes}}</p>-->
-              <!--<p>Alarm_system {{i.Alarm_system}}</p>-->
-              <!--<p>Broadband {{i.Broadband}}</p>-->
-              <!--<p>Floorboards {{i.Floorboards}}</p>-->
-              <!--<p>Gym {{i.Gym}}</p>-->
-              <!--<p>Rumpus_room {{i.Rumpus_room}}</p>-->
-              <!--<p>Workshop {{i.Workshop}}</p>-->
-              <!--<p>Air_conditioning {{i.Air_conditioning}}</p>-->
-              <!--<p>Solar_panels {{i.Solar_panels}}</p>-->
-              <!--<p>Heating {{i.Heating}}</p>-->
-              <!--<p>High_energy_efficiency {{i.High_energy_efficiency}}</p>-->
-              <!--<p>Water_tank {{i.Water_tank}}</p>-->
-
-              <!--<p>Solar_hot_water {{i.Solar_hot_water}}</p>-->
-
-
-
-
-            </div>
-
-            </div>
-            <!--row-->
 <hr>
 
+<div style='margin-bottom:20px;' id='map'>
 
-            </p>
 
-        </div>
+
+
 </div>
 <!--end card-->
 
 
-{% endfor %}
-{% show_pages %}
+
 
         </div>
         <!--col-md-8-->
@@ -399,7 +336,7 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for="bedmin"> <small>Bed (Min):</small></label>
-<select class="custom-select custom-select-sm" id="bedmin" name="Bed(min)" >
+<select class="custom-select custom-select-sm" id="bedmin" name="Bed(min)" onChange='changeBedMinMap()' >
 <option>Any</option>
 <option>Studio</option>
 <option value="1">1</option>
@@ -412,7 +349,7 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for="bedmax"> <small>Bed (Max):</small></label>
-<select class="custom-select custom-select-sm" id="bedmax" name="Bed(max)" >
+<select class="custom-select custom-select-sm" id="bedmax" name="Bed(max)" onChange='changeBedMaxMap()' >
 <option value='Any'>Any</option>
 <option value='Studio'>Studio</option>
 <option value="1">1</option>
@@ -441,7 +378,7 @@ input[type=submit] {
     <div class='form-group row'>
 <div class='col-md-6'>
 <label for=""> <small>Bathrooms:</small></label>
-<select class="custom-select custom-select-sm" id="" name="" >
+<select class="custom-select custom-select-sm" id="bathrooms" name="" >
 <option>Any</option>
 <option>Studio</option>
 <option value="1">1</option>
@@ -454,7 +391,7 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for=""> <small>Car Spaces:</small></label>
-<select class="custom-select custom-select-sm" id="" name="" >
+<select class="custom-select custom-select-sm" id="carspaces" name="" >
 <option>Any</option>
 <option>Studio</option>
 <option value="1">1</option>
@@ -466,7 +403,7 @@ input[type=submit] {
 </div>
 <div class='col-md-6'>
 <label for=""> <small>Min land size (m2):</small></label>
-<select class="custom-select custom-select-sm" id="bedmin" name="" >
+<select class="custom-select custom-select-sm" id="minlandsize" name="" >
 <option>Any</option>
 <option>Studio</option>
 <option value="100">100</option>
@@ -479,7 +416,7 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for=""> <small>New or established:</small></label>
-<select class="custom-select custom-select-sm" id="" name="" >
+<select class="custom-select custom-select-sm" id="new_or_established" name="" >
 <option value='Any'>Any</option>
 <option value='New'>New</option>
 <option value="Established">Established</option>
@@ -750,6 +687,140 @@ input[type=submit] {
 
 
 
+
+
+
+<script>
+    var locations = [
+    //   ['Bondi Beach', -33.890542, 151.274856],
+    //   ['Coogee Beach', -33.923036, 151.259052],
+    //   ['Cronulla Beach', -34.028249, 151.157507],
+    //   ['Manly Beach', -33.80010128657071, 151.28747820854187],
+    //   ['Maroubra Beach', -33.950198, 151.259302]
+    ];
+
+    {% for i in pagin %}
+     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}', '{{i.Price|cut:","|cut:"$" }}', '{{i.Bedrooms}}', '{{i.Bathrooms}}', '{{Car_spaces}}', '{{land_size}}'])
+    //   console.log('yeahhh', '{{i.latitude}}', '{{i.longitude}}')
+
+    {% endfor %}
+
+    console.log(locations)
+
+  function initialize() {
+
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(-33.92, 151.25),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+}
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  // script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+  //     'callback=initialize';
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initialize';
+
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
+  </script>
+
+
+
+
+<script>
+
+function changeBedMinMap(){
+//  console.log(locations)
+ bedmin = document.querySelector('#bedmin').value
+
+//  bedmax  = document.querySelector('#bedmax').value
+//  pricemin = document.querySelector('#pricemin').value
+//   pricemax = document.querySelector('#pricemax').value
+//  new_or_established = document.querySelector('#new_or_established').value
+//  carspaces = document.querySelector('#carspaces').value
+//  console.log(bedmin, bedmax, pricemin, pricemax, new_or_established,carspaces  )
+if(bedmin == 'Studio'){
+
+}
+else if(bedmin == 'Any'){
+
+}
+
+else{
+ for(i=0; i<locations.length; i++){
+      if(Number(locations[i][4]) >= Number(bedmin)){
+        //   console.log('yesss')
+          console.log('bedmin', locations[i][4])
+      }
+      else{
+          console.log('nahhh')
+      }
+
+      }
+        //  console.log('yes na', locations[i][4])
+
+
+ }
+}
+
+
+
+
+
+function changeBedMaxMap(){
+ console.log(locations)
+ bedmin = document.querySelector('#bedmin').value
+//  bedmax  = document.querySelector('#bedmax').value
+//  pricemin = document.querySelector('#pricemin').value
+//   pricemax = document.querySelector('#pricemax').value
+//  new_or_established = document.querySelector('#new_or_established').value
+//  carspaces = document.querySelector('#carspaces').value
+//  console.log(bedmin, bedmax, pricemin, pricemax, new_or_established,carspaces  )
+if(bedmin == 'Studio'){
+
+}
+else if(bedmin == 'Any'){
+
+}
+
+else{
+ for(i=0; i<locations.length; i++){
+     if(Number(locations[i][4]) <= Number(bedmax)){
+         console.log(locations[i][4])
+     }
+
+ }
+}
+
+
+}
+
+
+</script>
 
 
 

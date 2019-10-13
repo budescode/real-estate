@@ -184,6 +184,8 @@ class Poster(models.Model):
 	Solar_hot_water = models.BooleanField(default=False)
 	saved = models.BooleanField(default=False)
 	#this saved field is used to change the color of the star when a user has saved a search
+	class Meta:
+	    ordering = ['-created']
 
 	def __str__(self):
 		return str(self.id_user)
@@ -363,6 +365,58 @@ class PosterRent(models.Model):
 	# Keywords = models.CharField(max_length=1000, default='')
 	# Include_surrounding_suburbs = models.BooleanField(default=False)
 	# Exclude_under = models.BooleanField(default=False)
+
+# class SavedSearchHeaders(models.Model):
+#     name = models.CharField(max_length=500)
+#     user = models.ForeignKey(User, on_delete = models.CASCADE)
+
+# class SavedSearchDetail(models.Model):
+#     #this is to save the searched items
+#     search = models.TextField()
+#     header = models.ForeignKey(SavedSearchHeaders, on_delete = models.CASCADE)
+#     user = models.ForeignKey(User, on_delete = models.CASCADE)
+#     pricemin = models.TextField()
+#     pricemax = models.TextField()
+#     bedmin = models.TextField()
+#     bedmax = models.TextField()
+#     notification = models.BooleanField()
+
+
+class SavedHeaders(models.Model):
+    name = models.CharField(max_length=500)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    pricemin = models.TextField()
+    pricemax = models.TextField()
+    bedmin = models.TextField()
+    bedmax = models.TextField()
+    notification = models.BooleanField()
+    property_type = models.TextField()
+
+class SavedDetail(models.Model):
+    search = models.TextField()
+    header = models.ForeignKey(SavedHeaders, on_delete = models.CASCADE, related_name='saved_headers_property')
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+
+
+
+
+
+# class SavedHeaders1(models.Model):
+#     name = models.CharField(max_length=500)
+#     user = models.ForeignKey(User, on_delete = models.CASCADE)
+
+# class SavedDetail2(models.Model):
+#     search = models.TextField()
+#     header = models.ForeignKey(SavedHeaders, on_delete = models.CASCADE)
+#     user = models.ForeignKey(User, on_delete = models.CASCADE)
+#     pricemin = models.TextField()
+#     pricemax = models.TextField()
+#     bedmin = models.TextField()
+#     bedmax = models.TextField()
+#     notification = models.BooleanField()
+
+
+
 
 
 

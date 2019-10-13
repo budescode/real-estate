@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Poster, PropertyType, Price, SavedSearch, PosterRent
+from .models import Poster, PropertyType, Price, SavedSearch, PosterRent , SavedHeaders, SavedDetail
 
 
 admin.site.register(PropertyType)
@@ -14,3 +14,5 @@ class PosterAdmin(admin.ModelAdmin):
 admin.site.register(Poster, PosterAdmin)
 admin.site.register(SavedSearch)
 admin.site.register(PosterRent)
+admin.site.register(SavedHeaders)
+admin.site.register(SavedDetail)

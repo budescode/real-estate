@@ -10,6 +10,8 @@ urlpatterns = [
 	path('deleteposts/', views.deletePost, name="deleteposts" ),
 	path('viewdetails/', views.viewDetails, name="viewdetails" ),
 	path('upload/', views.upload_csv, name="upload_csv" ),
+	path('updatelonglat/', views.updatelonglat, name="updatelonglat" ),
+
 
 
 ]

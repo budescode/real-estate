@@ -24,7 +24,11 @@ urlpatterns = [
     path("", include('index.urls')),
     path("administrator/", include('administrator.urls')),
     path("account/", include('account.urls')),
+    #url('socialaccount/', include('social_django.urls', namespace='social'))
     path("oauth/", include('social_django.urls', namespace='social')),
+    # path("authaccounts/", include('allauth.urls')),
+    # url(r'^accounts/', include('allauth.urls')),
+    #url(r'^accounts/', include('allauth.urls')),
     # url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
 

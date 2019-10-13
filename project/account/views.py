@@ -22,6 +22,14 @@ from django.template.loader import get_template
 
 
 
+def googlelogin(request):
+    logout(request)
+    return redirect('social:begin', 'google-oauth2')
+
+def fblogin(request):
+    logout(request)
+    return redirect('social:begin', 'facebook')
+
 
 
 def profile(request):

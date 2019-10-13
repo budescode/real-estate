@@ -1,0 +1,55 @@
+{% extends 'index/base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block body %}
+
+
+
+    <div class="" style="margin-top: 80px;" >
+        <div class="container" >
+             <p><h5>Saved Search</h5></p>
+          <div class="row">
+              {% for i in qs %}
+            <div class="col-md-3">
+            <center>
+
+
+            </center>
+
+
+<div class="card">
+
+<div class="card-header">
+<h5 class="card-title"> <a href="{% url 'home:property_search_detail' i.id %}">{{i.name}}</a></h5>
+
+  </div>
+  <div class="card-body">
+    <!--<h5 class="card-title">Special title treatment</h5>-->
+
+
+
+                {% for a in qs2 %}
+
+
+                {% if a.header == i %}
+
+                <p class="card-text"><span>{{a.search}}</span></p>
+                {% endif %}
+                {% endfor %}
+
+                     <hr>
+                <a href='{% url 'home:delete_saved_property' i.id %}'><i class='fa fa-trash'></i></a>
+                <i class='fa fa-bell' style='float:right'></i>
+
+  </div>
+</div>
+
+
+              </div>
+              {% endfor %}
+            </div>
+
+          </div>
+        </div>
+
+{% endblock %}

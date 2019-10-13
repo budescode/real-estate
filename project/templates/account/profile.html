@@ -1,10 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'index/base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block body %}
 
 <style>
-    
+
 
 .card {
     padding-top: 20px;
@@ -275,15 +275,15 @@
                     </div>
                     <div class="desc"><h5>Email: {{request.user.email}}</h5></div>
                     <div class="desc"><h5>Tel: {{request.user.username}}</h5></div>
-                    <div class="desc"><h5>Category: {{request.user.user_category.category}} | {{request.user.user_category.select}} </h5></div>
-                    
+
+
                 </div>
 
             </div>
 
  </div>
  </div>
- </div>   
+ </div>
 
-    
+
 {% endblock %}

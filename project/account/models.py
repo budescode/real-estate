@@ -48,22 +48,3 @@ class UserRegister(models.Model):
 	password = models.CharField(max_length=100)
 
 
-# def create_profile(sender, **kwargs):
-# 	user = kwargs["instance"]
-# 	if kwargs["created"]:
-# 		user_profile = Profile(user=user)
-# 		user_profile.save()
-# post_save.connect(create_profile, sender=User)
-
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#        profile, created = Profile.objects.get_or_create(user=instance)
-
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-# 	if created:
-# 		Profile.objects.create(user=instance)
-
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-# 	instance.profile.save()

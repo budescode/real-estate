@@ -77,66 +77,16 @@ input[type=submit] {
 							</h1>
 							<div class="search-field">
 <form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
-<div class='row'>
-<div class='col-md-12'>
-<div id="searchitem" style=""></div>
-</div>
-</div>
-									 <div class="row">
+<!--<div class='row'>-->
+<!--<div class='col-md-12'>-->
+<!--<div id="searchitem" style=""></div>-->
+<!--</div>-->
+<!--</div>-->
+									 <div class="">
 									 	<div class="col-lg-12 d-flex align-items-center justify-content-center toggle-wrap">
 											<div class="row">
 												<div class="col">
 													<h4 class="search-title">Search Properties For</h4>
-													  <!-- The Modal -->
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Select State</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-            <div class="col-md-12">
-
-
-<span class="badge" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='ACT'>ACT</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='NSW'>NSW</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='NT'>NT</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='SA'>SA</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='QLD'>QLD</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='TAS'>TAS</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='VIC'>VIC</span>
-<span class="badge badge-secondary" style='background-color:#f40f68; padding:8px 12px;' onclick='filterState(this.innerHTML)' id='WA'>WA</span>
-
-
-
-
-            </div>
-           <div><img src="{% static 'images/loader.gif' %}" width='50' height='50' style='margin: 10px 10px; display:none' id='loader'>
-           <span style='display:none' id='loading'>loading</span></div>
-
-            <!--<div class="col-md-12">-->
-            <!--<input type="text" class="form-control" placeholder="search by state, suburb and postalcode" id="myInput" name="myCountry" style='display:none;'>-->
-            <!--</div>-->
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="genric-btn info" data-dismiss="modal">Next</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-
 
 												</div>
 												<div class="col">
@@ -148,28 +98,32 @@ input[type=submit] {
 													            	<span class="onoffswitch3-switch">Buy</span>
 													            	<span class="lnr lnr-arrow-right"></span>
 													            </span>
-													            <span class="onoffswitch3-inactive">
-													            	<span class="lnr lnr-arrow-left"></span>
-													            	<span class="onoffswitch3-switch">Rent</span>
-													            </span>
+													            <!--<span class="onoffswitch3-inactive">-->
+													            <!--	<span class="lnr lnr-arrow-left"></span>-->
+													            <!--	<span class="onoffswitch3-switch">Rent</span>-->
+													            <!--</span>-->
 													        </span>
 													    </label>
 													</div>
 												</div>
-<div class="col">
-<div class="onoffswitch3 d-block mx-auto">
-<div id="searchitem" style="display: none;"></div>
-</div>
-</div>
+
 
 
 											</div>
 									 	</div>
+									 	</div>
+<div class='row'>
+<div class='col-md-12' style=''>
+   <div id="searchitem" style="display: none;"></div>
+</div>
 									    <div class="col-lg-5 col-md-6 col-xs-6">
 <form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
 <input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
 <input type="text" name="category" id="category" style="display: none;" value="Poster">
 <input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
+
+
+
 
 <label for="demo">What are you looking for?</label>
 <input type="text" class="form-control" placeholder="search by state, suburb and postalcode" id="myInput" name="myCountry" style='' oninput="InputChange()">
