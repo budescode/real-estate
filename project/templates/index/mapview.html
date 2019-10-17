@@ -10,7 +10,7 @@
     width: 100%;
     left: 0;
     height:500px;
-
+    margin-bottom:20px;
 }
 
 .endless_page_link{
@@ -84,9 +84,9 @@ input[type=submit] {
 <form action="{% url 'home:mapview_search' %}" method="post"> {% csrf_token %}
 
 
-<div class='container'>
-    <div class='row' style='margin-top:85px;'>
-        <div class='col-md-9'>
+<div class='container-fluid'>
+    <div class='row' style='margin-top:95px;'>
+        <div class='col-md-8'>
             <!-- A grey horizontal navbar that becomes vertical on small screens -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
@@ -124,6 +124,7 @@ input[type=submit] {
 
 <div class='row'>
     <div class='col-md-12'>
+        <div><span id='total'></span> Search Found</div>
         <div id="searchitem" style=""></div>
     </div>
 </div>
@@ -174,13 +175,17 @@ input[type=submit] {
 
 <hr>
 
+
+<div id='mapwrapper'>
 <div style='margin-bottom:20px;' id='map'>
 
 
 
 
 </div>
-<!--end card-->
+
+</div>
+<!--end map-->
 
 
 
@@ -188,26 +193,44 @@ input[type=submit] {
         </div>
         <!--col-md-8-->
 
-        <div class='col-md-3'>
-                <div class="alert alert-danger" style='background-color: rgb(238, 40, 124); color:white;'>
-                <strong> <i class='fa fa-filter'></i> Advance Filter Options ( <span id='filtercount'></span> )</strong>
-                </div>
+        <div class='col-md-4'>
+
 
 <div class="form-group row">
 
-<div class='col-md-12'>
+
+
+<div class='col-md-12' style='margin-top:50px;'>
+
+
 <input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
 <input type="text" name="category" id="category" style="display: none;" value="Poster">
 <input type="text" name="filterlist" id="filterlist" style="display: none;" value="">
 
 <input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
 <input type='text' class='form-control' id="myInput" name="myCountry" oninput="InputChange()">
+<button type='submit' class='btn btn-default btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>
 
-</div>
+<hr>
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item">
+<a class="nav-link active" data-toggle="tab" href="#home"> <i class='fa fa-search'></i> Result</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-toggle="tab" href="#menu1"> <i class='fa fa-filter'></i> Filters</a>
+</li>
 
+</ul>
+
+<hr>
+
+  <div class="tab-content">
+    <div id="home" class="container tab-pane active"><br>
+      <h3>tt</h3>
+      <div class='row'>
 <div class="col-sm-6">
 <label for="pricemin"><small>Price (Min):</small></label>
-    <select class="custom-select custom-select-sm" id="pricemin" name="pricemin" >
+    <select class="custom-select custom-select-sm" id="pricemin" name="pricemin" onchange="changeMinPriceMap()">
     <option>Any </option>
     <option>$50,000 </option>
     <option>$75,000</option>
@@ -264,14 +287,12 @@ input[type=submit] {
     <option>$10,000,000</option>
     <option>$12,000,000</option>
     <option>$15,000,000</option>
-
     </select>
-
 </div>
 
 <div class="col-sm-6">
 <label for="pricemax"><small>Price (Max):</small></label>
-<select class="custom-select custom-select-sm" id="pricemax" name="pricemax" >
+<select class="custom-select custom-select-sm" id="pricemax" name="pricemax" onchange="changeMaxPriceMap()" >
 <option>Any </option>
 <option>$50,000 </option>
 <option>$75,000</option>
@@ -328,11 +349,12 @@ input[type=submit] {
 <option>$10,000,000</option>
 <option>$12,000,000</option>
 <option>$15,000,000</option>
-
 </select>
 </div>
 <!--col-md-6-->
 
+<hr>
+<br>
 
 <div class='col-md-6'>
 <label for="bedmin"> <small>Bed (Min):</small></label>
@@ -360,25 +382,9 @@ input[type=submit] {
 </select>
 </div>
 
-<!--<div class='col-md-6'>-->
-<!--    <button data-toggle="collapse" data-target="#demo" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Property Type</button>-->
-<!--</div>-->
-<!--<div class='col-md-6'>-->
-<!--    <button data-toggle="collapse" data-target="#filter" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' ><i style='color:white' class='fa fa-filter'> </i> Filter ( <span id='filtercount'></span>)</button>-->
-<!--</div>-->
-
-<!--<div class='col-md-12'>-->
-<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
-<!--</div>-->
-
-
-<div class='col-md-12'>
-<div id="filter" class="">
-    <h6>Filter Items</h6>
-    <div class='form-group row'>
 <div class='col-md-6'>
 <label for=""> <small>Bathrooms:</small></label>
-<select class="custom-select custom-select-sm" id="bathrooms" name="" >
+<select class="custom-select custom-select-sm" id="bathrooms" name="" onChange='changeBathroomMap()'>
 <option>Any</option>
 <option>Studio</option>
 <option value="1">1</option>
@@ -391,7 +397,7 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for=""> <small>Car Spaces:</small></label>
-<select class="custom-select custom-select-sm" id="carspaces" name="" >
+<select class="custom-select custom-select-sm" id="carspaces" name="" onChange = 'changeCarSpaceMap()'>
 <option>Any</option>
 <option>Studio</option>
 <option value="1">1</option>
@@ -401,9 +407,10 @@ input[type=submit] {
 <option value="5">5</option>
 </select>
 </div>
+
 <div class='col-md-6'>
 <label for=""> <small>Min land size (m2):</small></label>
-<select class="custom-select custom-select-sm" id="minlandsize" name="" >
+<select class="custom-select custom-select-sm" id="minlandsize" name="" onChange = 'changeMinLandMap()' >
 <option>Any</option>
 <option>Studio</option>
 <option value="100">100</option>
@@ -416,180 +423,14 @@ input[type=submit] {
 
 <div class='col-md-6'>
 <label for=""> <small>New or established:</small></label>
-<select class="custom-select custom-select-sm" id="new_or_established" name="" >
+<select class="custom-select custom-select-sm" id="new_or_established" name="" onChange = 'changeNoE()' >
 <option value='Any'>Any</option>
 <option value='New'>New</option>
 <option value="Established">Established</option>
 </select>
 </div>
-<hr>
-
-<div class='col-md-12'><br>
-<center><b>Outdoor Features</b></center>
-<hr>
-</div>
-
-</div>
-
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Swimming_pool' onclick=changeFilter(this)> Swimming pool
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Balcony' onclick=changeFilter(this)> Balcony
-      </label>
-    </div>
-    <hr>
-  <div class="form-check-inline">
-      <label class="form-check-label" for="check1">
-        <input type="checkbox" class="form-check-input" id="check1"  value="Garage" onclick=changeFilter(this)> Garage
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check2">
-        <input type="checkbox" class="form-check-input" id="check2" value="Outdoor_area" onclick=changeFilter(this)> Outdoor area
-      </label>
-    </div>
-
-    <hr>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check1">
-        <input type="checkbox" class="form-check-input" id="check1"  value="Fully_fenced" onclick=changeFilter(this) > Fully fenced
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check2">
-        <input type="checkbox" class="form-check-input" id="check2" value="Shed" onclick=changeFilter(this)> Shed
-      </label>
-    </div>
-    <hr>
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Outdoor_spa' onclick=changeFilter(this)> Outdoor spa
-      </label>
-    </div>
-  <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Tennis_court' onclick=changeFilter(this)> Tennis court
-      </label>
-    </div>
-    <hr>
- <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Undercover_parking' onclick=changeFilter(this)> Undercover parking
-      </label>
-    </div>
-
-<div class='col-md-12'><br>
-<center><b>Indoor Features</b></center>
-<hr>
-</div>
 
 
-<div class="form-check-inline">
-<label class="form-check-label" for="check1">
-<input type="checkbox" class="form-check-input" value="Ensuite" onclick=changeFilter(this) > Ensuite
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label" for="check2">
-<input type="checkbox" class="form-check-input"  value="DishWasher" onclick=changeFilter(this)> Dishwasher
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Built_in_robes' onclick=changeFilter(this)> Built in robes
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Study' onclick=changeFilter(this)> Study
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Alarm_system' onclick=changeFilter(this)> Alarm system
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Broadband' onclick=changeFilter(this)> Broadband
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Floorboards' onclick=changeFilter(this)> Floorboards
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Gym' onclick=changeFilter(this)> Gym
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Rumpus_room' onclick=changeFilter(this)> Rumpus room
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Workshop' onclick=changeFilter(this)> Workshop
-</label>
-</div>
-<hr>
-<div class='col-md-12'><br>
-<center><b>Climate control & energy</b></center>
-<hr>
-</div>
-
-
-<div class="form-check-inline">
-<label class="form-check-label" for="check1">
-<input type="checkbox" class="form-check-input" value="Air_conditioning" onclick=changeFilter(this) > Air conditioning
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label" for="check2">
-<input type="checkbox" class="form-check-input"  value="Solar_panels" onclick=changeFilter(this)> Solar panels
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Heating' onclick=changeFilter(this)> Heating
-</label>
-</div>
-
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Water_tank' onclick=changeFilter(this)> Water tank
-</label>
-</div>
-<hr>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='Solar_hot_water' onclick=changeFilter(this)> Solar hot water
-</label>
-</div>
-<div class="form-check-inline">
-<label class="form-check-label">
-<input type="checkbox" class="form-check-input" value='High_energy_efficiency' onclick=changeFilter(this)> High energy efficiency
-</label>
-</div>
-<hr>
-
-<!--<div class='col-md-12'>-->
-<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
-<!--</div>-->
-
-</div>
-</div>
 <div class='col-md-12'>
 <div id="demo" class="">
     <div class="form-check-inline">
@@ -650,16 +491,81 @@ input[type=submit] {
 
 
 
-<div class='col-md-12'>
-    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>
-</div>
+
+
+
 </form>
 
 </div>
+</div>
+
+
+
+
+
+      </div>
+    </div>
+
+
+    <div id="menu1" class="container tab-pane fade"><br>
+    <div class='row' style='overflow-y: auto;height: 400px;'>
+        <div class='col-md-12'>
+            {% for i in pagin %}
+    <div class="card" style='margin-bottom:10px;'>
+        <div class="card-body">
+            <h4 class="card-title"> <p>{{i.street_name}} {{i.street_number}} {{i.state}} {{i.suburb}}</p></h4>
+            <p class="card-text">
+
+            <div class='row'>
+            <div class='col-md-4'>
+              <a href='{% url 'home:details' i.id_user category1 %}'>   <img class='img-fluid' src={{i.image.url}}> </a>
+
+            </div>
+            <div class='col-md-8'>
+
+            <div class='row'>
+           <div class='col-md-12' style='background-color:rgb(238, 40, 124); color: white; padding: 8px 8px;'>
+                <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}} &nbsp&nbsp&nbsp
+                <i class='fa fa-bath' style='color:white'></i> {{i.Bathrooms}} &nbsp&nbsp&nbsp
+                <i class='fa fa-car' style='color:white'></i> {{i.Car_spaces}} &nbsp&nbsp&nbsp
+                {% for a in saved %}
+                {% if a.post_id == i.post_id %}
+                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
+                {% endif %}
+                {% endfor %}
+                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
+
+            </div>
+            </div>
+            <hr>
+
+                {{i.created|timesince}} ago <br> <br>
+              {{i.Property_type}} | ${{i.Price}}  |  <a href='{% url 'home:details' i.id_user category1 %}'>See more</a>
+            </div>
+
+            </div>
+            <!--row-->
+            <hr>
+            </p>
+        </div>
+</div>
+<!--end card-->
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+  </div>
+
+
 
 
 
 </div>
+
+
+
+
 
 
 
@@ -691,28 +597,29 @@ input[type=submit] {
 
 
 <script>
-    var locations = [
-    //   ['Bondi Beach', -33.890542, 151.274856],
-    //   ['Coogee Beach', -33.923036, 151.259052],
-    //   ['Cronulla Beach', -34.028249, 151.157507],
-    //   ['Manly Beach', -33.80010128657071, 151.28747820854187],
-    //   ['Maroubra Beach', -33.950198, 151.259302]
-    ];
+    var locations = [];
 
     {% for i in pagin %}
-     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}', '{{i.Price|cut:","|cut:"$" }}', '{{i.Bedrooms}}', '{{i.Bathrooms}}', '{{Car_spaces}}', '{{land_size}}'])
+     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}', '{{i.Price|cut:","|cut:"$" }}', '{{i.Bedrooms}}', '{{i.Bathrooms}}', '{{i.Car_spaces}}', '{{i.land_size}}', '{{i.new_or_established}}'])
     //   console.log('yeahhh', '{{i.latitude}}', '{{i.longitude}}')
 
     {% endfor %}
 
-    console.log(locations)
+    document.querySelector('#total').innerHTML = locations.length
+
+
 
   function initialize() {
 
-
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
-      center: new google.maps.LatLng(-33.92, 151.25),
+      center: new google.maps.LatLng(lo, la),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -721,6 +628,7 @@ input[type=submit] {
     var marker, i;
 
     for (i = 0; i < locations.length; i++) {
+        console.log(locations[i][1], locations[i][2])
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
         map: map
@@ -735,6 +643,10 @@ input[type=submit] {
     }
 }
 
+
+
+
+
 function loadScript() {
   var script = document.createElement('script');
   script.type = 'text/javascript';
@@ -746,6 +658,580 @@ function loadScript() {
 }
 
 window.onload = loadScript;
+
+
+function changeNoE(){
+    category = document.querySelector('#new_or_established').value
+
+    if (category == 'Any'){
+            map = document.querySelector('#map')
+    map.remove()
+
+    map = document.createElement('div')
+    map.id = 'map'
+    map.innerHTML = 'Loading'
+
+    mapwrapper = document.querySelector('#mapwrapper')
+    map.style.position = 'absolute'
+    map.style.width = '100%'
+    map.style.left = 0
+    map.style.height = '500px'
+    map.style.marginBottom = '20px'
+    mapwrapper.appendChild(map)
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(lo, la),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        total = 0
+       for (i=0; i<locations.length; i++){
+
+            total = total + 1
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+
+
+
+       }
+       document.querySelector('#total').innerHTML = total
+    }
+
+    else {
+    map = document.querySelector('#map')
+    map.remove()
+
+    map = document.createElement('div')
+    map.id = 'map'
+    map.innerHTML = 'Loading'
+
+    mapwrapper = document.querySelector('#mapwrapper')
+    map.style.position = 'absolute'
+    map.style.width = '100%'
+    map.style.left = 0
+    map.style.height = '500px'
+    map.style.marginBottom = '20px'
+    mapwrapper.appendChild(map)
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(lo, la),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        total = 0
+       for (i=0; i<locations.length; i++){
+           lo = locations[i][8]
+           if(lo == category){
+
+            total = total + 1
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+
+        }
+
+       }
+       document.querySelector('#total').innerHTML = total
+    }
+
+
+}
+
+function changeMinLandMap(){
+    minlandsize = document.querySelector('#minlandsize').value
+    if (minlandsize == 'Any'){
+
+
+    }
+    else if(minlandsize == 'Studio'){
+    minlandsize = 0
+
+    }
+
+    else{
+    map = document.querySelector('#map')
+    map.remove()
+    minlandsize = Number(minlandsize)
+    map = document.createElement('div')
+    map.id = 'map'
+    map.innerHTML = 'Loading'
+
+    mapwrapper = document.querySelector('#mapwrapper')
+    map.style.position = 'absolute'
+    map.style.width = '100%'
+    map.style.left = 0
+    map.style.height = '500px'
+    map.style.marginBottom = '20px'
+    mapwrapper.appendChild(map)
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(lo, la),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        total = 0
+       for (i=0; i<locations.length; i++){
+           lo = locations[i][7]
+           if(Number(lo) >= Number(minlandsize)){
+               total = total+1
+            // console.log('locations[i][7]', i)
+
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+
+        }
+
+       }
+
+       document.querySelector('#total').innerHTML = total
+    }
+
+
+}
+
+
+
+function changeCarSpaceMap(){
+    carspaces = document.querySelector('#carspaces').value
+    if (carspaces == 'Any'){
+
+
+    }
+    else if(carspaces == 'Studio'){
+    bathrooms = 0
+
+    }
+
+    else{
+    map = document.querySelector('#map')
+    map.remove()
+    carspaces = Number(carspaces)
+    map = document.createElement('div')
+    map.id = 'map'
+    map.innerHTML = 'Loading'
+
+    mapwrapper = document.querySelector('#mapwrapper')
+    map.style.position = 'absolute'
+    map.style.width = '100%'
+    map.style.left = 0
+    map.style.height = '500px'
+    map.style.marginBottom = '20px'
+    mapwrapper.appendChild(map)
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(lo, la),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        total = 0
+       for (i=0; i<locations.length; i++){
+           lo = locations[i][6]
+           if(Number(lo) >= Number(carspaces)){
+            total = total + 1
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+
+        }
+
+       }
+       document.querySelector('#total').innerHTML = total
+    }
+
+
+}
+
+
+function changeBathroomMap(){
+    bathrooms = document.querySelector('#bathrooms').value
+    if (bathrooms == 'Any'){
+
+
+    }
+    else if(bathrooms == 'Studio'){
+    bathrooms = 0
+
+    }
+
+    else{
+    map = document.querySelector('#map')
+    map.remove()
+    bathrooms = Number(bathrooms)
+    map = document.createElement('div')
+    map.id = 'map'
+    map.innerHTML = 'Loading'
+
+    mapwrapper = document.querySelector('#mapwrapper')
+    map.style.position = 'absolute'
+    map.style.width = '100%'
+    map.style.left = 0
+    map.style.height = '500px'
+    map.style.marginBottom = '20px'
+    mapwrapper.appendChild(map)
+    lo = -33.92
+    la = 151.25
+    for (i = 0; i < 1; i++) {
+        lo = locations[0][1]
+        la = locations[0][2]
+    }
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(lo, la),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        total = 0
+       for (i=0; i<locations.length; i++){
+           lo = locations[i][5]
+           if(Number(lo) >= Number(bathrooms)){
+            total = total + 1
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
+            }
+          })(marker, i));
+
+        }
+
+       }
+       document.querySelector('#total').innerHTML = total
+
+    }
+
+
+}
+
+
+function changeMinPriceMap(){
+map = document.querySelector('#map')
+map.remove()
+pricemin = document.querySelector('#pricemin').value
+pricemin  = pricemin.substring(1);
+pricemin1 = pricemin.replace(',','')
+map = document.createElement('div')
+map.id = 'map'
+map.innerHTML = 'Loading'
+mapwrapper = document.querySelector('#mapwrapper')
+map.style.position = 'absolute'
+map.style.width = '100%'
+map.style.left = 0
+map.style.height = '500px'
+map.style.marginBottom = '20px'
+mapwrapper.appendChild(map)
+lo = -33.92
+la = 151.25
+for (i = 0; i < 1; i++) {
+    lo = locations[0][1]
+    la = locations[0][2]
+}
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: new google.maps.LatLng(lo, la),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    total = 0
+   for (i=0; i<locations.length; i++){
+       lo = locations[i][3]
+       if(Number(lo) >= Number(pricemin1)){
+        total = total + 1
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+    }
+
+   }
+
+   document.querySelector('#total').innerHTML = total
+}
+//endfunction
+
+
+
+
+
+function changeBedMinMap(){
+bedmin = document.querySelector('#bedmin').value
+
+if (bedmin == 'Any'){
+    console.log(bedmin)
+
+}
+else if(bedmin == 'Studio'){
+    bedmin = 0
+    console.log(bedmin)
+}
+
+else{
+map = document.querySelector('#map')
+map.remove()
+bedmin = Number(bedmin)
+map = document.createElement('div')
+map.id = 'map'
+map.innerHTML = 'Loading'
+
+mapwrapper = document.querySelector('#mapwrapper')
+map.style.position = 'absolute'
+map.style.width = '100%'
+map.style.left = 0
+map.style.height = '500px'
+map.style.marginBottom = '20px'
+mapwrapper.appendChild(map)
+lo = -33.92
+la = 151.25
+for (i = 0; i < 1; i++) {
+    lo = locations[0][1]
+    la = locations[0][2]
+}
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: new google.maps.LatLng(lo, la),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    total = 0
+   for (i=0; i<locations.length; i++){
+       lo = locations[i][4]
+       if(Number(lo) >= Number(bedmin)){
+        total = total + 1
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+    }
+
+   }
+   document.querySelector('#total').innerHTML = total
+}
+
+}
+
+//endfunction
+
+
+function changeBedMaxMap(){
+bedmax = document.querySelector('#bedmax').value
+
+if (bedmax == 'Any'){
+    console.log(bedmax)
+
+}
+else if(bedmax == 'Studio'){
+    bedmax = 0
+    console.log(bedmax)
+}
+
+else{
+map = document.querySelector('#map')
+map.remove()
+bedmax = Number(bedmax)
+map = document.createElement('div')
+map.id = 'map'
+map.innerHTML = 'Loading'
+
+mapwrapper = document.querySelector('#mapwrapper')
+map.style.position = 'absolute'
+map.style.width = '100%'
+map.style.left = 0
+map.style.height = '500px'
+map.style.marginBottom = '20px'
+mapwrapper.appendChild(map)
+lo = -33.92
+la = 151.25
+for (i = 0; i < 1; i++) {
+    lo = locations[0][1]
+    la = locations[0][2]
+}
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: new google.maps.LatLng(lo, la),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    total =  0
+   for (i=0; i<locations.length; i++){
+       lo = locations[i][4]
+       if(Number(lo) <= Number(bedmax)){
+        total = total + 1
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+    }
+
+   }
+   document.querySelector('#total').innerHTML = total
+}
+
+}
+
+//endfunction
+
+
+
+function changeMaxPriceMap(){
+map = document.querySelector('#map')
+map.remove()
+pricemax = document.querySelector('#pricemax').value
+pricemax  = pricemax.substring(1);
+pricemax1 = pricemax.replace(',','')
+map = document.createElement('div')
+map.id = 'map'
+map.innerHTML = 'Loading...'
+
+mapwrapper = document.querySelector('#mapwrapper')
+map.style.position = 'absolute'
+map.style.width = '100%'
+map.style.left = 0
+map.style.height = '500px'
+map.style.marginBottom = '20px'
+mapwrapper.appendChild(map)
+lo = -33.92
+la = 151.25
+for (i = 0; i < 1; i++) {
+    lo = locations[0][1]
+    la = locations[0][2]
+}
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: new google.maps.LatLng(lo, la),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    total = 0
+   for (i=0; i<locations.length; i++){
+       lo = locations[i][3]
+       if(Number(lo) <= Number(pricemax1)){
+        total = total + 1
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+    }
+
+   }
+   document.querySelector('#total').innerHTML = total
+}
+//endfunction
+
+
+
   </script>
 
 
@@ -753,71 +1239,13 @@ window.onload = loadScript;
 
 <script>
 
-function changeBedMinMap(){
-//  console.log(locations)
- bedmin = document.querySelector('#bedmin').value
-
-//  bedmax  = document.querySelector('#bedmax').value
-//  pricemin = document.querySelector('#pricemin').value
-//   pricemax = document.querySelector('#pricemax').value
-//  new_or_established = document.querySelector('#new_or_established').value
-//  carspaces = document.querySelector('#carspaces').value
-//  console.log(bedmin, bedmax, pricemin, pricemax, new_or_established,carspaces  )
-if(bedmin == 'Studio'){
-
-}
-else if(bedmin == 'Any'){
-
-}
-
-else{
- for(i=0; i<locations.length; i++){
-      if(Number(locations[i][4]) >= Number(bedmin)){
-        //   console.log('yesss')
-          console.log('bedmin', locations[i][4])
-      }
-      else{
-          console.log('nahhh')
-      }
-
-      }
-        //  console.log('yes na', locations[i][4])
-
-
- }
-}
 
 
 
 
 
-function changeBedMaxMap(){
- console.log(locations)
- bedmin = document.querySelector('#bedmin').value
-//  bedmax  = document.querySelector('#bedmax').value
-//  pricemin = document.querySelector('#pricemin').value
-//   pricemax = document.querySelector('#pricemax').value
-//  new_or_established = document.querySelector('#new_or_established').value
-//  carspaces = document.querySelector('#carspaces').value
-//  console.log(bedmin, bedmax, pricemin, pricemax, new_or_established,carspaces  )
-if(bedmin == 'Studio'){
-
-}
-else if(bedmin == 'Any'){
-
-}
-
-else{
- for(i=0; i<locations.length; i++){
-     if(Number(locations[i][4]) <= Number(bedmax)){
-         console.log(locations[i][4])
-     }
-
- }
-}
 
 
-}
 
 
 </script>
@@ -1530,77 +1958,77 @@ function mapHide(){
 
 
 // console.log('datatttttttt iss', latitude, longitude, address);
-function initMap() {
-    // console.log('datatttttttt iss', latitude, longitude);
+// function initMap() {
+//     // console.log('datatttttttt iss', latitude, longitude);
 
-	var broadway = {
-		info: '<strong>Chipotle on Broadway</strong><br>\
-					 N Broadway St<br> Chicago, IL 60640<br>\
-					<a href="https://goo.gl/maps/jKNEDz4SyyH2">Get Directions</a>',
-		lat: 41.976816,
-		long: -87.659916
-	};
-
-
+// 	var broadway = {
+// 		info: '<strong>Chipotle on Broadway</strong><br>\
+// 					 N Broadway St<br> Chicago, IL 60640<br>\
+// 					<a href="https://goo.gl/maps/jKNEDz4SyyH2">Get Directions</a>',
+// 		lat: 41.976816,
+// 		long: -87.659916
+// 	};
 
 
-	var sheridan = {
-		info: '<strong>Chipotle on Sheridan</strong><br>\r\
-					6600 N Sheridan Rd<br> Chicago, IL 60626<br>\
-					<a href="https://goo.gl/maps/QGUrqZPsYp92">Get Directions</a>',
-		lat: 42.002707,
-		long: -87.661236
-	};
 
-	var locations = [
-      [broadway.info, broadway.lat, broadway.long],
-      [sheridan.info, sheridan.lat, sheridan.long],
-      ['sheridan.info', -31.9431656, 115.876085],
-      ['sheridan.info2222', -31.94942, 115.831923],
 
-    ];
+// 	var sheridan = {
+// 		info: '<strong>Chipotle on Sheridan</strong><br>\r\
+// 					6600 N Sheridan Rd<br> Chicago, IL 60626<br>\
+// 					<a href="https://goo.gl/maps/QGUrqZPsYp92">Get Directions</a>',
+// 		lat: 42.002707,
+// 		long: -87.661236
+// 	};
 
-    // var locations = [
-    // {% for i in pagin %}
+// 	var locations = [
+//       [broadway.info, broadway.lat, broadway.long],
+//       [sheridan.info, sheridan.lat, sheridan.long],
+//       ['sheridan.info', -31.9431656, 115.876085],
+//       ['sheridan.info2222', -31.94942, 115.831923],
 
-    //   ['{{i.street_number}}' + ', ' + '{{i.street_name}}' + ', '  + '{{i.suburb}}' + ', '  + '{{i.state}}' + ', '  + '{{i.postcode}}', {{i.longitude}} , {{i.latitude}}],
-    // {% endfor %}
+//     ];
 
-    //  ];
+//     // var locations = [
+//     // {% for i in pagin %}
 
-    console.log(locations)
+//     //   ['{{i.street_number}}' + ', ' + '{{i.street_name}}' + ', '  + '{{i.suburb}}' + ', '  + '{{i.state}}' + ', '  + '{{i.postcode}}', {{i.longitude}} , {{i.latitude}}],
+//     // {% endfor %}
 
-	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 13,
-		center: new google.maps.LatLng(-35.473469, 149.012375),
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	});
+//     //  ];
 
-	var infowindow = new google.maps.InfoWindow({});
+//     console.log(locations)
 
-	var marker, i;
+// 	var map = new google.maps.Map(document.getElementById('map'), {
+// 		zoom: 13,
+// 		center: new google.maps.LatLng(-35.473469, 149.012375),
+// 		mapTypeId: google.maps.MapTypeId.ROADMAP
+// 	});
 
-	for (i = 0; i < locations.length; i++) {
-		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-			map: map
-		});
+// 	var infowindow = new google.maps.InfoWindow({});
 
-		google.maps.event.addListener(marker, 'click', (function (marker, i) {
-			return function () {
-				infowindow.setContent(locations[i][0]);
-				infowindow.open(map, marker);
-			}
-		})(marker, i));
-	}
-}
+// 	var marker, i;
+
+// 	for (i = 0; i < locations.length; i++) {
+// 		marker = new google.maps.Marker({
+// 			position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+// 			map: map
+// 		});
+
+// 		google.maps.event.addListener(marker, 'click', (function (marker, i) {
+// 			return function () {
+// 				infowindow.setContent(locations[i][0]);
+// 				infowindow.open(map, marker);
+// 			}
+// 		})(marker, i));
+// 	}
+// }
 
 
 
 </script>
 
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
+<!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>-->
 
 
 {% endblock %}

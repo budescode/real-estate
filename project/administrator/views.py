@@ -70,22 +70,22 @@ def upload_csv(request):
 # 		longitude = r.json()['results'][0]['geometry']['location']['lng']
 # 		print('the datas areee',r.json())
 # 		print('address is',column[41], column[40], column[42], column[39])
-		url =  'https://maps.googleapis.com/maps/api/geocode/json?address='+ str(column[41]) + ', '+ str(column[40]) + ', ' +  str(column[42]) + ', ' +  str(column[39]) + ', ' + str(column[38]) + '&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY'
-		r = requests.get(url = url)
-		data = r.json()
-		print(url)
-		#print('dataaaaaaaaaaaaaa', data)
-		latitude = data['results'][0]['geometry']['location']['lat']
-		longitude = data['results'][0]['geometry']['location']['lng']
-		print(latitude, longitude, 'yeahhh')
+# 		url =  'https://maps.googleapis.com/maps/api/geocode/json?address='+ str(column[41]) + ', '+ str(column[40]) + ', ' +  str(column[42]) + ', ' +  str(column[39]) + ', ' + str(column[38]) + '&key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY'
+# 		r = requests.get(url = url)
+# 		data = r.json()
+# 		print(url)
+# 		#print('dataaaaaaaaaaaaaa', data)
+# 		latitude = data['results'][0]['geometry']['location']['lat']
+# 		longitude = data['results'][0]['geometry']['location']['lng']
+# 		print(latitude, longitude, 'yeahhh')
 
 		Poster.objects.create(user=request.user,
 
 		# _, created = Poster.objects.create(
 			# user = request.user,
 			Property_type = column[3],
-			longitude = longitude,
-			latitude = latitude,
+			longitude = column[44],
+			latitude = column[45],
 			Price = column[4],
 			Bedrooms = column[5],
 			Bathrooms = column[6],
@@ -97,7 +97,7 @@ def upload_csv(request):
 			land_size = column[37],
 			street_name = column[40],
  			street_number = column[41],
-			image = column[44],
+			image = column[46],
 # 			image1 = column[45],
 			plan = column[36],
 			)
