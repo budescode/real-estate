@@ -1,0 +1,1029 @@
+{% extends 'index/base2.html' %}
+{% block body %}
+{% load staticfiles %}
+{% load el_pagination_tags %}
+<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+
+
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-md-8'>
+            <!-- A grey horizontal navbar that becomes vertical on small screens -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
+        <div id="navbarNavDropdown" class="navbar-collapse collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"><i class='fa fa-list-alt'></i> List <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home:mapview_search' %}"><i class='fa fa-globe'></i> Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal"><i class='fa fa-save'></i><span id='savesearchid'>Save Search</span></a>
+                </li>
+
+
+            </ul>
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <div class="form-group">
+                    <label class="d-inline-block" for="">Sort By:</label>
+                    <select class="form-control form-control-sm d-inline-block" style="width: auto;" id="sortby" name='sortby' onchange="this.form.submit()">
+                    <option value="Relevant">Most Relevant</option>
+                    <option value="-created">Date (Newest - Oldest)</option>
+                    <option value="created">Date (Oldest - Newest)</option>
+                    <option value="Price">Price (Lowest - Highest)</option>
+                    <option value="-Price">Price (Highest - Lowest)</option>
+                    </select>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+<div class='row'>
+    <div class='col-md-12'>
+        <div id="searchitem" style=""></div>
+    </div>
+</div>
+
+
+  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Save Search</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="form-group">
+            <label for="usr">Name the search:</label>
+            <input type="text" class="form-control" id="namesave">
+            </div>
+
+
+        <div class="form-check">
+        <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" id='checkboxsave' value=""> Enable Notifications
+        </label>
+        </div>
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" onclick='saveFunction()'>Submit</button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+    <hr>
+{% paginate pagin %}
+{% show_pages %}
+<hr>
+{% for i in pagin %}
+    <div class="card" style='margin-bottom:20px;'>
+        <div class="card-body">
+            <h4 class="card-title"> <p>{{i.street_number}}, {{i.street_name}} {{i.state}} {{i.suburb}}, {{i.postcode}}</p></h4>
+            <p class="card-text">
+
+            <div class='row'>
+            <div class='col-md-4'>
+              <a href='{% url 'home:details' i.id_user category1 %}'>   <img class='img-fluid' src={{i.image.url}}> </a>
+
+            </div>
+            <div class='col-md-8'>
+
+            <div class='row'>
+           <div class='col-md-12' style='background-color:darkred; color: white; padding: 8px 8px;'>
+                <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}} &nbsp&nbsp&nbsp
+                <i class='fa fa-bath' style='color:white'></i> {{i.Bathrooms}} &nbsp&nbsp&nbsp
+                <i class='fa fa-car' style='color:white'></i> {{i.Car_spaces}} &nbsp&nbsp&nbsp
+                <i class='fa fa-star' id='star{{i.id_user}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id_user}}")></i>
+
+
+
+            </div>
+            </div>
+            <hr>
+
+                {{i.created|timesince}} ago <br> <br>
+              {{i.Property_type}} | ${{i.Price}}  |  <a href='{% url 'home:details' i.id_user category1 %}'>See more</a>  <br>
+
+              <br>
+            </div>
+
+            </div>
+            <!--row-->
+            <hr>
+            </p>
+        </div>
+</div>
+<!--end card-->
+
+
+{% endfor %}
+{% show_pages %}
+
+        </div>
+        <!--col-md-8-->
+
+        <div class='col-md-4' style='margin-top:-56px'>
+                <!--<div class="alert alert-danger" style='background-color: darkred; color:white;'>-->
+                <!--<strong> <i class='fa fa-filter'></i> Advance Filter Options ( <span id='filtercount'></span> )</strong>-->
+                <!--</div>-->
+
+<div class="form-group row">
+
+<div class='col-md-12'>
+
+<input type="text" name="category" id="category" style="display: none;" value="Poster">
+<input type="text" name="filterlist" id="filterlist" style="display: none;" value="">
+
+<input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
+<!--<input type='text' class='form-control' id="myInput" name="myCountry" oninput="InputChange()">-->
+<div id="wrapper">
+
+<!--<div class="demo">-->
+<!--<div class="control-group">-->
+<!--<label for="select-to">Select Locations:</label>-->
+<!--<select id="select-to" class="contacts" placeholder="Pick some locations..." name='hiddensearch'></select>-->
+<!--</div>-->
+<!--</div>-->
+			<div class="demo">
+				<div class="control-group">
+					<!--<label for="select-state">States:</label>-->
+					<select id="select-state" multiple name="hiddensearch" class="demo-default">
+						<option value="">Select a state...</option>
+
+                        {% for i in mylist %}
+                        <option value="{{i}}" selected> {{i}}</option>
+                        {% endfor %}
+
+                        {% for i in qs %}
+                        <option value="{{i.suburb}} - {{i.state}}"> {{i.suburb}} - {{i.state}}</option>
+                        {% endfor %}
+
+					</select>
+				</div>
+
+
+			</div>
+
+</div>
+
+</div>
+
+<div class="col-sm-6">
+<label for="pricemin"><small>Price (Min):</small></label>
+    <select class="custom-select custom-select-sm" id="pricemin" name="pricemin" >
+    <option>Any </option>
+    <option>$50,000 </option>
+    <option>$75,000</option>
+    <option>$100,000</option>
+    <option>$125,000</option>
+    <option>$150,000</option>
+    <option>$175,000</option>
+    <option>$200,000</option>
+    <option>$225,000</option>
+    <option>$250,000</option>
+    <option>$275,000</option>
+    <option>$300,000</option>
+    <option>$325,000</option>
+    <option>$350,000</option>
+    <option>$350,000</option>
+    <option>$350,000</option>
+    <option>$375,000</option>
+    <option>$400,000</option>
+    <option>$425,000</option>
+    <option>$450,000</option>
+    <option>$475,000</option>
+    <option>$500,000</option>
+    <option>$550,000</option>
+    <option>$600,000</option>
+    <option>$650,000</option>
+    <option>$700,000</option>
+    <option>$750,000</option>
+    <option>$800,000</option>
+    <option>$850,000</option>
+    <option>$900,000</option>
+    <option>$950,000</option>
+    <option>$1,000,000</option>
+    <option>$1,100,000</option>
+    <option>$1,200,000</option>
+    <option>$1,300,000</option>
+    <option>$1,400,000</option>
+    <option>$1,500,000</option>
+    <option>$1,600,000</option>
+    <option>$1,700,000</option>
+    <option>$1,800,000</option>
+    <option>$1,900,000</option>
+    <option>$2,000,000</option>
+    <option>$2,250,000</option>
+    <option>$2,500,000</option>
+    <option>$2,750,000</option>
+    <option>$3,000,000</option>
+    <option>$3,500,000</option>
+    <option>$4,000,000</option>
+    <option>$4,500,000</option>
+    <option>$5,000,000 </option>
+    <option>$7,000,000</option>
+    <option>$8,000,000</option>
+    <option>$9,000,000</option>
+    <option>$10,000,000</option>
+    <option>$12,000,000</option>
+    <option>$15,000,000</option>
+
+    </select>
+
+</div>
+
+<div class="col-sm-6">
+<label for="pricemax"><small>Price (Max):</small></label>
+<select class="custom-select custom-select-sm" id="pricemax" name="pricemax" >
+<option>Any </option>
+<option>$50,000 </option>
+<option>$75,000</option>
+<option>$100,000</option>
+<option>$125,000</option>
+<option>$150,000</option>
+<option>$175,000</option>
+<option>$200,000</option>
+<option>$225,000</option>
+<option>$250,000</option>
+<option>$275,000</option>
+<option>$300,000</option>
+<option>$325,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$350,000</option>
+<option>$375,000</option>
+<option>$400,000</option>
+<option>$425,000</option>
+<option>$450,000</option>
+<option>$475,000</option>
+<option>$500,000</option>
+<option>$550,000</option>
+<option>$600,000</option>
+<option>$650,000</option>
+<option>$700,000</option>
+<option>$750,000</option>
+<option>$800,000</option>
+<option>$850,000</option>
+<option>$900,000</option>
+<option>$950,000</option>
+<option>$1,000,000</option>
+<option>$1,100,000</option>
+<option>$1,200,000</option>
+<option>$1,300,000</option>
+<option>$1,400,000</option>
+<option>$1,500,000</option>
+<option>$1,600,000</option>
+<option>$1,700,000</option>
+<option>$1,800,000</option>
+<option>$1,900,000</option>
+<option>$2,000,000</option>
+<option>$2,250,000</option>
+<option>$2,500,000</option>
+<option>$2,750,000</option>
+<option>$3,000,000</option>
+<option>$3,500,000</option>
+<option>$4,000,000</option>
+<option>$4,500,000</option>
+<option>$5,000,000 </option>
+<option>$7,000,000</option>
+<option>$8,000,000</option>
+<option>$9,000,000</option>
+<option>$10,000,000</option>
+<option>$12,000,000</option>
+<option>$15,000,000</option>
+
+</select>
+</div>
+<!--col-md-6-->
+
+
+<div class='col-md-6'>
+<label for="bedmin"> <small>Bed (Min):</small></label>
+<select class="custom-select custom-select-sm" id="bedmin" name="Bed(min)" >
+<option>Any</option>
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+
+<div class='col-md-6'>
+<label for="bedmax"> <small>Bed (Max):</small></label>
+<select class="custom-select custom-select-sm" id="bedmax" name="Bed(max)" >
+<option value='Any'>Any</option>
+<option value='Studio'>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+
+
+<div class="col-md-6">
+<label for="demo">Property Type</label>
+    <select id="option-droup-demo" multiple="multiple" name='propertytype1'>
+    <optgroup label="All"  >
+    <option value="House" id='darkred'>House</option>
+    <option value="Apartment" id='darkred'>Apartment</option>
+    <option value="Town">Town</option>
+    <option value="Villa">Villa</option>
+    <option value="Acreage">Acreage</option>
+    <option value="Rural">Rural</option>
+    <option value="Block Of Units">Block Of Units</option>
+    <option value="Retirement Living">Retirement Living</option>
+    </optgroup>
+    </select>
+</div>
+
+
+
+<div class='col-md-12'>
+<div id="filter" class="">
+    <h5 style='text-align: center; padding-top: 10px;'>Filter Items</h5>
+    <div class='form-group row'>
+<div class='col-md-6'>
+<label for=""> <small>Bathrooms:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+
+<div class='col-md-6'>
+<label for=""> <small>Car Spaces:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</div>
+<div class='col-md-6'>
+<label for=""> <small>Min land size (m2):</small></label>
+<select class="custom-select custom-select-sm" id="bedmin" name="" >
+<option>Any</option>
+<option>Studio</option>
+<option value="100">100</option>
+<option value="200">200</option>
+<option value="300">300</option>
+<option value="400">400</option>
+<option value="500">500</option>
+</select>
+</div>
+
+<div class='col-md-6'>
+<label for=""> <small>New or established:</small></label>
+<select class="custom-select custom-select-sm" id="" name="" >
+<option value='Any'>Any</option>
+<option value='New'>New</option>
+<option value="Established">Established</option>
+</select>
+</div>
+<hr>
+
+<div class='col-md-12'><br>
+<center><b>Outdoor Features</b></center>
+<hr>
+</div>
+
+</div>
+
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Swimming_pool' onclick=changeFilter(this)> Swimming pool
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Balcony' onclick=changeFilter(this)> Balcony
+      </label>
+    </div>
+    <hr>
+  <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="check1"  value="Garage" onclick=changeFilter(this)> Garage
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="check2" value="Outdoor_area" onclick=changeFilter(this)> Outdoor area
+      </label>
+    </div>
+
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check1">
+        <input type="checkbox" class="form-check-input" id="check1"  value="Fully_fenced" onclick=changeFilter(this) > Fully fenced
+      </label>
+    </div>
+    <div class="form-check-inline">
+      <label class="form-check-label" for="check2">
+        <input type="checkbox" class="form-check-input" id="check2" value="Shed" onclick=changeFilter(this)> Shed
+      </label>
+    </div>
+    <hr>
+    <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Outdoor_spa' onclick=changeFilter(this)> Outdoor spa
+      </label>
+    </div>
+  <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Tennis_court' onclick=changeFilter(this)> Tennis court
+      </label>
+    </div>
+    <hr>
+ <div class="form-check-inline">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value='Undercover_parking' onclick=changeFilter(this)> Undercover parking
+      </label>
+    </div>
+
+<div class='col-md-12'><br>
+<center><b>Indoor Features</b></center>
+<hr>
+</div>
+
+
+<div class="form-check-inline">
+<label class="form-check-label" for="check1">
+<input type="checkbox" class="form-check-input" value="Ensuite" onclick=changeFilter(this) > Ensuite
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label" for="check2">
+<input type="checkbox" class="form-check-input"  value="DishWasher" onclick=changeFilter(this)> Dishwasher
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Built_in_robes' onclick=changeFilter(this)> Built in robes
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Study' onclick=changeFilter(this)> Study
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Alarm_system' onclick=changeFilter(this)> Alarm system
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Broadband' onclick=changeFilter(this)> Broadband
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Floorboards' onclick=changeFilter(this)> Floorboards
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Gym' onclick=changeFilter(this)> Gym
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Rumpus_room' onclick=changeFilter(this)> Rumpus room
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Workshop' onclick=changeFilter(this)> Workshop
+</label>
+</div>
+<hr>
+<div class='col-md-12'><br>
+<center><b>Climate control & energy</b></center>
+<hr>
+</div>
+
+
+<div class="form-check-inline">
+<label class="form-check-label" for="check1">
+<input type="checkbox" class="form-check-input" value="Air_conditioning" onclick=changeFilter(this) > Air conditioning
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label" for="check2">
+<input type="checkbox" class="form-check-input"  value="Solar_panels" onclick=changeFilter(this)> Solar panels
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Heating' onclick=changeFilter(this)> Heating
+</label>
+</div>
+
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Water_tank' onclick=changeFilter(this)> Water tank
+</label>
+</div>
+<hr>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='Solar_hot_water' onclick=changeFilter(this)> Solar hot water
+</label>
+</div>
+<div class="form-check-inline">
+<label class="form-check-label">
+<input type="checkbox" class="form-check-input" value='High_energy_efficiency' onclick=changeFilter(this)> High energy efficiency
+</label>
+</div>
+<hr>
+
+<!--<div class='col-md-12'>-->
+<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
+<!--</div>-->
+
+</div>
+</div>
+
+
+
+
+
+
+<div class='col-md-12'>
+    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: darkred; color:white; margin-top:7px; cursor:pointer' >Submit</button>
+</div>
+</form>
+
+
+
+
+
+
+
+
+</div>
+<!--form group row-->
+
+
+
+
+
+
+
+        </div>
+        <!--col-md-4-->
+
+
+    </div>
+</div>
+
+
+{% block selectizescript %}
+				<script>
+$('#select-state').selectize({
+	maxItems: 100000
+});
+</script>
+
+<script>
+
+
+pro = '{{firstpropertytype}}'
+a = pro.split(",");
+
+propertylist=[]
+
+if(a){
+for(i=0;i<a.length; i++){
+    propertylist.push(a[i])
+}
+}
+else{
+    propertylist=[]
+}
+
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value = propertylist
+
+
+{% for i in saved %}
+
+id = '#star' + '{{i.post_id}}'
+qs = document.querySelector(id)
+if(qs){
+    qs.style.color = 'orange';
+}
+{% endfor %}
+
+
+
+sort = '{{sort|safe}}'
+console.log('sorrrrrr', sort)
+if (sort == '-Price'){
+ document.getElementById("sortby").options.selectedIndex = 4;
+}
+else if(sort == 'Price'){
+  document.getElementById("sortby").options.selectedIndex = 3;
+}
+else if(sort == 'created'){
+  document.getElementById("sortby").options.selectedIndex = 2;
+}
+else if(sort == '-created'){
+  document.getElementById("sortby").options.selectedIndex = 1;
+}
+else if(sort == 'Relevant'){
+  document.getElementById("sortby").options.selectedIndex = 0;
+}
+else{
+   document.getElementById("sortby").options.selectedIndex = 0;
+}
+
+
+
+var searchlist = []
+
+filterlist = []
+
+
+function changeFilter(x){
+    filtercount = document.querySelector('#filtercount').innerHTML
+    position = filterlist.indexOf(x.value)
+    console.log(position)
+    if (x.checked == true){
+        if(position == -1){
+            console.log('uaaa')
+            filterlist.push(x.value)
+            document.querySelector('#filtercount').innerHTML = filterlist.length
+            document.querySelector('#filterlist').value = filterlist
+
+            console.log(filterlist, document.querySelector('#filterlist').value)
+        }
+    }
+    else if(x.checked == false){
+        if(position != -1){
+            filterlist.splice(position, 1);
+
+            document.querySelector('#filtercount').innerHTML = filterlist.length
+            document.querySelector('#filterlist').value = filterlist
+            console.log(filterlist, document.querySelector('#filterlist').value)
+        }
+    }
+
+}
+
+document.querySelector('#bedmin').value = '{{firstbedmin|safe}}'
+document.querySelector('#bedmax').value = '{{firstbedmax|safe}}'
+document.querySelector('#pricemax').value = '{{firstpricemax|safe}}'
+document.querySelector('#pricemin').value = '{{firstpricemin|safe}}'
+var firstpropertytype = '{{firstpropertytype|safe}}'
+firstpropertytype = firstpropertytype.split(',')
+console.log(firstpropertytype)
+for(i=0; i<firstpropertytype.length; i++){
+    if (firstpropertytype[i] == 'All property types'){
+        document.querySelector('#All').checked = true
+        document.querySelector('#House').checked = true
+        document.querySelector('#Apartment').checked = true
+        document.querySelector('#Town').checked = true
+        document.querySelector('#Villa').checked = true
+        document.querySelector('#Land').checked = true
+        document.querySelector('#Acreage').checked = true
+        document.querySelector('#Rural').checked = true
+        document.querySelector('#Block').checked = true
+         document.querySelector('#Retirement').checked = true
+
+    }
+    else{
+    if (firstpropertytype[i] == 'House'){
+
+        document.querySelector('#House').checked = true
+    }
+    if (firstpropertytype[i] == 'Apartment Unit'){
+
+        document.querySelector('#Apartment').checked = true
+    }
+    if (firstpropertytype[i] == 'Town House'){
+
+        document.querySelector('#Town').checked = true
+    }
+    if (firstpropertytype[i] == 'Villa'){
+
+        document.querySelector('#Villa').checked = true
+    }
+    if (firstpropertytype[i] == 'Land'){
+
+        document.querySelector('#Land').checked = true
+    }
+    if (firstpropertytype[i] == 'Acreage'){
+
+        document.querySelector('#Acreage').checked = true
+    }
+    if (firstpropertytype[i] == 'Rural'){
+
+        document.querySelector('#Rural').checked = true
+    }
+    if (firstpropertytype[i] == 'Block Of Units'){
+
+        document.querySelector('#Block').checked = true
+    }
+    if (firstpropertytype[i] == 'Retirement Living"'){
+
+        document.querySelector('#Retirement').checked = true
+    }
+
+
+    }
+    //else
+
+}
+
+// changePropertyType(e)
+
+
+mysearch = {{mylist|safe}}
+document.querySelector("#hiddensearch").value = mysearch
+console.log(document.querySelector("#hiddensearch").value)
+for (i=0;i<mysearch.length;i++){
+    qs = mysearch[i]
+    searchlist.push(qs)
+    var element = document.createTextNode(qs+ ' X')
+    // console.log(mysearch[i], 'listttt', element)
+
+var searchitem = document.querySelector("#searchitem")
+var spanelement = document.createElement("span");
+var length = searchlist.length
+spanelement.setAttribute("class", "badge badge-primary badge-lg");
+spanelement.setAttribute("id", 'itemid'+length);
+spanelement.style.marginLeft = '3px';
+spanelement.style.marginRight = '3px';
+
+spanelement.addEventListener('click',
+function(){
+var id = this.innerHTML.slice(0,-2)
+var index = searchlist.indexOf(id)
+searchlist.splice( index, 1 );
+// console.log(id, index, searchlist)
+this.remove()
+var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
+
+}
+)
+
+
+
+spanelement.appendChild(element)
+
+searchitem.appendChild(spanelement)
+
+
+}
+
+
+
+
+
+function saveFunction(){
+    qs = document.querySelector('#savesearchid').innerHTML = 'loading'
+    document.querySelector('#savesearchid').style.color = 'green'
+
+    pricemin = document.querySelector('#pricemin').value
+    pricemax = document.querySelector('#pricemin').value
+    bedmin = document.querySelector('#bedmin').value
+    bedmax = document.querySelector('#bedmax').value
+    namesave = document.querySelector('#namesave').value
+    propertytype = document.querySelector('#propertytype1').value
+    notification = document.querySelector('#checkboxsave').checked
+
+
+            var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+            var url = 'http://anandrathi.pythonanywhere.com/save_search_details/'
+            let  formData = new FormData()
+            formData.append('pricemin', pricemin)
+            formData.append('pricemax', pricemax)
+            formData.append('bedmin', bedmin)
+            formData.append('bedmax', bedmax)
+            formData.append('namesave', namesave)
+            formData.append('notification', notification)
+            formData.append('searchlist', searchlist)
+            formData.append('propertytype', propertytype)
+
+
+            fetch(url,
+            {
+            body: new URLSearchParams(formData),
+            method: 'post',
+            headers:{
+            'X-CSRFTOKEN': token
+            }
+
+
+            }).then(res => res.json()).then(function(data) {
+
+            console.log(data)
+    qs = document.querySelector('#savesearchid').innerHTML = 'saved'
+    document.querySelector('#savesearchid').style.color = 'pink'
+
+            })
+
+    // console.log('yeahhh', pricemin,pricemax, bedmin,bedmax, namesave , checkboxsave, searchlist )
+}
+
+var eventHandler = function(name) {
+	return function() {
+		console.log(name, arguments);
+		$('#log').append('<div><span class="name">' + name + '</span></div>');
+	};
+};
+var $select = $('#select-state').selectize({
+	create          : true,
+	onChange        : eventHandler('onChange'),
+	onItemAdd       : eventHandler('onItemAdd'),
+	onItemRemove    : eventHandler('onItemRemove'),
+	onOptionAdd     : eventHandler('onOptionAdd'),
+	onOptionRemove  : eventHandler('onOptionRemove'),
+	onDropdownOpen  : eventHandler('onDropdownOpen'),
+	onDropdownClose : eventHandler('onDropdownClose'),
+	onFocus         : eventHandler('onFocus'),
+	onBlur          : eventHandler('onBlur'),
+	onInitialize    : eventHandler('onInitialize'),
+});
+</script>
+{% endblock %}
+
+
+<!-- slider script -->
+<script>
+
+mysearch = {{mylist|safe}}
+// document.querySelector("#hiddensearch").value = mysearch
+// console.log(document.querySelector("#hiddensearch").value)
+for (i=0;i<mysearch.length;i++){
+    qs = mysearch[i]
+    console.log(qs)
+}
+
+
+
+var url1 = 'http://anandrathi.pythonanywhere.com/'
+function StarSearch(e){
+console.log(e)
+var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
+
+var url = url1 +'savesearch/'
+let  formData = new FormData()
+formData.append('post_id', e)
+
+
+fetch(url,
+{
+body: new URLSearchParams(formData),
+method: 'post',
+headers:{
+'X-CSRFTOKEN': token
+}
+
+
+}).then(res => res.json()).then(function(data) {
+var post_id = '#star'+data.post_id
+if (data.msg == 'saved'){
+document.querySelector(post_id).style.color = 'orange'
+}
+else if (data.msg == 'deleted'){
+document.querySelector(post_id).style.color = 'grey'
+}
+
+})
+
+}
+
+
+
+function mapShow(){
+    document.querySelector('#map').style.display='block'
+    document.querySelector('#profile').style.display='none'
+
+    console.log('shown')
+}
+
+function mapHide(){
+    document.querySelector('#map').style.display='none'
+    document.querySelector('#profile').style.display='block'
+
+    console.log('hidden')
+}
+
+
+
+
+// console.log('datatttttttt iss', latitude, longitude, address);
+function initMap() {
+    // console.log('datatttttttt iss', latitude, longitude);
+
+	var broadway = {
+		info: '<strong>Chipotle on Broadway</strong><br>\
+					 N Broadway St<br> Chicago, IL 60640<br>\
+					<a href="https://goo.gl/maps/jKNEDz4SyyH2">Get Directions</a>',
+		lat: 41.976816,
+		long: -87.659916
+	};
+
+
+
+
+	var sheridan = {
+		info: '<strong>Chipotle on Sheridan</strong><br>\r\
+					6600 N Sheridan Rd<br> Chicago, IL 60626<br>\
+					<a href="https://goo.gl/maps/QGUrqZPsYp92">Get Directions</a>',
+		lat: 42.002707,
+		long: -87.661236
+	};
+
+	var locations = [
+      [broadway.info, broadway.lat, broadway.long],
+      [sheridan.info, sheridan.lat, sheridan.long],
+      ['sheridan.info', -31.9431656, 115.876085],
+      ['sheridan.info2222', -31.94942, 115.831923],
+
+    ];
+
+    // var locations = [
+    // {% for i in pagin %}
+
+    //   ['{{i.street_number}}' + ', ' + '{{i.street_name}}' + ', '  + '{{i.suburb}}' + ', '  + '{{i.state}}' + ', '  + '{{i.postcode}}', {{i.longitude}} , {{i.latitude}}],
+    // {% endfor %}
+
+    //  ];
+
+    console.log(locations)
+
+	var map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 13,
+		center: new google.maps.LatLng(-35.473469, 149.012375),
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	});
+
+	var infowindow = new google.maps.InfoWindow({});
+
+	var marker, i;
+
+	for (i = 0; i < locations.length; i++) {
+		marker = new google.maps.Marker({
+			position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+			map: map
+		});
+
+		google.maps.event.addListener(marker, 'click', (function (marker, i) {
+			return function () {
+				infowindow.setContent(locations[i][0]);
+				infowindow.open(map, marker);
+			}
+		})(marker, i));
+	}
+}
+
+
+
+</script>
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
+
+
+{% endblock %}

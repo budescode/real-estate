@@ -1,0 +1,129 @@
+.mynav{
+    background-color: transparent;
+    border-color: transparent;
+
+}
+#mobileview a{
+    color: white;
+}
+#brandy a{
+    color: white;
+}
+.buttons{
+    float:right;
+}
+.btn-mine{
+    background-color:darkred ;
+    width: 80px;
+    height: 40px;
+    color: white;
+}
+/*.top{*/
+/*    background-image: url("../images/backdrop.jpg");*/
+/*    background-repeat: no-repeat;*/
+/*    background-size: 1920px 1080px;*/
+/*}*/
+#jumbo{
+    background-image: rgba(245, 245, 245, 0.315);
+    float: inherit;
+    color:white;
+    height: ;
+
+}
+#jumbo-text{
+
+    color: darkred;
+}
+#jumbo-body{
+    background-color: transparent;
+    color: darkred;
+    float: inherit;
+    border-radius: 5px;
+}
+.choices{
+    color: darkred;
+}
+.jumbo-btn{
+    width: 100px;
+    height: 40px;
+    background-color: darkred;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(119, 38, 38);
+    color: white;
+}
+.drop{
+    float: left;
+    margin: 20px;
+}
+.drop button{
+    background-color: darkred;
+    color: white;
+}
+.choices a:visited{
+    color: white;
+}
+
+#region{
+    width: 100%;
+}
+.star{
+    position: relative;
+    color: darkred;
+    font-size: px;
+}
+.tags{
+    color: darkred;
+    text-align: center;
+    padding-bottom: 200px;
+
+}
+.body-can{
+    width: auto;
+    background-image: url(background.jpg);
+    background-repeat: no-repeat;
+    background-size: 1920px 826px;
+}
+.tags h4{
+    text-align: center;
+}
+.more hr{
+    width: 290px;
+    color: yellow;
+    text-align: left;
+}
+.more{
+    background-color: darkred;
+    color: white;
+    width: inherit;
+    padding-left: 20px;
+}
+#footer{
+    background-color: darkred;
+    float: left;
+    border-radius: 0px;
+    border-style: solid;
+    border-color: white;
+    margin-top:0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+    width: 100%;
+    flex-wrap: inherit ;
+
+}
+.btn-footer{
+    background-color:darkred ;
+    width: 80px;
+    height: 40px;
+    color: white;
+    border-radius: 5px;
+    border-width: 1px;
+    margin-top: 5px;
+}
+.socials{
+    text-align: center;
+}
+.socials a{
+    color: white;
+}

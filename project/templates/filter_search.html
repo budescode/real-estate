@@ -1,84 +1,23 @@
-{% extends 'index/base.html' %}
+{% extends 'index/base2.html' %}
+{% block body %}
 {% load staticfiles %}
 {% load el_pagination_tags %}
 
-{% block body %}
-<style>
-
-.endless_page_link{
-    font-size:15px;
-    background-color: rgb(238, 40, 124);
-    color:white;
-    padding: 3px 8px;
-    border-radius:5px;
-}
-/*body {*/
-/*  font: 16px Arial;*/
-/*}*/
-
-/*the container must be positioned relative:*/
-.autocomplete {
-  position: relative;
-  display: inline-block;
-}
-
-input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
-}
-
-input[type=text] {
-  background-color: #f1f1f1;
-  width: 100%;
-}
-
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
-  cursor: pointer;
-}
-
-.autocomplete-items {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  border-bottom: none;
-  border-top: none;
-  z-index: 99;
-  /*position the autocomplete items to be the same width as the container:*/
-  top: 100%;
-  left: 0;
-  right: 0;
-}
-
-.autocomplete-items div {
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
-}
-
-/*when hovering an item:*/
-.autocomplete-items div:hover {
-  background-color: #e9e9e9;
-}
-
-/*when navigating through the items using the arrow keys:*/
-.autocomplete-active {
-  background-color: DodgerBlue !important;
-  color: #ffffff;
-}
-</style>
-
-
+<link rel="stylesheet" href="{% static 'index/css/normalize.css' %}">
+<link rel="stylesheet" href="{% static 'index/css/selectize.css' %}">
+<link rel="stylesheet" href="{% static 'index/css/bootstrap-multiselect/bootstrap-multiselect.css' %}">
+<!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
+<script src="{% static 'index/js/jquery.min.js' %}"></script>
+<script src="{% static 'index/dist/js/standalone/selectize.js' %}"></script>
+<script src="{% static 'index/js/index.js' %}"></script>
+<script src="{% static 'index/js/bootstrap-multiselect/bootstrap-multiselect.js' %}"></script>
 
 <form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
 
 
-<div class='container'>
+<div class='container-fluid'>
     <div class='row' style='margin-top:85px;'>
-        <div class='col-md-9'>
+        <div class='col-md-8'>
             <!-- A grey horizontal navbar that becomes vertical on small screens -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
         <div id="navbarNavDropdown" class="navbar-collapse collapse">
@@ -169,7 +108,7 @@ input[type=submit] {
 {% for i in pagin %}
     <div class="card" style='margin-bottom:20px;'>
         <div class="card-body">
-            <h4 class="card-title"> <p>{{i.street_name}} {{i.street_number}} {{i.state}} {{i.suburb}}</p></h4>
+            <h4 class="card-title"> <p>{{i.street_number}}, {{i.street_name}} {{i.state}} {{i.suburb}}, {{i.postcode}}</p></h4>
             <p class="card-text">
 
             <div class='row'>
@@ -180,16 +119,13 @@ input[type=submit] {
             <div class='col-md-8'>
 
             <div class='row'>
-           <div class='col-md-12' style='background-color:rgb(238, 40, 124); color: white; padding: 8px 8px;'>
+           <div class='col-md-12' style='background-color:darkred; color: white; padding: 8px 8px;'>
                 <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}} &nbsp&nbsp&nbsp
                 <i class='fa fa-bath' style='color:white'></i> {{i.Bathrooms}} &nbsp&nbsp&nbsp
                 <i class='fa fa-car' style='color:white'></i> {{i.Car_spaces}} &nbsp&nbsp&nbsp
-                {% for a in saved %}
-                {% if a.post_id == i.post_id %}
-                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
-                {% endif %}
-                {% endfor %}
-                <i class='fa fa-star' id='star{{i.id}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id}}")></i>
+                <i class='fa fa-star' id='star{{i.id_user}}' style='color:white; float:right; cursor:pointer' onclick=StarSearch("{{i.id_user}}")></i>
+
+
 
             </div>
             </div>
@@ -216,20 +152,49 @@ input[type=submit] {
         </div>
         <!--col-md-8-->
 
-        <div class='col-md-3'>
-                <div class="alert alert-danger" style='background-color: rgb(238, 40, 124); color:white;'>
-                <strong> <i class='fa fa-filter'></i> Advance Filter Options ( <span id='filtercount'></span> )</strong>
-                </div>
+        <div class='col-md-4'>
+                <!--<div class="alert alert-danger" style='background-color: darkred; color:white;'>-->
+                <!--<strong> <i class='fa fa-filter'></i> Advance Filter Options ( <span id='filtercount'></span> )</strong>-->
+                <!--</div>-->
 
 <div class="form-group row">
 
 <div class='col-md-12'>
-<input type="text" name="hiddensearch" id="hiddensearch" style="display: none;" value="">
+
 <input type="text" name="category" id="category" style="display: none;" value="Poster">
 <input type="text" name="filterlist" id="filterlist" style="display: none;" value="">
 
 <input type="text" name="propertytype1" id="propertytype1" style="display: none;" value="All property types">
-<input type='text' class='form-control' id="myInput" name="myCountry" oninput="InputChange()">
+<!--<input type='text' class='form-control' id="myInput" name="myCountry" oninput="InputChange()">-->
+<div id="wrapper">
+
+<!--<div class="demo">-->
+<!--<div class="control-group">-->
+<!--<label for="select-to">Select Locations:</label>-->
+<!--<select id="select-to" class="contacts" placeholder="Pick some locations..." name='hiddensearch'></select>-->
+<!--</div>-->
+<!--</div>-->
+			<div class="demo">
+				<div class="control-group">
+					<!--<label for="select-state">States:</label>-->
+					<select id="select-state" multiple name="hiddensearch" class="demo-default">
+						<option value="">Select a state...</option>
+
+                        {% for i in mylist %}
+                        <option value="{{i}}" selected> {{i}}</option>
+                        {% endfor %}
+
+                        {% for i in qs %}
+                        <option value="{{i.suburb}} - {{i.state}}"> {{i.suburb}} - {{i.state}}</option>
+                        {% endfor %}
+
+					</select>
+				</div>
+
+
+			</div>
+
+</div>
 
 </div>
 
@@ -388,21 +353,28 @@ input[type=submit] {
 </select>
 </div>
 
-<!--<div class='col-md-6'>-->
-<!--    <button data-toggle="collapse" data-target="#demo" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Property Type</button>-->
-<!--</div>-->
-<!--<div class='col-md-6'>-->
-<!--    <button data-toggle="collapse" data-target="#filter" class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' ><i style='color:white' class='fa fa-filter'> </i> Filter ( <span id='filtercount'></span>)</button>-->
-<!--</div>-->
 
-<!--<div class='col-md-12'>-->
-<!--    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>-->
-<!--</div>-->
+<div class='col-md-6' style='margin-top:10px'>
+<label for="demo">Property Type</label>
+    <select id="option-droup-demo" multiple="multiple" name='propertytype1'>
+    <optgroup label="All"  >
+    <option value="House" id='darkred'>House</option>
+    <option value="Apartment" id='darkred'>Apartment</option>
+    <option value="Town">Town</option>
+    <option value="Villa">Villa</option>
+    <option value="Acreage">Acreage</option>
+    <option value="Rural">Rural</option>
+    <option value="Block Of Units">Block Of Units</option>
+    <option value="Retirement Living">Retirement Living</option>
+    </optgroup>
+    </select>
+</div>
+
 
 
 <div class='col-md-12'>
 <div id="filter" class="">
-    <h6>Filter Items</h6>
+    <h5 style='text-align: center; padding-top: 10px;'>Filter Items</h5>
     <div class='form-group row'>
 <div class='col-md-6'>
 <label for=""> <small>Bathrooms:</small></label>
@@ -618,76 +590,18 @@ input[type=submit] {
 
 </div>
 </div>
-<div class='col-md-12'>
-<div id="demo" class="">
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check1">
-        <input type="checkbox" class="form-check-input" id="All" value="All property types" onclick='changePropertyType(this.id)'>All property types
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check2">
-        <input type="checkbox" class="form-check-input" id="House" value="House" onclick='changePropertyType(this.id)'>House
-      </label>
-    </div>
-    <hr>
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input"  id="Apartment"  value='Apartment & Unit' onclick='changePropertyType(this.id)'>Apartment & Unit
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" id="Land" value='Land' onclick='changePropertyType(this.id)'>Land
-      </label>
-    </div>
-    <hr>
-  <div class="form-check-inline">
-      <label class="form-check-label" for="check1">
-        <input type="checkbox" class="form-check-input" id="Town" value="Town House" onclick='changePropertyType(this.id)'>Town House
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check2">
-        <input type="checkbox" class="form-check-input" id="Villa" value="Villa" onclick='changePropertyType(this.id)'> Villa
-      </label>
-    </div>
 
-    <hr>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check1">
-        <input type="checkbox" class="form-check-input" id="Acreage" value="Acreage" onclick='changePropertyType(this.id)'>Acreage
-      </label>
-    </div>
-    <div class="form-check-inline">
-      <label class="form-check-label" for="check2">
-        <input type="checkbox" class="form-check-input" id="Rural" value="Rural" onclick='changePropertyType(this.id)'>Rural
-      </label>
-    </div>
-    <hr>
-    <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Block Of Units' id='Block' onclick='changePropertyType(this.id)'>Block Of Units
-      </label>
-    </div>
-  <div class="form-check-inline">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" value='Retirement Living' id='Retirement' onclick='changePropertyType(this.id)'>Retirement Living
-      </label>
-    </div>
+
+
 
 
 
 <div class='col-md-12'>
-    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: rgb(238, 40, 124); color:white; margin-top:7px; cursor:pointer' >Submit</button>
+    <button type='submit' class='btn btn-default btn-block btn-sm' style='background-color: darkred; color:white; margin-top:7px; cursor:pointer' >Submit</button>
 </div>
 </form>
 
-</div>
 
-
-
-</div>
 
 
 
@@ -711,15 +625,36 @@ input[type=submit] {
 </div>
 
 
-
-
-
-
-
-
-
-
+{% block selectizescript %}
 <script>
+
+
+pro = '{{firstpropertytype}}'
+a = pro.split(",");
+
+propertylist=[]
+
+if(a){
+for(i=0;i<a.length; i++){
+    propertylist.push(a[i])
+}
+}
+else{
+    propertylist=[]
+}
+
+var propertytype1 = document.querySelector('#propertytype1')
+propertytype1.value = propertylist
+
+
+{% for i in saved %}
+
+id = '#star' + '{{i.post_id}}'
+qs = document.querySelector(id)
+if(qs){
+    qs.style.color = 'orange';
+}
+{% endfor %}
 
 
 
@@ -746,65 +681,9 @@ else{
 
 
 
-
-
-
-
 var searchlist = []
 
 filterlist = []
-
-
-function saveFunction(){
-    qs = document.querySelector('#savesearchid').innerHTML = 'loading'
-    document.querySelector('#savesearchid').style.color = 'green'
-
-    pricemin = document.querySelector('#pricemin').value
-    pricemax = document.querySelector('#pricemin').value
-    bedmin = document.querySelector('#bedmin').value
-    bedmax = document.querySelector('#bedmax').value
-    namesave = document.querySelector('#namesave').value
-    propertytype = document.querySelector('#propertytype1').value
-    console.log(propertytype, 'yaaaa')
-
-    notification = document.querySelector('#checkboxsave').checked
-
-
-            var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
-
-            var url = 'http://anandrathi.pythonanywhere.com/save_search_details/'
-            let  formData = new FormData()
-            formData.append('pricemin', pricemin)
-            formData.append('pricemax', pricemax)
-            formData.append('bedmin', bedmin)
-            formData.append('bedmax', bedmax)
-            formData.append('namesave', namesave)
-            formData.append('notification', notification)
-            formData.append('searchlist', searchlist)
-            formData.append('propertytype', propertytype)
-
-
-            fetch(url,
-            {
-            body: new URLSearchParams(formData),
-            method: 'post',
-            headers:{
-            'X-CSRFTOKEN': token
-            }
-
-
-            }).then(res => res.json()).then(function(data) {
-
-            console.log(data)
-    qs = document.querySelector('#savesearchid').innerHTML = 'saved'
-    document.querySelector('#savesearchid').style.color = 'pink'
-
-            })
-
-    // console.log('yeahhh', pricemin,pricemax, bedmin,bedmax, namesave , checkboxsave, searchlist )
-}
-
-
 
 
 function changeFilter(x){
@@ -859,7 +738,7 @@ for(i=0; i<firstpropertytype.length; i++){
 
         document.querySelector('#House').checked = true
     }
-    if (firstpropertytype[i] == 'Apartment & Unit'){
+    if (firstpropertytype[i] == 'Apartment Unit'){
 
         document.querySelector('#Apartment').checked = true
     }
@@ -926,15 +805,7 @@ searchlist.splice( index, 1 );
 // console.log(id, index, searchlist)
 this.remove()
 var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-console.log(searchlist)
-// var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
 
-// for (var i = 0; i < checkboxes.length; i++) {
-// propertyarray.push(checkboxes[i].value)
-// }
-//var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-
-//console.log(propertytype1)
 }
 )
 
@@ -948,424 +819,89 @@ searchitem.appendChild(spanelement)
 }
 
 
-propertylist=[]
-function changePropertyType(e){
-<!--console.log(e)-->
-var id = '#'+e
-var qs =document.querySelector(id)
-var a = propertylist.indexOf(qs.value);
-
-if (qs.checked==false){
-    if(qs.value=='All property types'){
-        document.querySelector('#House').checked = false
-
-        document.querySelector('#Apartment').checked = false
-
-        document.querySelector('#Town').checked = false
-
-        document.querySelector('#Villa').checked = false
-
-        document.querySelector('#Land').checked = false
-
-        document.querySelector('#Acreage').checked = false
-
-        document.querySelector('#Rural').checked = false
-
-        document.querySelector('#Retirement').checked = false
-
-        document.querySelector('#Block').checked = false
-        propertylist = []
-        console.log(propertylist)
 
 
-    }}
 
-if (qs.checked==true){
-    if(qs.value=='All property types'){
-        document.querySelector('#House').checked = true
-        propertylist.push(document.querySelector('#House').value)
-        document.querySelector('#Apartment').checked = true
-        propertylist.push(document.querySelector('#Apartment').value)
-        document.querySelector('#Town').checked = true
-        propertylist.push(document.querySelector('#Town').value)
-        document.querySelector('#Villa').checked = true
-        propertylist.push(document.querySelector('#Villa').value)
-        document.querySelector('#Land').checked = true
-        propertylist.push(document.querySelector('#Land').value)
-        document.querySelector('#Acreage').checked = true
-        propertylist.push(document.querySelector('#Acreage').value)
-        document.querySelector('#Rural').checked = true
-        propertylist.push(document.querySelector('#Rural').value)
-        document.querySelector('#Retirement').checked = true
-        propertylist.push(document.querySelector('#Retirement').value)
-        document.querySelector('#Block').checked = true
-        propertylist.push(document.querySelector('#Block').value)
-         }
+function saveFunction(){
+    qs = document.querySelector('#savesearchid').innerHTML = 'loading'
+    document.querySelector('#savesearchid').style.color = 'green'
+
+    pricemin = document.querySelector('#pricemin').value
+    pricemax = document.querySelector('#pricemin').value
+    bedmin = document.querySelector('#bedmin').value
+    bedmax = document.querySelector('#bedmax').value
+    namesave = document.querySelector('#namesave').value
+    propertytype = document.querySelector('#propertytype1').value
+    notification = document.querySelector('#checkboxsave').checked
 
 
-if (a==-1){
+            var token = document.querySelector("input[name=csrfmiddlewaretoken]").value
 
-propertylist.push(qs.value)
-var propertytype1 = document.querySelector('#propertytype1')
-propertytype1.value = propertylist
-console.log(propertytype1.value)
-} //if a==-1
-
-
-else{
-
-propertylist.splice(a, 1);
-var propertytype1 = document.querySelector('#propertytype1')
-propertytype1.value= propertylist
-console.log(propertytype1.value)
-
-}//else
-}// if qs
+            var url = 'http://anandrathi.pythonanywhere.com/save_search_details/'
+            let  formData = new FormData()
+            formData.append('pricemin', pricemin)
+            formData.append('pricemax', pricemax)
+            formData.append('bedmin', bedmin)
+            formData.append('bedmax', bedmax)
+            formData.append('namesave', namesave)
+            formData.append('notification', notification)
+            formData.append('searchlist', searchlist)
+            formData.append('propertytype', propertytype)
 
 
-else{
-    // console.log('nahhhh')
-    propertylist.splice(a, 1);
-    var propertytype1 = document.querySelector('#propertytype1')
-    propertytype1.value= propertylist
-    console.log(propertytype1.value)
+            fetch(url,
+            {
+            body: new URLSearchParams(formData),
+            method: 'post',
+            headers:{
+            'X-CSRFTOKEN': token
+            }
+
+
+            }).then(res => res.json()).then(function(data) {
+
+            console.log(data)
+    qs = document.querySelector('#savesearchid').innerHTML = 'saved'
+    document.querySelector('#savesearchid').style.color = 'pink'
+
+            })
+
+    // console.log('yeahhh', pricemin,pricemax, bedmin,bedmax, namesave , checkboxsave, searchlist )
 }
 
-} //function
-
-
-
-
-
-
-
-function autocomplete(inp, arr) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  var currentFocus;
-  /*execute a function when someone writes in the text field:*/
-  inp.addEventListener("input", function(e) {
-      var a, b, i, val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) { return false;}
-      currentFocus = -1;
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-          /*create a DIV element for each matching element:*/
-          b = document.createElement("DIV");
-          /*make the matching letters bold:*/
-          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += arr[i].substr(val.length);
-          /*insert a input field that will hold the current array item's value:*/
-          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-          /*execute a function when someone clicks on the item value (DIV element):*/
-          b.addEventListener("click", function(e) {
-              /*insert the value for the autocomplete text field:*/
-              inp.value = this.getElementsByTagName("input")[0].value;
-              /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
-              closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-  });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-        currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-        currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
-        }
-      }
-  });
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
-    }
-  }
-  /*execute a function when someone clicks in the document:*/
-  document.addEventListener("click", function (e) {
-    document.querySelector("#searchitem").style.display = 'block'
-    var inputedvalue = document.querySelector("#myInput").value
-    if (inputedvalue){
-    var searchitem = document.querySelector("#searchitem")
-    var inputedvalue = document.querySelector("#myInput").value
-    var spanelement = document.createElement("span");
-    var length = searchlist.length
-    spanelement.setAttribute("class", "badge badge-primary badge-lg");
-    spanelement.setAttribute("id", 'itemid'+length);
-    spanelement.style.marginLeft = '3px';
-    spanelement.style.marginRight = '3px';
-
-    spanelement.addEventListener('click',
-    function(){
-    var id = this.innerHTML.slice(0,-2)
-    var index = searchlist.indexOf(id)
-    searchlist.splice( index, 1 );
-    // console.log(id, index, searchlist)
-    this.remove()
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-
-    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
-
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-
-    //console.log(propertytype1)
-    }
-
-    )
-
-    var testnode = document.createTextNode(inputedvalue)
-    var cancel = document.createTextNode(' X')
-
-
-    spanelement.appendChild(testnode)
-    spanelement.appendChild(cancel)
-
-
-    // console.log(spanelement)
-
-    searchitem.appendChild(spanelement)
-    searchlist[length] = spanelement.innerHTML
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-
-
-    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
-
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-
-  console.log(searchlist)
-
-    inputedvalue = document.querySelector("#myInput").value = ''
-    // document.querySelector("#myInput").focus()
-    }
-
-    // console.log(inputedvalue)
-      closeAllLists(e.target);
-
-  });
-}
-
-/*An array containing all the country names in the world:*/
-// var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-
-
-
-
-
-var list2 = []
-{% for i in qs %}
-list2.push('{{i.suburb}}' + ' - ' +  '{{i.state}}')
-{% endfor %}
-
-
-
-// this will take the least of items to be searched
-
-
-function InputChange(){
-/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-
-autocomplete(document.getElementById("myInput"), list2);
-  document.querySelector("#searchitem").style.display = 'block';
-  var searchitem = document.querySelector("#myInput").value
-  if (searchitem.includes(";")){
-    console.log("ok")
-
-
-    var inputedvalue = document.querySelector("#myInput").value
-
-
-    if (inputedvalue){
-    var length = searchlist.length
-    var searchitem = document.querySelector("#searchitem")
-    inputedvalue = inputedvalue.slice(0, -1);
-    var spanelement = document.createElement("span");
-    spanelement.setAttribute("class", "badge badge-primary");
-    // var addlength =  length
-    spanelement.setAttribute("id", 'itemid'+length);
-
-
-
-    spanelement.style.marginLeft = '3px';
-    spanelement.style.marginRight = '3px';
-    spanelement.addEventListener('click',
-    function(){
-    var id = this.innerHTML.slice(0,-2)
-
-    // var element = document.querySelector(id);
-
-
-    var index = searchlist.indexOf(id)
-    searchlist.splice( index, 1 );
-    // var propertyarray = []
-    // var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
-
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    // var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-
-
-    this.remove()
-
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-    // console.log(propertyarray)
-    })
-
-    var testnode = document.createTextNode(inputedvalue)
-    var cancel = document.createTextNode(' X')
-    spanelement.appendChild(testnode)
-    spanelement.appendChild(cancel)
-    searchitem.appendChild(spanelement)
-    searchlist[length] = spanelement.innerHTML
-    console.log(searchlist)
-    var hiddensearch= document.querySelector("#hiddensearch").value = searchlist
-
-    var checkboxes = document.querySelectorAll('input[type=checkbox][name=propertycheck]:checked')
-
-    // for (var i = 0; i < checkboxes.length; i++) {
-    // propertyarray.push(checkboxes[i].value)
-    // }
-    //var propertytype1 = document.querySelector("#propertytype1").value = propertylist
-    // var bedmin1 = document.querySelector("#bedmin1").value = document.querySelector(".bedmin").innerHTML.trim().slice(0, 1);
-    // var bedmax1 = document.querySelector("#bedmax1").value = document.querySelector(".bedmax").innerHTML.trim().slice(0, 1);
-    // var pricemin1 = document.querySelector("#pricemin1").value = document.querySelector(".pricemin").innerHTML
-    // var pricemax1 = document.querySelector("#pricemax1").value = document.querySelector(".pricemax").innerHTML
-    // console.log(bedmin1)
-    inputedvalue = document.querySelector("#myInput").value = ''
-    }
-
-
-  }
-
-}
-// endof inputchange function
-
-
-
-function filterState(e){
-document.querySelector('.modal-title').innerHTML = 'Search bu suburb, postcode'
-
-document.getElementById("loading").style.display = 'block'
-
-
-document.getElementById("myInput").style.display = 'none';
-
-document.getElementById("loading").innerHTML = 'loading'
-
-
-
-test(e)
-}
-// end of function
-
-
-function test(e){
-        list1=[]
-
-    for(i=0; i<list2.length; i++){
-
-    if(list2[i].includes(e)){
-    list1.push(list2[i])
-    console.log('yeahh')
-    }
-
-
-    else{
-        console.log('nahhh')
-    }
-    console.log(document.getElementById("loader").style.display, 'okay')
-
-}
-// end for loop
-
-
-autocomplete(document.getElementById("myInput"), list1);
-document.getElementById("loading").innerHTML = 'done'
-document.getElementById("myInput").style.display = 'block';
-console.log(e, 'done')
-/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-}
-
-
-
-
-
+var eventHandler = function(name) {
+	return function() {
+		console.log(name, arguments);
+		$('#log').append('<div><span class="name">' + name + '</span></div>');
+	};
+};
+var $select = $('#select-state').selectize({
+	create          : true,
+	onChange        : eventHandler('onChange'),
+	onItemAdd       : eventHandler('onItemAdd'),
+	onItemRemove    : eventHandler('onItemRemove'),
+	onOptionAdd     : eventHandler('onOptionAdd'),
+	onOptionRemove  : eventHandler('onOptionRemove'),
+	onDropdownOpen  : eventHandler('onDropdownOpen'),
+	onDropdownClose : eventHandler('onDropdownClose'),
+	onFocus         : eventHandler('onFocus'),
+	onBlur          : eventHandler('onBlur'),
+	onInitialize    : eventHandler('onInitialize'),
+});
 </script>
+{% endblock %}
+
 
 <!-- slider script -->
 <script>
-// var slider = document.getElementById("myRange");
-// var output = document.getElementById("demoslide");
-// output.innerHTML = slider.value;
 
-// slider.oninput = function() {
-//   output.innerHTML = this.value;
-// }
-
-// var maxslider = document.getElementById("myRange2");
-// var maxoutput = document.getElementById("demoslide2");
-// maxoutput.innerHTML = maxslider.value;
-
-// maxslider.oninput = function() {
-//   maxoutput.innerHTML = this.value;
-// }
-
-
+mysearch = {{mylist|safe}}
+// document.querySelector("#hiddensearch").value = mysearch
+// console.log(document.querySelector("#hiddensearch").value)
+for (i=0;i<mysearch.length;i++){
+    qs = mysearch[i]
+    console.log(qs)
+}
 
 
 
@@ -1396,9 +932,6 @@ document.querySelector(post_id).style.color = 'orange'
 else if (data.msg == 'deleted'){
 document.querySelector(post_id).style.color = 'grey'
 }
-console.log(data)
-
-
 
 })
 

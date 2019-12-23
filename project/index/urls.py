@@ -23,6 +23,12 @@ urlpatterns = [
 	path('mapview/', views.mapview_search, name="mapview_search" ),
 
     path('savesearch/', views.savesearch, name="savesearch" ),
+    path('reports/', views.reports, name="reports" ),
+    path('changereport/<slug:id>/', views.changereport, name="changereport" ),
+    path('deletereport/<slug:id>/', views.deletereport, name="deletereport" ),
+
+
+
     path('mysavedsearch/', views.mysavedsearch, name="mysavedsearch" ),
     path('deletesavesearch/', views.deletesavesearch, name="deletesavesearch" ),
     path('save_search_details/', views.save_search_details, name="save_search_details" ),

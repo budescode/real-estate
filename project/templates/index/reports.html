@@ -1,0 +1,17 @@
+{% extends 'index/base2.html' %}
+{% load staticfiles %}
+{% load el_pagination_tags %}
+{% block body %}
+
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-md-12'>
+            The various users viewed your post
+            {% for i in qs %}
+            <p>Your post was viewed by {{i.user_viewed}} on {{i.date}}. <a href='{% url 'home:changereport' i.id  %}'>Click to change to seen</a> or <a href='{% url 'home:deletereport' i.id  %}'>click to delete</a></p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

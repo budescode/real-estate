@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     # 'easy_maps',
     # 'leaflet',
     'el_pagination',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'corsheaders',
     # 'django_elasticsearch_dsl',
     'django.contrib.sites',
 
@@ -63,6 +67,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,6 +93,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'project.processors.PosterContextProcessors',
+                'project.processors.saveReportProcessor',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -270,6 +276,50 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_by_email',
 
 )
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated','rest_framework.permissions.AllowAny' )
+# }
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:4200'
+#     )
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# Application definition
+
+
+from corsheaders.defaults import default_methods
+CORS_ALLOW_METHODS = list(default_methods)
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = list(default_headers)
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 
 SITE_ID=1

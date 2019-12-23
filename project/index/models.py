@@ -415,8 +415,14 @@ class SavedDetail(models.Model):
 #     bedmax = models.TextField()
 #     notification = models.BooleanField()
 
-
-
+#this class will save date and  time a post was viewed
+class saveReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #It'll save the user that own the post
+    user_viewed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userviewed') #It'll save the user that viewed the post
+    date = models.DateTimeField(auto_now_add=True) #this is the time it was viewed
+    seen = models.BooleanField(default=False) #It'll change to true when the user that owns the post sees it
+    def __str__(self):
+        return self.user.username
 
 
 

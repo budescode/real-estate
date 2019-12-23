@@ -1,4 +1,4 @@
-{% extends 'index/base.html' %}
+{% extends 'index/base2.html' %}
 {% load staticfiles %}
 {% load el_pagination_tags %}
 
@@ -85,7 +85,7 @@ input[type=submit] {
 
 
 <div class='container-fluid'>
-    <div class='row' style='margin-top:95px;'>
+    <div class='row' style=''>
         <div class='col-md-8'>
             <!-- A grey horizontal navbar that becomes vertical on small screens -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
@@ -213,11 +213,13 @@ input[type=submit] {
 
 <hr>
 <ul class="nav nav-tabs" role="tablist">
+
 <li class="nav-item">
-<a class="nav-link active" data-toggle="tab" href="#home"> <i class='fa fa-search'></i> Result</a>
+<a class="nav-link " data-toggle="tab" href="#menu1"> <i class='fa fa-search'></i>Result </a>
 </li>
+
 <li class="nav-item">
-<a class="nav-link" data-toggle="tab" href="#menu1"> <i class='fa fa-filter'></i> Filters</a>
+<a class="nav-link active" data-toggle="tab" href="#home"> <i class='fa fa-filter'></i>  Filters</a>
 </li>
 
 </ul>
@@ -226,10 +228,10 @@ input[type=submit] {
 
   <div class="tab-content">
     <div id="home" class="container tab-pane active"><br>
-      <h3>tt</h3>
+
       <div class='row'>
 <div class="col-sm-6">
-<label for="pricemin"><small>Price (Min):</small></label>
+<label for="pricemin"><small>Price (Min):</small></label> <br>
     <select class="custom-select custom-select-sm" id="pricemin" name="pricemin" onchange="changeMinPriceMap()">
     <option>Any </option>
     <option>$50,000 </option>
@@ -291,7 +293,7 @@ input[type=submit] {
 </div>
 
 <div class="col-sm-6">
-<label for="pricemax"><small>Price (Max):</small></label>
+<label for="pricemax"><small>Price (Max):</small></label> <br>
 <select class="custom-select custom-select-sm" id="pricemax" name="pricemax" onchange="changeMaxPriceMap()" >
 <option>Any </option>
 <option>$50,000 </option>
@@ -354,10 +356,9 @@ input[type=submit] {
 <!--col-md-6-->
 
 <hr>
-<br>
 
 <div class='col-md-6'>
-<label for="bedmin"> <small>Bed (Min):</small></label>
+<label for="bedmin"> <small>Bed (Min):</small></label> <br>
 <select class="custom-select custom-select-sm" id="bedmin" name="Bed(min)" onChange='changeBedMinMap()' >
 <option>Any</option>
 <option>Studio</option>
@@ -370,7 +371,7 @@ input[type=submit] {
 </div>
 
 <div class='col-md-6'>
-<label for="bedmax"> <small>Bed (Max):</small></label>
+<label for="bedmax"> <small>Bed (Max):</small></label> <br>
 <select class="custom-select custom-select-sm" id="bedmax" name="Bed(max)" onChange='changeBedMaxMap()' >
 <option value='Any'>Any</option>
 <option value='Studio'>Studio</option>
@@ -383,7 +384,7 @@ input[type=submit] {
 </div>
 
 <div class='col-md-6'>
-<label for=""> <small>Bathrooms:</small></label>
+<label for=""> <small>Bathrooms:</small></label> <br>
 <select class="custom-select custom-select-sm" id="bathrooms" name="" onChange='changeBathroomMap()'>
 <option>Any</option>
 <option>Studio</option>
@@ -396,7 +397,7 @@ input[type=submit] {
 </div>
 
 <div class='col-md-6'>
-<label for=""> <small>Car Spaces:</small></label>
+<label for=""> <small>Car Spaces:</small></label> <br>
 <select class="custom-select custom-select-sm" id="carspaces" name="" onChange = 'changeCarSpaceMap()'>
 <option>Any</option>
 <option>Studio</option>
@@ -409,7 +410,7 @@ input[type=submit] {
 </div>
 
 <div class='col-md-6'>
-<label for=""> <small>Min land size (m2):</small></label>
+<label for=""> <small>Min land size (m2):</small></label> <br>
 <select class="custom-select custom-select-sm" id="minlandsize" name="" onChange = 'changeMinLandMap()' >
 <option>Any</option>
 <option>Studio</option>
@@ -422,7 +423,7 @@ input[type=submit] {
 </div>
 
 <div class='col-md-6'>
-<label for=""> <small>New or established:</small></label>
+<label for=""> <small>New or established:</small></label> <br>
 <select class="custom-select custom-select-sm" id="new_or_established" name="" onChange = 'changeNoE()' >
 <option value='Any'>Any</option>
 <option value='New'>New</option>
@@ -509,20 +510,20 @@ input[type=submit] {
 
     <div id="menu1" class="container tab-pane fade"><br>
     <div class='row' style='overflow-y: auto;height: 400px;'>
-        <div class='col-md-12'>
+        <div class='col-md-12' id='mapid'>
+   <div id='mapid2'>
             {% for i in pagin %}
+
     <div class="card" style='margin-bottom:10px;'>
         <div class="card-body">
             <h4 class="card-title"> <p>{{i.street_name}} {{i.street_number}} {{i.state}} {{i.suburb}}</p></h4>
             <p class="card-text">
-
             <div class='row'>
             <div class='col-md-4'>
               <a href='{% url 'home:details' i.id_user category1 %}'>   <img class='img-fluid' src={{i.image.url}}> </a>
 
             </div>
             <div class='col-md-8'>
-
             <div class='row'>
            <div class='col-md-12' style='background-color:rgb(238, 40, 124); color: white; padding: 8px 8px;'>
                 <i class='fa fa-bed' style='color:white'></i> {{i.Bedrooms}} &nbsp&nbsp&nbsp
@@ -548,9 +549,12 @@ input[type=submit] {
             <hr>
             </p>
         </div>
+
 </div>
+<!--end mapid-->
 <!--end card-->
             {% endfor %}
+</div>
         </div>
     </div>
     </div>
@@ -600,8 +604,8 @@ input[type=submit] {
     var locations = [];
 
     {% for i in pagin %}
-     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}', '{{i.Price|cut:","|cut:"$" }}', '{{i.Bedrooms}}', '{{i.Bathrooms}}', '{{i.Car_spaces}}', '{{i.land_size}}', '{{i.new_or_established}}'])
-    //   console.log('yeahhh', '{{i.latitude}}', '{{i.longitude}}')
+     locations.push(['<a href="{% url 'home:details' i.id_user category1 %}">{{i.street_number}}, {{i.street_name}}, {{i.suburb}}, {{i.state}}  <br><hr> <img src="{{i.image.url}}" width="250" height="125"></a> <hr> <i class="fa fa-bed"></i> {{i.Bedrooms}}  <i class="fa fa-bath"></i> {{i.Bathrooms}}  <i class="fa fa-car"></i> {{i.Car_spaces}} <br><hr>$ {{i.Price}} ', '{{i.latitude}}', '{{i.longitude}}', '{{i.Price|cut:","|cut:"$" }}', '{{i.Bedrooms}}', '{{i.Bathrooms}}', '{{i.Car_spaces}}', '{{i.land_size}}', '{{i.new_or_established}}', '{{i.street_number}}', '{{i.street_name}}', '{{i.suburb}}', '{{i.state}}', '{{i.image.url}}', '{{i.created|timesince}} ago', '{{i.Property_type}}'])
+      console.log('yeahhh', '{{i.latitude}}', '{{i.longitude}}')
 
     {% endfor %}
 
@@ -661,7 +665,13 @@ window.onload = loadScript;
 
 
 function changeNoE(){
+    mapid2 = document.querySelector('#mapid2')
+    mapid2.remove()
     category = document.querySelector('#new_or_established').value
+    mapid2 = document.createElement('div')
+    mapid2.id = 'mapid2'
+    mapid = document.querySelector('#mapid')
+    mapid.appendChild(mapid2)
 
     if (category == 'Any'){
             map = document.querySelector('#map')
@@ -708,6 +718,92 @@ function changeNoE(){
             }
           })(marker, i));
 
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
 
 
        }
@@ -747,7 +843,7 @@ function changeNoE(){
        for (i=0; i<locations.length; i++){
            lo = locations[i][8]
            if(lo == category){
-
+            console.log(lo, category)
             total = total + 1
           marker = new google.maps.Marker({
             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
@@ -761,6 +857,93 @@ function changeNoE(){
             }
           })(marker, i));
 
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
+
         }
 
        }
@@ -771,7 +954,14 @@ function changeNoE(){
 }
 
 function changeMinLandMap(){
+    mapid2 = document.querySelector('#mapid2')
+    mapid2.remove()
     minlandsize = document.querySelector('#minlandsize').value
+    mapid2 = document.createElement('div')
+    mapid2.id = 'mapid2'
+    mapid = document.querySelector('#mapid')
+    mapid.appendChild(mapid2)
+
     if (minlandsize == 'Any'){
 
 
@@ -813,6 +1003,7 @@ function changeMinLandMap(){
         total = 0
        for (i=0; i<locations.length; i++){
            lo = locations[i][7]
+
            if(Number(lo) >= Number(minlandsize)){
                total = total+1
             // console.log('locations[i][7]', i)
@@ -829,6 +1020,92 @@ function changeMinLandMap(){
             }
           })(marker, i));
 
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
         }
 
        }
@@ -842,7 +1119,13 @@ function changeMinLandMap(){
 
 
 function changeCarSpaceMap(){
+    mapid2 = document.querySelector('#mapid2')
+    mapid2.remove()
     carspaces = document.querySelector('#carspaces').value
+    mapid2 = document.createElement('div')
+    mapid2.id = 'mapid2'
+    mapid = document.querySelector('#mapid')
+    mapid.appendChild(mapid2)
     if (carspaces == 'Any'){
 
 
@@ -884,6 +1167,7 @@ function changeCarSpaceMap(){
         total = 0
        for (i=0; i<locations.length; i++){
            lo = locations[i][6]
+
            if(Number(lo) >= Number(carspaces)){
             total = total + 1
           marker = new google.maps.Marker({
@@ -898,6 +1182,92 @@ function changeCarSpaceMap(){
             }
           })(marker, i));
 
+     cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
         }
 
        }
@@ -909,7 +1279,13 @@ function changeCarSpaceMap(){
 
 
 function changeBathroomMap(){
+    mapid2 = document.querySelector('#mapid2')
+    mapid2.remove()
     bathrooms = document.querySelector('#bathrooms').value
+    mapid2 = document.createElement('div')
+    mapid2.id = 'mapid2'
+    mapid = document.querySelector('#mapid')
+    mapid.appendChild(mapid2)
     if (bathrooms == 'Any'){
 
 
@@ -951,7 +1327,9 @@ function changeBathroomMap(){
         total = 0
        for (i=0; i<locations.length; i++){
            lo = locations[i][5]
+
            if(Number(lo) >= Number(bathrooms)){
+
             total = total + 1
           marker = new google.maps.Marker({
             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
@@ -965,6 +1343,92 @@ function changeBathroomMap(){
             }
           })(marker, i));
 
+      cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
         }
 
        }
@@ -977,11 +1441,23 @@ function changeBathroomMap(){
 
 
 function changeMinPriceMap(){
+mapid2 = document.querySelector('#mapid2')
+mapid2.remove()
+
 map = document.querySelector('#map')
 map.remove()
+
 pricemin = document.querySelector('#pricemin').value
 pricemin  = pricemin.substring(1);
 pricemin1 = pricemin.replace(',','')
+pricemin1 = pricemin1.replace(',','')
+
+mapid2 = document.createElement('div')
+mapid2.id = 'mapid2'
+mapid = document.querySelector('#mapid')
+mapid.appendChild(mapid2)
+
+
 map = document.createElement('div')
 map.id = 'map'
 map.innerHTML = 'Loading'
@@ -1008,7 +1484,9 @@ var map = new google.maps.Map(document.getElementById('map'), {
     var marker, i;
     total = 0
    for (i=0; i<locations.length; i++){
+
        lo = locations[i][3]
+
        if(Number(lo) >= Number(pricemin1)){
         total = total + 1
       marker = new google.maps.Marker({
@@ -1023,9 +1501,100 @@ var map = new google.maps.Map(document.getElementById('map'), {
         }
       })(marker, i));
 
-    }
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+
+
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
 
    }
+
+  }
 
    document.querySelector('#total').innerHTML = total
 }
@@ -1036,16 +1605,22 @@ var map = new google.maps.Map(document.getElementById('map'), {
 
 
 function changeBedMinMap(){
+mapid2 = document.querySelector('#mapid2')
+mapid2.remove()
 bedmin = document.querySelector('#bedmin').value
+mapid2 = document.createElement('div')
+mapid2.id = 'mapid2'
+mapid = document.querySelector('#mapid')
+mapid.appendChild(mapid2)
 
 if (bedmin == 'Any'){
-    console.log(bedmin)
-
 }
+
 else if(bedmin == 'Studio'){
     bedmin = 0
-    console.log(bedmin)
+
 }
+
 
 else{
 map = document.querySelector('#map')
@@ -1079,7 +1654,9 @@ var map = new google.maps.Map(document.getElementById('map'), {
     total = 0
    for (i=0; i<locations.length; i++){
        lo = locations[i][4]
+
        if(Number(lo) >= Number(bedmin)){
+
         total = total + 1
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
@@ -1093,6 +1670,95 @@ var map = new google.maps.Map(document.getElementById('map'), {
         }
       })(marker, i));
 
+
+
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
+
     }
 
    }
@@ -1105,7 +1771,13 @@ var map = new google.maps.Map(document.getElementById('map'), {
 
 
 function changeBedMaxMap(){
+mapid2 = document.querySelector('#mapid2')
+mapid2.remove()
 bedmax = document.querySelector('#bedmax').value
+mapid2 = document.createElement('div')
+mapid2.id = 'mapid2'
+mapid = document.querySelector('#mapid')
+mapid.appendChild(mapid2)
 
 if (bedmax == 'Any'){
     console.log(bedmax)
@@ -1149,18 +1821,108 @@ var map = new google.maps.Map(document.getElementById('map'), {
    for (i=0; i<locations.length; i++){
        lo = locations[i][4]
        if(Number(lo) <= Number(bedmax)){
-        total = total + 1
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-        map: map
-      });
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(locations[i][0]);
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
+            total = total + 1
+            marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+            });
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+            infowindow.setContent(locations[i][0]);
+            infowindow.open(map, marker);
+            }
+            })(marker, i));
+
+
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
+
 
     }
 
@@ -1177,9 +1939,21 @@ var map = new google.maps.Map(document.getElementById('map'), {
 function changeMaxPriceMap(){
 map = document.querySelector('#map')
 map.remove()
+
+mapid2 = document.querySelector('#mapid2')
+mapid2.remove()
+
 pricemax = document.querySelector('#pricemax').value
 pricemax  = pricemax.substring(1);
 pricemax1 = pricemax.replace(',','')
+pricemax1 = pricemax1.replace(',','')
+
+mapid2 = document.createElement('div')
+mapid2.id = 'mapid2'
+mapid = document.querySelector('#mapid')
+mapid.appendChild(mapid2)
+console.log(pricemax1)
+
 map = document.createElement('div')
 map.id = 'map'
 map.innerHTML = 'Loading...'
@@ -1210,6 +1984,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
    for (i=0; i<locations.length; i++){
        lo = locations[i][3]
        if(Number(lo) <= Number(pricemax1)){
+
         total = total + 1
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
@@ -1223,42 +1998,111 @@ var map = new google.maps.Map(document.getElementById('map'), {
         }
       })(marker, i));
 
+
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
+
     }
+    //end if
 
    }
+   //endfor
    document.querySelector('#total').innerHTML = total
 }
 //endfunction
 
 
 
-  </script>
 
-
-
-
-<script>
-
-
-
-
-
-
-
-
-
-
-</script>
-
-
-
-
-<script>
-
-
+propertylist=['All property types', 'House', 'Apartment & Unit', 'Land', 'Town', 'Villa', 'Acreage', 'Rural', 'Block Of Units', 'Retirement Living']
+//this array contains the property type
 
 sort = '{{sort|safe}}'
-console.log('sorrrrrr', sort)
+
 if (sort == '-Price'){
  document.getElementById("sortby").options.selectedIndex = 4;
 }
@@ -1482,9 +2326,48 @@ searchitem.appendChild(spanelement)
 }
 
 
-propertylist=[]
+
+
 function changePropertyType(e){
-<!--console.log(e)-->
+
+mapid2 = document.querySelector('#mapid2')
+mapid2.remove()
+
+mapid2 = document.createElement('div')
+mapid2.id = 'mapid2'
+mapid = document.querySelector('#mapid')
+mapid.appendChild(mapid2)
+
+
+
+map = document.createElement('div')
+map.id = 'map'
+
+
+mapwrapper = document.querySelector('#mapwrapper')
+map.style.position = 'absolute'
+map.style.width = '100%'
+map.style.left = 0
+map.style.height = '500px'
+map.style.marginBottom = '20px'
+mapwrapper.appendChild(map)
+lo = -33.92
+la = 151.25
+for (i = 0; i < 1; i++) {
+    lo = locations[0][1]
+    la = locations[0][2]
+}
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 10,
+  center: new google.maps.LatLng(lo, la),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    total = 0
+
 var id = '#'+e
 var qs =document.querySelector(id)
 var a = propertylist.indexOf(qs.value);
@@ -1509,7 +2392,7 @@ if (qs.checked==false){
 
         document.querySelector('#Block').checked = false
         propertylist = []
-        console.log(propertylist)
+
 
 
     }}
@@ -1542,7 +2425,7 @@ if (a==-1){
 propertylist.push(qs.value)
 var propertytype1 = document.querySelector('#propertytype1')
 propertytype1.value = propertylist
-console.log(propertytype1.value)
+
 } //if a==-1
 
 
@@ -1551,20 +2434,133 @@ else{
 propertylist.splice(a, 1);
 var propertytype1 = document.querySelector('#propertytype1')
 propertytype1.value= propertylist
-console.log(propertytype1.value)
+
 
 }//else
 }// if qs
 
 
 else{
-    // console.log('nahhhh')
+
     propertylist.splice(a, 1);
     var propertytype1 = document.querySelector('#propertytype1')
     propertytype1.value= propertylist
-    console.log(propertytype1.value)
+
 }
 
+
+
+// console.log(propertylist, 'listsss', locations)
+for (i=0; i<locations.length; i++){
+    // console.log(locations[i][15])
+    if (propertylist.includes(locations[i][15])){
+
+        total = total + 1
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+
+
+
+    cardid = document.createElement('div')
+    cardid.className = 'card-body'
+    cardid.style.marginBottom = '10px'
+    h4 = document.createElement('h4')
+    p1 = document.createElement('p')
+    p1.innerHTML = locations[i][9] + ' ' + locations[i][10] + ' ' + locations[i][11] + ' ' + locations[i][12]
+    p2 = document.createElement('p')
+    p2.className = 'card-text'
+    div2 = document.createElement('div')
+    div2.className = 'row'
+    div3 = document.createElement('div')
+    div3.className = 'col-md-4'
+    a1 = document.createElement('a')
+    a1.href = '#'
+    img1 = document.createElement('img')
+    img1.src = locations[i][13]
+    img1.className = 'img-fluid'
+    div4 = document.createElement('div')
+    div4.className = 'col-md-8'
+    div5 = document.createElement('div')
+    div5.className = 'row'
+    div6 = document.createElement('div')
+    div6.className = 'col-md-12'
+    div6.style.backgroundColor = 'pink'
+    div6.style.color = 'black'
+    div6.style.padding = '8px'
+    i1 = document.createElement('i')
+    i1.style.color = 'white'
+    i1.style.marginRight = '12px'
+    i1.className = 'fa fa-bed'
+    i1.innerHTML = '  ' + locations[i][4]
+
+
+    i2 = document.createElement('i')
+    i2.style.color = 'white'
+    i2.style.marginRight = '12px'
+    i2.className = 'fa fa-bath'
+    i2.innerHTML = '  ' + locations[i][5]
+
+    i3 = document.createElement('i')
+    i3.style.color = 'white'
+    i3.style.marginRight = '12px'
+    i3.className = 'fa fa-car'
+    i3.innerHTML = '  ' + locations[i][6]
+
+    i4 = document.createElement('i')
+    i4.style.color = 'white'
+    i4.style.float = 'right'
+    i4.className = 'fa fa-star'
+
+    p3 = document.createElement('p')
+    p3.innerHTML = locations[i][14]
+
+
+    p4 = document.createElement('p')
+    p4.innerHTML = locations[i][15] + ' ' + '|' + ' ' + locations[i][3] + ' '
+
+    a2 = document.createElement('a')
+    a2.href = '#'
+    a2.innerHTML = 'See more'
+
+    hr = document.createElement('hr')
+
+    p4.appendChild(a2)
+    div6.appendChild(i1)
+    div6.appendChild(i2)
+    div6.appendChild(i3)
+    div6.appendChild(i4)
+
+    div5.appendChild(div6)
+    div4.appendChild(div5)
+    div4.appendChild(p3)
+    div4.appendChild(p4)
+
+    a1.appendChild(img1)
+    div3.appendChild(a1)
+    div2.appendChild(div3)
+    div2.appendChild(div4)
+
+    p2.appendChild(div2)
+    h4.appendChild(p1)
+    cardid.appendChild(h4)
+    cardid.appendChild(p2)
+    cardid.appendChild(hr)
+    mapid2.appendChild(cardid)
+
+    } //end if
+} //end for
+
+
+document.querySelector('#total').innerHTML = total
 } //function
 
 

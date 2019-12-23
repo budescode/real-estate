@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse,JsonResponse
@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.models import User
 # from account.forms import CreateProfileForm, CategoryForm
 # from account.models import CreateProfile, Profile
-from .models import Poster, SavedSearch, PosterRent, SavedHeaders, SavedDetail
+from .models import Poster, SavedSearch, PosterRent, SavedHeaders, SavedDetail, saveReport
 import json
 from administrator.models import CountryDetails
 from django.db.models import Q
@@ -20,7 +20,6 @@ import requests
 
 def home(request):
 	qs = CountryDetails.objects.all()
-
 	return render(request, 'index/index.html', {'qs':qs})
 
 def about(request):
@@ -60,10 +59,6 @@ def save_search_details(request):
     qs = SavedHeaders.objects.create(user=request.user,property_type=propertytype, name=namesave, pricemin=pricemin, pricemax=pricemax, bedmin=bedmin, bedmax=bedmax, notification=notification)
     for i in searchlist:
         SavedDetail.objects.create(user=request.user, search=i, header=qs)
-
-    print(namesave,searchlist,pricemin, pricemax,bedmin, bedmax, notification)
-
-
     return JsonResponse({"done":'done'})
 
 
@@ -72,29 +67,18 @@ def save_search_details(request):
 
 # this function is used to filter the searched items from users
 def filter_search(request):
-
-# 	print(filterlist,sortby ,'listttt')
-# 	for i in filterlist:
-# 	    print(i)
-# 	return HttpResponse('done')
-
 	qs = CountryDetails.objects.all()
 	sort = '-created'
 	filterlist = ['none']
 	if not request.method == 'POST':
 	    #if the method isn't post, it get its data off the session
-# 		print('hiddensearchsession', request.session['hiddensearchsession'])
-
 		hiddensearch = request.session['hiddensearchsession']
-		print(hiddensearch)
 		mylist = request.session['mylistsession']
 		propertytype1 = request.session['propertytype1']
 		bedmin1 = request.session['bedmin1']
 		bedmax1 = request.session['bedmax1']
 		pricemax1 = request.session['pricemax1']
 		pricemin1 = request.session['pricemin1']
-# 		category = request.session['categorysession']
-# 		state = request.session['state']
 		firstbedmin = request.session['firstbedmin']
 		firstbedmax = request.session['firstbedmax']
 		firstpricemin = request.session['firstpricemin']
@@ -103,29 +87,18 @@ def filter_search(request):
 		filterlist = request.session['filterlist']
 		sort = request.session['sort']
 		if sort == None:
-		    print('yeah nine')
 		    sort = '-created'
 
-
-
-
-
-		#print('valuessssss', mylist, propertytype1, bedmin1, bedmax1, pricemax1, pricemin1)
-
-# 		return HttpResponse('done')
 	if request.method == 'POST':
-		hiddensearch = request.POST.get("hiddensearch") #it brings a string of the postalcode
-		print(hiddensearch)
-		#print('hiddensearch is',hiddensearch)
+		hiddensearch = request.POST.getlist("hiddensearch") #it brings a string of the postalcode
+		print(hiddensearch, 'hiddensearch')
 		if hiddensearch:
-		    hiddensearch0 = hiddensearch.replace('X', '')
-		    hiddensearch1 =  hiddensearch0.split(',')
-		    mylist = list(dict.fromkeys(hiddensearch1)) #to remove duplicate from hiddensearch1
+		    mylist = hiddensearch
 		else:
 		    mylist = ['']
 		request.session['hiddensearchsession'] = hiddensearch
 		request.session['mylistsession'] = mylist
-		filterlist = request.POST.get('filterlist')
+		filterlist = request.POST.get('filterlist') #this is for searching again
 
 		if filterlist:
 			filterlist = filterlist.split(',')
@@ -136,31 +109,24 @@ def filter_search(request):
 		sort = request.POST.get('sortby')
 		request.session['sort'] = sort
 		if sort == None:
-		    print('yeahh')
 		    sort = '-created'
 		elif sort == 'Relevant':
 		    sort = '-created'
 		else:
-		    print('nahhh')
-		print('sortbyyyy', sort)
+		    ...
 
-# 		category = request.POST.get("category") #it brings a string of the category rent or buy
-# 		request.session['categorysession'] = category
-
-# 		state = request.POST.get("state")
-# 		request.session['state'] = state
-# 		print('the state isss', state, mylist )
-
-		propertytype1 = request.POST.get("propertytype1")
+		propertytype1 = request.POST.getlist("propertytype1") #this will get the property type
+		print(propertytype1, 'propertytype', len(propertytype1) )
 		firstpropertytype = propertytype1 #I will return it as default value back to the template.
-
-		propertytype1 =  propertytype1.split(',')
+# 		propertytype1 =  propertytype1.split(',')
 		request.session['propertytype1'] = propertytype1
 		request.session['firstpropertytype'] = firstpropertytype
 
 
 		bedmin1 = request.POST.get("Bed(min)")
 		firstbedmin = bedmin1 #I will return it as default value back to the template.
+		print(bedmin1, 'bedmin')
+
 
 		request.session['bedmin1'] = bedmin1
 		request.session['firstbedmin'] = firstbedmin
@@ -168,16 +134,13 @@ def filter_search(request):
 
 		bedmax1 = request.POST.get("Bed(max)")
 		firstbedmax = bedmax1 #I will return it as default value back to the template.
+		print(bedmax1, 'bedmax')
+
 
 		request.session['bedmax1'] = bedmax1
 		request.session['firstbedmax'] = firstbedmax
-		#print('enhh', propertytype1, bedmin1, bedmax1, price_range[0], price_range[1])
-# 		return HttpResponse('ok')
 
-# 		pricemax1 = request.POST.get("Price(max)")
-# 		pricemax1 = ''.join(pricemax1.split())
-# 		pricemax1 = ''.join(pricemax1.split(','))
-# 		pricemax1 = pricemax1[1:]
+
 
 		pricemax1 = request.POST.get("pricemax")
 		firstpricemax = pricemax1
@@ -185,12 +148,9 @@ def filter_search(request):
 		pricemax1 = pricemax1.replace(',', '')
 		request.session['pricemax1'] = pricemax1
 		request.session['firstpricemax'] = firstpricemax
+		print(pricemax1, 'pricemax1')
 
 
-# 		pricemin1 = request.POST.get("Price(min)")
-# 		pricemin1 = ''.join(pricemin1.split())
-# 		pricemin1 = ''.join(pricemin1.split(','))
-# 		pricemin1 = pricemin1[1:]
 		pricemin1 = request.POST.get("pricemin")
 		firstpricemin = pricemin1
 		pricemin1 = pricemin1[1:]
@@ -198,9 +158,9 @@ def filter_search(request):
 		request.session['pricemin1'] = pricemin1
 		request.session['firstpricemin'] = firstpricemin
 
-# 	print('testttt', pricemin1, pricemax1,propertytype1, bedmin1, bedmax1)
+		print(pricemin1, 'pricemax1pricemax1')
 
-# 	return HttpResponse('done')
+
 
 	category = 'Poster'
 	if category == 'Poster':
@@ -251,19 +211,14 @@ def filter_search(request):
 
 
 	list2 = ['TAS GLEBEA' ,'NT DARWIN']
-	#print(bedminsearch, bedmaxsearch, priceminsearch, pricemaxsearch)
-#
-	# it'll remove duplicate from the list that has the postal code
+
 
 	searchlist = []
-	# this list contains all the Poster that has the postal code needed
-	#print('mylist', len(mylist), mylist, mylist[0] )
-# 	print(fillterlist)
-# 	return HttpResponse('done')
-	print('filterrrr', filterlist)
+
 	if mylist == ['']:
 	   # print('zobobobo')
-		if 'All property types' in propertytype1:
+		if len(propertytype1) == 0 or propertytype1[0] == 'All property types':
+			print('yesooo')
 			if filterlist:
 				if 'Swimming_pool' in filterlist:
 					searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ).order_by(sort)
@@ -347,12 +302,9 @@ def filter_search(request):
 					print('nahhhh')
 			else:
 				searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch).order_by(sort)
-				print('okayyyyy')
+				print('okayyyyy, all properties')
 		else:
-			for i in propertytype1:
 
-				# searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch, Property_type=i)
-				# searchlist.extend(searchlist1)
 				if filterlist:
 					if 'Swimming_pool' in filterlist:
 						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True , Property_type=i ).order_by(sort)
@@ -444,9 +396,10 @@ def filter_search(request):
 
 			suburb = i[0:findvalue]
 			state = i[findvalue+3:].replace(' ', '')
-			print(suburb, state)
+			print(suburb, state, 'zobo')
 			if suburb == '':
-				if 'All property types' in propertytype1:
+				if len(propertytype1) == 0:
+					print('lobobobo')
 					if filterlist:
 						if 'Swimming_pool' in filterlist:
 							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,state= state ).order_by(sort)
@@ -527,20 +480,21 @@ def filter_search(request):
 
 						else:
 							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state= state).order_by(sort)
-							print('nahhhh')
+
 					else:
 						searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state= state).order_by(sort)
-						print('okayyyyy')
+
 				else:
 					for a in propertytype1:
 						post = category.objects.filter(Property_type=a, state= state, Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch).order_by(sort)
 						searchlist.extend(post)
 			else:
-				print(state, suburb, 'zobo', filterlist)
-				if 'All property types' in propertytype1:
+
+				if len(propertytype1) == 0 or propertytype1[0] == 'All property types':
+
 					post = category.objects.filter(state__icontains= state, suburb__icontains=suburb, Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch).order_by(sort)
 					if filterlist:
-						print('yaya')
+
 						if 'Swimming_pool' in filterlist:
 							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,state__icontains= state, suburb__icontains=suburb, ).order_by(sort)
 							searchlist.extend(searchlist1)
@@ -619,13 +573,20 @@ def filter_search(request):
 
 
 						else:
-							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state__icontains= state, suburb__icontains=suburb,).order_by(sort)
-							print('nahhhh')
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state__icontains= state, suburb__icontains=suburb,).order_by(sort)
+							searchlist.extend(searchlist1)
+
 					else:
-						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,state__icontains= state, suburb__icontains=suburb,).order_by(sort)
+						print('no naaaa',bedminsearch, bedmaxsearch, priceminsearch, pricemaxsearch, state, suburb  )
+						#Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,
+						searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch, state__icontains = state, suburb__icontains = suburb) # Price__gte = priceminsearch, Price__lte = pricemaxsearch).order_by(sort)
 						searchlist.extend(searchlist1)
+				# 		searchlist1 = category.objects.all().filter(state__icontains = state, suburb__icontains = suburb).order_by(sort)
+				# 		searchlist.extend(searchlist1)
 				else:
+
 					for a in propertytype1:
+
 						if filterlist:
 							if 'Swimming_pool' in filterlist:
 								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,Property_type=a, state= state, suburb__icontains=suburb ).order_by(sort)
@@ -705,13 +666,12 @@ def filter_search(request):
 
 
 							else:
-								searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb).order_by(sort)
-								print('nahhhh')
+								searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb).order_by(sort)
+								searchlist.extend(searchlist1)
 						else:
-							searchlist = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb).order_by(sort)
-							print('okayyyyy')
+							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Property_type=a, state= state, suburb__icontains=suburb).order_by(sort)
+							searchlist.extend(searchlist1)
 
-			print('propertytype1 is', propertytype1)
 
 	pagin = list(dict.fromkeys(searchlist))	# it'll remove duplicate from the generallist
 
@@ -729,7 +689,7 @@ def filter_search(request):
 	context = {'sort':sort, 'saved':saved, 'firstbedmin':firstbedmin, 'firstpropertytype':firstpropertytype, 'firstbedmax':firstbedmax, 'firstpricemax':firstpricemax, 'firstpricemin':firstpricemin, 'saved':saved,'mylist':mylist,'qs':qs,'pagin':pagin, 'category1':category1,'generallist':generallist, 'bedminsearch':bedminsearch, 'bedmaxsearch':bedmaxsearch, 'priceminsearch':priceminsearch, 'pricemaxsearch':pricemaxsearch}
 
 
-	return render(request, 'filter_search.html', context)
+	return render(request, 'index/filter_search.html', context)
 
 # batmobi748/
 
@@ -738,29 +698,17 @@ def filter_search(request):
 
 # this function is used to display filter the searched items from users in map
 def mapview_search(request):
-
-# 	print(filterlist,sortby ,'listttt')
-# 	for i in filterlist:
-# 	    print(i)
-# 	return HttpResponse('done')
-
 	qs = CountryDetails.objects.all()
 	sort = '-created'
 	filterlist = ['none']
 	if not request.method == 'POST':
-	    #if the method isn't post, it get its data off the session
-# 		print('hiddensearchsession', request.session['hiddensearchsession'])
-
 		hiddensearch = request.session['hiddensearchsession']
-		print(hiddensearch)
 		mylist = request.session['mylistsession']
 		propertytype1 = request.session['propertytype1']
 		bedmin1 = request.session['bedmin1']
 		bedmax1 = request.session['bedmax1']
 		pricemax1 = request.session['pricemax1']
 		pricemin1 = request.session['pricemin1']
-# 		category = request.session['categorysession']
-# 		state = request.session['state']
 		firstbedmin = request.session['firstbedmin']
 		firstbedmax = request.session['firstbedmax']
 		firstpricemin = request.session['firstpricemin']
@@ -768,21 +716,11 @@ def mapview_search(request):
 		firstpropertytype = request.session['firstpropertytype']
 		filterlist = request.session['filterlist']
 		sort = request.session['sort']
+		print(hiddensearch, 'hiddensearch', filterlist,bedmin1, bedmax1, pricemin1, pricemax1, propertytype1 )
 		if sort == None:
-		    print('yeah nine')
 		    sort = '-created'
-
-
-
-
-
-		#print('valuessssss', mylist, propertytype1, bedmin1, bedmax1, pricemax1, pricemin1)
-
-# 		return HttpResponse('done')
 	if request.method == 'POST':
 		hiddensearch = request.POST.get("hiddensearch") #it brings a string of the postalcode
-		print(hiddensearch)
-		#print('hiddensearch is',hiddensearch)
 		if hiddensearch:
 		    hiddensearch0 = hiddensearch.replace('X', '')
 		    hiddensearch1 =  hiddensearch0.split(',')
@@ -802,7 +740,6 @@ def mapview_search(request):
 		sort = request.POST.get('sortby')
 		request.session['sort'] = sort
 		if sort == None:
-		    print('yeahh')
 		    sort = '-created'
 		elif sort == 'Relevant':
 		    sort = '-created'
@@ -1112,7 +1049,7 @@ def mapview_search(request):
 			state = i[findvalue+3:].replace(' ', '')
 			print(suburb, state)
 			if suburb == '':
-				if 'All property types' in propertytype1:
+				if len(propertytype1) == 0:
 					if filterlist:
 						if 'Swimming_pool' in filterlist:
 							searchlist1 = category.objects.all().filter(Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch,Swimming_pool=True ,state= state ).order_by(sort)
@@ -1203,7 +1140,7 @@ def mapview_search(request):
 						searchlist.extend(post)
 			else:
 				print(state, suburb, 'zobo', filterlist)
-				if 'All property types' in propertytype1:
+				if len(propertytype1) == 0 or propertytype1[0] == 'All property types':
 					post = category.objects.filter(state__icontains= state, suburb__icontains=suburb, Bedrooms__gte = bedminsearch, Bedrooms__lte = bedmaxsearch, Price__gte = priceminsearch, Price__lte = pricemaxsearch).order_by(sort)
 					if filterlist:
 						print('yaya')
@@ -1380,6 +1317,7 @@ def mapview_search(request):
 			print('propertytype1 is', propertytype1)
 
 	pagin = list(dict.fromkeys(searchlist))	# it'll remove duplicate from the generallist
+	print(pagin, 'paginnnnn')
 
 	try:
 	    user = User.objects.get(username=request.user.username)
@@ -1974,7 +1912,6 @@ def property_search_detail(request, id):
 
 
 def details(request, id, category):
-
     if category == 'Poster':
         category1=Poster
     elif category ==  'PosterRent':
@@ -1986,10 +1923,32 @@ def details(request, id, category):
         data = True
     else:
         data = False
+    try:
+        saveReport.objects.create(user=qs.user, user_viewed=request.user, seen=False)
+    except:
+        user_viewed = User.objects.get(username='AnonymousUser')
+        saveReport.objects.create(user=qs.user, user_viewed=user_viewed, seen=False)
     context = {'qs':qs, 'data':data}
     return render(request, 'details.html', context)
 
+@login_required(login_url='/account/login/')
+def reports(request):
+    qs = saveReport.objects.filter(user=request.user).order_by('-date')
+    context = {'qs':qs}
+    return render(request, 'index/reports.html', context)
 
+@login_required(login_url='/account/login/')
+def changereport(request, id):
+    qs = get_object_or_404(saveReport, id=id, user=request.user)
+    qs.seen=True
+    qs.save()
+    return redirect('home:reports')
+
+@login_required(login_url='/account/login/')
+def deletereport(request, id):
+    qs = get_object_or_404(saveReport, id=id, user=request.user)
+    qs.delete()
+    return redirect('home:reports')
 
 
 @login_required(login_url='/account/login/')

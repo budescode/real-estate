@@ -26,6 +26,9 @@ urlpatterns = [
     path("account/", include('account.urls')),
     #url('socialaccount/', include('social_django.urls', namespace='social'))
     path("oauth/", include('social_django.urls', namespace='social')),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('indexapi/', include('index.api.urls')),
+    path('adminapi/', include('administrator.api.urls')),
     # path("authaccounts/", include('allauth.urls')),
     # url(r'^accounts/', include('allauth.urls')),
     #url(r'^accounts/', include('allauth.urls')),

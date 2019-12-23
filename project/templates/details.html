@@ -1,16 +1,27 @@
-{% extends 'index/base.html' %}
+{% extends 'index/base2.html' %}
 {% load staticfiles %}
 {% load el_pagination_tags %}
 {% block body %}
 
+<link rel="stylesheet" href="{% static 'owlcarousel/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'owlcarousel/owl.theme.default.min.css' %}">
+<style>
+@media only screen and (max-width: 768px) {
+    #contact_row{
+        margin-top:300px;
+    }
+}
 
 
-<form action="{% url 'home:filter_search' %}" method="post"> {% csrf_token %}
+</style>
 
 
-<div class='container'>
-    <div class='row' style='margin-top:85px;'>
-        <div class='col-md-9'>
+
+<div class='container-fluid'>
+    <div class='row'>
+
+
+        <div class='col-md-7'>
             <a class="nav-link" href="#" onclick="window.history.back();return false;"><i class='fa fa-arrow-left'></i> Back TO PROPERTY LIST <span class="sr-only">(current)</span></a>
             <!-- A grey horizontal navbar that becomes vertical on small screens -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; '>
@@ -18,7 +29,7 @@
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
 
-            <p>{{qs.street_number}}  {{qs.street_name}}, {{qs.suburb}} {{qs.state}}</p>
+            <p><h6 style='color:black'> {{qs.street_number}}  {{qs.street_name}}, {{qs.suburb}} {{qs.state}} </h6></p>
             </li>
             <!--<li class="nav-item">-->
             <!--    <a class="nav-link" href="#"><i class='fa fa-globe'></i> Map</a>-->
@@ -28,7 +39,7 @@
             <ul class="navbar-nav">
 
             <li class="nav-item">
-            <p>$ {{qs.Price}}</p>
+            <p> <h6 style='color:black'>$ {{qs.Price}} </h6></p>
             </li>
 
             </ul>
@@ -36,136 +47,307 @@
             </nav>
 
 
-            <img src='{{qs.image.url}}' class='img-fluid'>
+            <img src='{{qs.image.url}}' class='img-fluid' id='bg_image' width="800" height='600'>
+
+
+
+
+
+
+
+
+   <h6 style='color:black'>Image Gallery</h6>
+<div class="owl-carousel">
+
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Building</p>
+</figcaption>
+</figure>
+</div>
+
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.plan.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Plan</p>
+</figcaption>
+</figure>
+</div>
+
+{% if qs.image1 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image1.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image2 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image2.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image3 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image3.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image4 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image4.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image5 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image5.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image6 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image6.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image7 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image7.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image8 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image8.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image9 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image9.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image10 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image10.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image11 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image11.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image12 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image12.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image13 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image13.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image14 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image14.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image15 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image15.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image16 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image16.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image17 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image17.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+{% if qs.image18 %}
+<div>
+<figure class="figure" style="border: 1px solid lightgrey;">
+<img src="{{qs.image18.url}}" class="figure-img img-fluid" alt="Car image" style="width: 200px; height: 200px" onclick='showImage(this.src)'>
+<figcaption class="figure-caption">
+<p>Image</p>
+</figcaption>
+</figure>
+</div>
+{% endif %}
+
+
+</div>
+
+
+
+
+
+
 
         </div>
         <!--col-md-9-->
 
 
-        <div class='col-md-3'>
+        <div class='col-md-5'>
             <br>
             <hr>
             <div class="alert alert-primary">
-              <strong>Share this property</strong>
+              <strong>Property Features</strong>
             </div>
-            <a href=''> <i class='fa fa-facebook' style='font-size:20px'></i></a>
-            <a href=''>    <i class='fa fa-twitter' style='font-size:20px'></i></a>
-            <a href=''>   <i class='fa fa-instagram' style='font-size:20px'></i></a>
-          <br>
-          <hr>
-            <a href=''> <i class='fa fa-bed' style='font-size:20px'></i>{{qs.Bedrooms}}</a>
-            <a href=''>    <i class='fa fa-bath' style='font-size:20px'></i>  {{qs.Bathrooms}} </a>
-            <a href=''>   <i class='fa fa-car' style='font-size:20px'></i>   {{qs.Car_spaces}} </a>
-            <a href=''>   <i class='fa fa-area-chart' style='font-size:20px'></i>   {{qs.land_size}} </a> <br>
-            <a href=''>     {{qs.Property_type}} </a>
-
+          <!--  <a href=''> <i class='fa fa-facebook' style='font-size:20px'></i></a>-->
+          <!--  <a href=''>    <i class='fa fa-twitter' style='font-size:20px'></i></a>-->
+          <!--  <a href=''>   <i class='fa fa-instagram' style='font-size:20px'></i></a>-->
+          <!--<br>-->
+          <!--<hr>-->
+          <div style='font-size:17px;color:black'>
+            <a href='' style='margin-right: 60px;color:black'>Bedrooms <i class='fa fa-bed' style='font-size:20px'></i> {{qs.Bedrooms}}</a>
+            <a href='' style='color:black'>Bathrooms <i class='fa fa-bath' style='font-size:20px'></i>  {{qs.Bathrooms}} </a> <br>
+            <a href='' style='margin-right: 60px;color:black'>Car Spaces <i class='fa fa-car' style='font-size:20px'></i>   {{qs.Car_spaces}} </a>
+            <a href='' style='color:black'>Landsize  <i class='fa fa-area-chart' style='font-size:20px'></i>   {{qs.land_size}} </a> <br>
+            <a href=''style='color:black'>     {{qs.Property_type}} </a>
+        </div>
             <hr>
-            <p><b>Description:</b></p>
-            {{qs.description}}
-
+            <div class="alert alert-primary">
+            <strong>Description</strong>
+            </div>
+            <p style='font-size:17px;color:black'>{{qs.description}}</p>
             <hr>
 
-            <p><b>Other Properties</b></p>
-            {% if qs.Swimming_pool == True %}
-            Swimming pool,
-            {% endif %}
-            {% if qs.Garage == True %}
-            Garage,
-            {% endif %}
-            {% if qs.Outdoor_area == True %}
-            Outdoor area,
-            {% endif %}
-            {% if qs.Undercover_parking == True %}
-            Undercover parking,
-            {% endif %}
-            {% if qs.Shed == True %}
-            Shed,
-            {% endif %}
-            {% if qs.Fully_fenced == True %}
-            Fully fenced,
-            {% endif %}
-            {% if qs.Outdoor_spa == True %}
-            Outdoor spa,
-            {% endif %}
-            {% if qs.Tennis_court == True %}
-            Tennis court,
-            {% endif %}
-            {% if qs.Ensuite == True %}
-            Ensuite,
-            {% endif %}
-            {% if qs.DishWasher == True %}
-            DishWasher,
-            {% endif %}
-            {% if qs.Study == True %}
-            Study,
-            {% endif %}
-            {% if qs.Built_in_robes == True %}
-            Built in robes,
-            {% endif %}
-            {% if qs.Alarm_system == True %}
-            Alarm system,
-            {% endif %}
-            {% if qs.Broadband == True %}
-            Broadband,
-            {% endif %}
-            {% if qs.Floorboards == True %}
-            Floorboards,
-            {% endif %}
-            {% if qs.Gym == True %}
-            Gym,
-            {% endif %}
-            {% if qs.Rumpus_room == True %}
-            Rumpus room,
-            {% endif %}
-            {% if qs.Workshop == True %}
-            Workshop,
-            {% endif %}
-            {% if qs.Air_conditioning == True %}
-            Air conditioning,
-            {% endif %}
-            {% if qs.Solar_panels == True %}
-            Solar panels,
-            {% endif %}
-            {% if qs.Heating == True %}
-            Heating,
-            {% endif %}
-            {% if qs.High_energy_efficiency == True %}
-            High energy efficiency,
-            {% endif %}
-            {% if qs.Water_tank == True %}
-            Water tank,
-            {% endif %}
-            {% if qs.Solar_hot_water == True %}
-            Solar hot water
-            {% endif %}
+            <div class="alert alert-primary">
+              <strong>Seller Info</strong>
+            </div>
 
+            <p>{{qs.user.username}}</p>
+            <p>{{qs.user.email}}</p>
+<hr>
 
 
 <div class="alert alert-primary">
-<strong>Contact Agent</strong>
+<strong>Map View</strong>
 </div>
 
-<form action="">
+<div id="map" style='height:40%;'></div>
+<hr>
 
-<div class="form-group">
-<label for="name">Name:</label>
-<input type="text" class="form-control" id="name">
-</div>
-<div class="form-group">
-<label for="email">Email address:</label>
-<input type="email" class="form-control" id="email">
-</div>
 
-<div class="form-group">
-<label for="phone">Phone:</label>
-<input type="text" class="form-control" id="phone">
-</div>
-<div class="form-group">
-  <label for="comment">Comment:</label>
-  <textarea class="form-control" rows="5" id="comment"></textarea>
-</div>
-<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+
 
 
 
@@ -185,93 +367,44 @@
 
 
 
-
-<div class='row'>
+<hr>
+<div class='row' id='contact_row'>
 <div class='col-md-6'>
-    Map View
-    <div id="map" style='height:100%'></div>
+<h6 style='color:black'>Contact Seller</h6>
+<form action="">
+
+<div class="form-group">
+<label for="name" style='color:black'>Name:</label>
+<input type="text" class="form-control" id="name">
+</div>
+<div class="form-group">
+<label for="email" style='color:black'>Email address:</label>
+<input type="email" class="form-control" id="email">
+</div>
+
+<div class="form-group">
+<label for="phone" style='color:black'>Phone:</label>
+<input type="text" class="form-control" id="phone">
+</div>
+<div class="form-group">
+  <label for="comment" style='color:black'>Comment:</label>
+  <textarea class="form-control" rows="5" id="comment"></textarea>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+
+
+
+
 
 </div>
 </div>
 
 
 </div>
-
-
-
-
-
-		<!-- start footer Area -->
-			<footer class="footer-area section-gap" style='margin-top:70px'>
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3  col-md-6 col-sm-6">
-							<div class="single-footer-widget">
-								<h6>About Us</h6>
-								<p>
-									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore dolore magna aliqua.
-								</p>
-							</div>
-						</div>
-						<div class="col-lg-3  col-md-6 col-sm-6">
-							<div class="single-footer-widget">
-								<h6>Newsletter</h6>
-								<p>Stay update with our latest</p>
-								<div class="" id="mc_embed_signup">
-
-
-										<div class="d-flex flex-row">
-
-											<input class="form-control" name="EMAIL" placeholder="Enter Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Email '" required="" type="email">
-
-
-				                            	<button class="click-btn btn btn-default"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
-				                            	<div style="position: absolute; left: -5000px;">
-													<input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
-												</div>
-
-											<!-- <div class="col-lg-4 col-md-4">
-												<button class="bb-btn btn"><span class="lnr lnr-arrow-right"></span></button>
-											</div>  -->
-										</div>
-										<div class="info"></div>
-
-								</div>
-								</div>
-						</div>
-						<div class="col-lg-3  col-md-6 col-sm-6">
-							<div class="single-footer-widget mail-chimp">
-								<h6 class="mb-20">Instragram Feed</h6>
-								<ul class="instafeed d-flex flex-wrap">
-									<li><img src="img/i1.jpg" alt=""></li>
-									<li><img src="img/i2.jpg" alt=""></li>
-									<li><img src="img/i3.jpg" alt=""></li>
-									<li><img src="img/i4.jpg" alt=""></li>
-									<li><img src="img/i5.jpg" alt=""></li>
-									<li><img src="img/i6.jpg" alt=""></li>
-									<li><img src="img/i7.jpg" alt=""></li>
-									<li><img src="img/i8.jpg" alt=""></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-6 col-sm-6">
-							<div class="single-footer-widget">
-								<h6>Follow Us</h6>
-								<p>Let us be social</p>
-								<div class="footer-social d-flex align-items-center">
-									<a href="#"><i class="fa fa-facebook"></i></a>
-									<a href="#"><i class="fa fa-twitter"></i></a>
-									<a href="#"><i class="fa fa-dribbble"></i></a>
-									<a href="#"><i class="fa fa-behance"></i></a>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</footer>
-			<!-- End footer Area -->
-
 
 
 
@@ -279,7 +412,15 @@
 
 {% csrf_token %}
 
+{% block selectizescript %}
+.
+{% endblock %}
+<script>
+    function showImage(src){
+        image = document.querySelector('#bg_image').src = src
+    }
 
+</script>
     <script>
       var geocoder;
       var map;
@@ -311,6 +452,48 @@
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY
 &callback=initMap">
     </script>
+
+
+<script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+$(".owl-carousel").owlCarousel();
+});
+
+var owl = $('.owl-carousel');
+ $('.owl-carousel').owlCarousel({
+            margin: 10,
+            nav: true,
+      loop:true,
+      margin:10,
+      autoplay:true,
+      autoplayTimeout:3000,
+      autoplayHoverPause:true,
+            navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+            responsive: {
+                0: {
+                    items: 2
+                },
+                490: {
+                    items: 2
+                },
+                1000: {
+                    items: 5
+                }
+            }
+        });
+
+$('.play').on('click',function(){
+    owl.trigger('play.owl.autoplay',[1000])
+})
+$('.stop').on('click',function(){
+    owl.trigger('stop.owl.autoplay')
+})
+
+
+</script>
+
 
 <script>
 var url1 = 'http://anandrathi.pythonanywhere.com/'
@@ -355,6 +538,6 @@ function StarSearch(e){
 
 
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>
+<!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfZ86mdGX5E7o4PGSB7ct22axSb_JzVTY&callback=initMap"></script>-->
 
 {% endblock %}
