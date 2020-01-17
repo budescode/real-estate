@@ -8,5 +8,6 @@ app_name = 'index_api'
 
 
 urlpatterns = [
-path('posterlistapi/', views.PosterListView.as_view(), name='posterapilist'),
+path('posterlistapi/', views.PosterListView.as_view(), name='posterapilistview'),
+path('detail/', views.DetailView.as_view(), name='detailview'),
 ]

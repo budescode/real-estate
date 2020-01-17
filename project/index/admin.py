@@ -9,7 +9,7 @@ admin.site.register(Price)
 
 
 class PosterAdmin(admin.ModelAdmin):
-	list_display = ['user','id_user', 'created', 'active', 'state', 'suburb', 'postcode']
+	list_display = ['user','id_user', 'created', 'active', 'state', 'suburb', 'postcode', 'longitude', 'latitude']
 	search_fields = ['id_user', 'state', 'suburb', 'postcode']
 
 admin.site.register(Poster, PosterAdmin)

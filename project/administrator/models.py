@@ -8,7 +8,7 @@ class CountryDetails(models.Model):
 	detail_type = models.CharField(max_length=100, default='')
 	lat = models.CharField(max_length=100, default='')
 	ion = models.CharField(max_length=100, default='')
-
+	#test = models.CharField(max_length=100, default='')
 	def __str__(self):
 		return self.postcode
 

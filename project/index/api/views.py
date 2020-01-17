@@ -108,8 +108,19 @@ class PosterListView(generics.ListAPIView):
 
 
 
-
-
+permission_classes = [permissions.AllowAny]
+class DetailView(generics.ListAPIView):
+	lookup_field = 'pk'
+	serializer_class = PosterSerializer
+	pagination_class = PostLimitOffsetPagination
+	def get_queryset(self):
+	    id = self.request.GET.get('id')
+	    qs = Poster.objects.all()
+	    if id is not None:
+	        qs1 = qs.filter(id_user=id)
+	        qs = qs1
+	        return qs
+	    return qs
 
 
 
